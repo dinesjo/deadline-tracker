@@ -3,6 +3,10 @@ import {
   Box,
   Button,
   Card,
+  CardActions,
+  CardContent,
+  CardOverflow,
+  Chip,
   Divider,
   IconButton,
   Input,
@@ -22,6 +26,7 @@ import {
 import {
   FaBorderAll,
   FaCalendarDay,
+  FaCheckCircle,
   FaCross,
   FaEraser,
   FaHeading,
@@ -31,8 +36,36 @@ import {
   FaPlus,
   FaQuoteLeft,
   FaSun,
+  FaTrash,
   FaXbox,
 } from "react-icons/fa";
+
+const StatusChip = ({ status }) => {
+  return (
+    <Chip
+      variant="solid"
+      color={
+        status === "Not Started"
+          ? "neutral"
+          : status === "In Progress"
+          ? "warning"
+          : "success"
+      }
+      startDecorator={
+        status === "Not Started" ? (
+          <FaBorderAll />
+        ) : status === "In Progress" ? (
+          <FaPencilAlt />
+        ) : (
+          <FaCheckCircle />
+        )
+      }
+      onClick={() => {}}
+    >
+      {status}
+    </Chip>
+  );
+};
 
 function ModeToggle() {
   const { mode, setMode } = useColorScheme();
@@ -66,15 +99,16 @@ function ModeToggle() {
 }
 
 function App() {
-  const [value, setValue] = useState("");
+  const [type, setType] = useState("");
   const action = useRef(null);
   const [deadlines, setDeadlines] = useState([
     {
       title: "Title",
       details:
-        "Lämnas in fysiskt på övningen aljdhalkjs jdla slkdj alksjl jalksjl k",
-      date: "2023-10-10",
+        "Lämnas in fysiskt på övningen. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget ultricies ultrices, nunc nisl ultricies nisl, vitae ultricies nisl nisl eget nisl. Donec euismod, nisl eget ultricies ultrices, nunc nisl ultricies nisl, vitae ultricies nisl nisl eget nisl.",
+      date: "2023-09-11",
       type: "Assignment",
+      status: "In Progress",
     },
   ]);
 
@@ -109,8 +143,9 @@ function App() {
               {
                 title: e.target[0].value,
                 details: e.target[1].value,
-                date: e.target[3].innerHTML,
-                type: e.target[4].value,
+                date: e.target[3].value,
+                type: e.target[4].outerText,
+                status: "Not Started",
               },
             ]);
           }}
@@ -128,13 +163,14 @@ function App() {
                   min: "2023-09-10T00:00",
                 },
               }}
+              defaultValue={new Date().toISOString().slice(0, 10)}
             />
             <Select
               action={action}
-              value={value}
+              value={type}
               placeholder="Type..."
-              onChange={(e, newValue) => setValue(newValue)}
-              {...(value && {
+              onChange={(e, newValue) => setType(newValue)}
+              {...(type && {
                 // display the button and remove select indicator
                 // when user has selected a value
                 endDecorator: (
@@ -147,7 +183,7 @@ function App() {
                       event.stopPropagation();
                     }}
                     onClick={() => {
-                      setValue(null);
+                      setType(null);
                       action.current?.focusVisible();
                     }}
                   >
@@ -158,32 +194,81 @@ function App() {
               })}
               sx={{ minWidth: 160 }}
             >
-              <Option value="lab">Lab</Option>
-              <Option value="assignment">Assignment</Option>
-              <Option value="quiz">Quiz</Option>
-              <Option value="exam">Exam</Option>
+              <Option value="lab" color="primary" variant="plain">
+                Lab
+              </Option>
+              <Option value="assignment" color="warning" variant="plain">
+                Assignment
+              </Option>
+              <Option value="quiz" color="success" variant="plain">
+                Quiz
+              </Option>
+              <Option value="exam" color="danger" variant="plain">
+                Exam
+              </Option>
             </Select>
             <Button type="submit">Submit</Button>
           </Stack>
         </form>
+        <Divider sx={{ width: "100%", my: 1 }} />
         <List>
           {deadlines.map((deadline, index) => (
             <ListItem key={index}>
-              <Card>
-                <Stack direction="column" justifyContent="space-between">
-                  <Typography startDecorator={<FaHeading />}>
-                    {deadline.title.toUpperCase()}
-                  </Typography>
-                  <Typography maxWidth={300} startDecorator={<FaQuoteLeft />}>
-                    {deadline.details}
-                  </Typography>
+              <Card
+                variant="soft"
+                sx={{
+                  maxWidth: 500,
+                  overflow: "auto",
+                  resize: "horizontal",
+                }}
+              >
+                <CardContent>
+                  <Box display={"flex"} justifyContent="space-between">
+                    <Typography level="title-lg">
+                      {deadline.title.toUpperCase()}
+                    </Typography>
+                    <Chip variant="solid" color="neutral">
+                      {deadline.type}
+                    </Chip>
+                  </Box>
                   <Typography startDecorator={<FaCalendarDay />}>
                     {deadline.date}
                   </Typography>
-                  <Typography startDecorator={<FaEraser />}>
-                    {deadline.type}
-                  </Typography>
-                </Stack>
+                  <Typography level="body-md">{deadline.details}</Typography>
+                  <CardActions buttonFlex="0 1 120px">
+                    <Button variant="solid" color="primary">
+                      Docs
+                    </Button>
+                    <IconButton
+                      variant="soft"
+                      color="danger"
+                      sx={{ ml: "auto" }}
+                    >
+                      <FaTrash />
+                    </IconButton>
+                  </CardActions>
+                </CardContent>
+                <CardOverflow>
+                  <Divider inset="context" />
+                  <CardContent
+                    orientation="horizontal"
+                    sx={{ display: "flex", justifyContent: "space-between" }}
+                  >
+                    <StatusChip status={deadline.status} />
+                    <Typography
+                      startDecorator={<FaCalendarDay />}
+                      fontWeight="md"
+                      color="primary"
+                    >
+                      {Math.ceil(
+                        (new Date(deadline.date).getTime() -
+                          new Date().getTime()) /
+                          (1000 * 60 * 60 * 24)
+                      )}{" "}
+                      day(s) left
+                    </Typography>
+                  </CardContent>
+                </CardOverflow>
               </Card>
             </ListItem>
           ))}
