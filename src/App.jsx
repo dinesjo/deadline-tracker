@@ -21,7 +21,19 @@ import {
   Typography,
   useColorScheme,
 } from "@mui/joy";
-import { FaArrowUp, FaBoxOpen, FaCalendarDay, FaLongArrowAltUp, FaMinusSquare, FaMoon, FaPlusSquare, FaSun, FaTrashAlt } from "react-icons/fa";
+import {
+  FaArchive,
+  FaArrowUp,
+  FaBoxOpen,
+  FaCalendar,
+  FaCalendarDay,
+  FaLongArrowAltUp,
+  FaMinusSquare,
+  FaMoon,
+  FaPlusSquare,
+  FaSun,
+  FaTrashAlt,
+} from "react-icons/fa";
 import NewDeadlineForm from "./NewDeadlineForm";
 import DeadlinesList from "./DeadlinesList";
 
@@ -102,6 +114,9 @@ function App() {
         <Divider sx={{ width: "100%", my: 1 }} />
 
         {/* DEADLINES LIST */}
+        <Typography level="title-lg" startDecorator={<FaCalendar />}>
+          Deadlines
+        </Typography>
         <DeadlinesList
           deadlines={deadlines}
           setDeadlines={setDeadlines}
@@ -109,6 +124,9 @@ function App() {
         />
 
         {/* ARCHIVED DEADLINES */}
+        <Typography level="title-lg" startDecorator={<FaArchive />}>
+          Archived
+        </Typography>
         <List
           sx={{
             width: "80%",
@@ -165,7 +183,7 @@ function App() {
                     Unarchive
                   </Button>
                   <Button
-                  startDecorator={<FaTrashAlt />}
+                    startDecorator={<FaTrashAlt />}
                     variant="plain"
                     color="danger"
                     onClick={() => {

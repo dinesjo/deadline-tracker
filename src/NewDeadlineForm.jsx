@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FaPlus } from "react-icons/fa";
+import { FaFlask, FaPlus } from "react-icons/fa";
 import {
   Button,
   Input,
@@ -9,6 +9,7 @@ import {
   Textarea,
   Typography,
 } from "@mui/joy";
+import types from "./types";
 
 export default function NewDeadlineForm({ setDeadlines }) {
   const [newDeadline, setNewDeadline] = useState({
@@ -35,8 +36,13 @@ export default function NewDeadlineForm({ setDeadlines }) {
         ]);
       }}
     >
-      <Stack spacing={0.5}>
-        <Typography startDecorator={<FaPlus />} variant="h4">
+      <Stack
+        spacing={0.5}
+        sx={{
+          mt: 2,
+        }}
+      >
+        <Typography startDecorator={<FaPlus />} level="title-lg">
           New Deadline
         </Typography>
         <Input
@@ -49,6 +55,7 @@ export default function NewDeadlineForm({ setDeadlines }) {
           }
         />
         <Textarea
+          sx={{ height: "4em", overflow: "hidden", resize: "vertical" }}
           value={newDeadline.details}
           type="textarea"
           placeholder="Details"
@@ -79,13 +86,15 @@ export default function NewDeadlineForm({ setDeadlines }) {
           placeholder="Type"
         >
           <Option value="lab" color="primary" variant="plain">
-            Lab
+            <Typography startDecorator={types.icon["Lab"]}>Lab</Typography>
           </Option>
           <Option value="assignment" color="warning" variant="plain">
-            Assignment
+            <Typography startDecorator={types.icon["Assignment"]}>
+              Assignment
+            </Typography>
           </Option>
           <Option value="exam" color="danger" variant="plain">
-            Exam
+            <Typography startDecorator={types.icon["Exam"]}>Exam</Typography>
           </Option>
         </Select>
         <Button type="submit">Submit</Button>

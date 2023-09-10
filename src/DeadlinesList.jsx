@@ -27,12 +27,10 @@ import {
   FaBatteryFull,
   FaBatteryHalf,
   FaCalendarDay,
-  FaExclamationTriangle,
-  FaFilePdf,
-  FaFlask,
   FaTrash,
   FaTrashAlt,
 } from "react-icons/fa";
+import types from "./types";
 
 const statuses = {
   color: {
@@ -44,15 +42,6 @@ const statuses = {
     "Not Started": <FaBatteryEmpty />,
     "In Progress": <FaBatteryHalf />,
     Completed: <FaBatteryFull />,
-  },
-};
-
-const types = {
-  color: { Lab: "primary", Assignment: "warning", Exam: "danger" },
-  icon: {
-    Lab: <FaFlask />,
-    Assignment: <FaFilePdf />,
-    Exam: <FaExclamationTriangle />,
   },
 };
 
@@ -196,7 +185,7 @@ export default function DeadlinesList({
   setArchived,
 }) {
   return (
-    <List sx={{ width: "80%" }}>
+    <List sx={{ width: 500 }}>
       {deadlines.length === 0 && (
         <ListItem>
           <Card
