@@ -1,29 +1,16 @@
 import { useEffect, useState } from "react";
 import {
   Button,
-  Card,
-  CardActions,
-  CardContent,
-  Divider,
-  List,
-  ListItem,
   Sheet,
   Stack,
   Tooltip,
   Typography,
   useColorScheme,
 } from "@mui/joy";
-import {
-  FaArchive,
-  FaBoxOpen,
-  FaCalendar,
-  FaCalendarDay,
-  FaMoon,
-  FaSun,
-  FaTrashAlt,
-} from "react-icons/fa";
+import { FaArchive, FaCalendar, FaMoon, FaSun } from "react-icons/fa";
 import NewDeadlineForm from "./NewDeadlineForm";
 import DeadlinesList from "./DeadlinesList";
+import ArchiveList from "./ArchiveList";
 
 function ModeToggle() {
   const { mode, setMode } = useColorScheme();
@@ -75,29 +62,6 @@ function App() {
     localStorage.setItem("archived", JSON.stringify(archived));
   }, [archived]);
 
-  // Delete archived deadline
-  const deleteArchived = (index) => {
-    setArchived((prev) => {
-      const newArchived = [...prev];
-      newArchived.splice(index, 1);
-      return newArchived;
-    });
-  };
-
-  // Unarchive deadline
-  const unarchiveDeadline = (index) => {
-    setArchived((prev) => {
-      const newArchived = [...prev];
-      newArchived.splice(index, 1);
-      return newArchived;
-    });
-    setDeadlines((prev) => {
-      const newDeadlines = [...prev];
-      newDeadlines.push(archived[index]);
-      return newDeadlines;
-    });
-  };
-
   return (
     <>
       <Stack
@@ -142,67 +106,11 @@ function App() {
             Archived
           </Typography>
         )}
-        <List
-          sx={{
-            width: "80%",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          {archived.map((deadline, index) => (
-            <ListItem key={index}>
-              <Card
-                variant="soft"
-                sx={{
-                  width: "100%",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <CardContent>
-                  <Typography variant="h4">{deadline.title}</Typography>
-                  <Typography variant="body-md">
-                    {deadline.date && (
-                      <>
-                        <Typography
-                          startDecorator={<FaCalendarDay />}
-                          level="body-sm"
-                          color="primary"
-                        >
-                          {deadline.date}
-                        </Typography>
-                      </>
-                    )}
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  <Button
-                    startDecorator={<FaBoxOpen />}
-                    variant="plain"
-                    color="primary"
-                    onClick={() => {
-                      unarchiveDeadline(index);
-                    }}
-                  >
-                    Unarchive
-                  </Button>
-                  <Button
-                    startDecorator={<FaTrashAlt />}
-                    variant="plain"
-                    color="danger"
-                    onClick={() => {
-                      deleteArchived(index);
-                    }}
-                  >
-                    Delete
-                  </Button>
-                </CardActions>
-              </Card>
-            </ListItem>
-          ))}
-        </List>
+        <ArchiveList
+          archived={archived}
+          setArchived={setArchived}
+          setDeadlines={setDeadlines}
+        />
       </Sheet>
     </>
   );

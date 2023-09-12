@@ -36,7 +36,7 @@ export default function NewDeadlineForm({ setDeadlines, ...props }) {
             id: crypto.randomUUID(),
           },
         ]);
-        console.log(newDeadline);
+        console.log("New deadline submitted:", newDeadline);
       }}
     >
       <Stack
