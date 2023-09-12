@@ -11,13 +11,14 @@ import {
 } from "@mui/joy";
 import types from "./types";
 
-export default function NewDeadlineForm({ setDeadlines }) {
+export default function NewDeadlineForm({ setDeadlines, ...props }) {
   const [newDeadline, setNewDeadline] = useState({
     title: "",
     details: "",
     date: new Date().toISOString().slice(0, 10),
     type: "",
     status: "",
+    id: "",
   });
 
   return (
@@ -32,15 +33,15 @@ export default function NewDeadlineForm({ setDeadlines }) {
             date: newDeadline.date,
             type: newDeadline.type,
             status: "Not Started",
+            id: crypto.randomUUID(),
           },
         ]);
+        console.log(newDeadline);
       }}
     >
       <Stack
         spacing={0.5}
-        sx={{
-          mt: 2,
-        }}
+        {...props}
       >
         <Typography startDecorator={<FaPlus />} level="title-lg">
           New Deadline

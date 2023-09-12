@@ -75,6 +75,29 @@ function App() {
     localStorage.setItem("archived", JSON.stringify(archived));
   }, [archived]);
 
+  // Delete archived deadline
+  const deleteArchived = (index) => {
+    setArchived((prev) => {
+      const newArchived = [...prev];
+      newArchived.splice(index, 1);
+      return newArchived;
+    });
+  };
+
+  // Unarchive deadline
+  const unarchiveDeadline = (index) => {
+    setArchived((prev) => {
+      const newArchived = [...prev];
+      newArchived.splice(index, 1);
+      return newArchived;
+    });
+    setDeadlines((prev) => {
+      const newDeadlines = [...prev];
+      newDeadlines.push(archived[index]);
+      return newDeadlines;
+    });
+  };
+
   return (
     <>
       <Stack
@@ -97,12 +120,14 @@ function App() {
         }}
       >
         {/* NEW DEADLINES FORM */}
-        <NewDeadlineForm setDeadlines={setDeadlines} />
-
-        <Divider sx={{ width: "100%", my: 1 }} />
+        <NewDeadlineForm setDeadlines={setDeadlines} sx={{ mt: 2 }} />
 
         {/* DEADLINES LIST */}
-        <Typography level="title-lg" startDecorator={<FaCalendar />}>
+        <Typography
+          level="title-lg"
+          startDecorator={<FaCalendar />}
+          sx={{ mt: 2 }}
+        >
           Deadlines
         </Typography>
         <DeadlinesList
@@ -112,9 +137,11 @@ function App() {
         />
 
         {/* ARCHIVED DEADLINES */}
-        <Typography level="title-lg" startDecorator={<FaArchive />}>
-          Archived
-        </Typography>
+        {archived.length != 0 && (
+          <Typography level="title-lg" startDecorator={<FaArchive />}>
+            Archived
+          </Typography>
+        )}
         <List
           sx={{
             width: "80%",
@@ -156,16 +183,7 @@ function App() {
                     variant="plain"
                     color="primary"
                     onClick={() => {
-                      setArchived((prev) => {
-                        const newArchived = [...prev];
-                        newArchived.splice(index, 1);
-                        return newArchived;
-                      });
-                      setDeadlines((prev) => {
-                        const newDeadlines = [...prev];
-                        newDeadlines.push(deadline);
-                        return newDeadlines;
-                      });
+                      unarchiveDeadline(index);
                     }}
                   >
                     Unarchive
@@ -175,11 +193,7 @@ function App() {
                     variant="plain"
                     color="danger"
                     onClick={() => {
-                      setArchived((prev) => {
-                        const newArchived = [...prev];
-                        newArchived.splice(index, 1);
-                        return newArchived;
-                      });
+                      deleteArchived(index);
                     }}
                   >
                     Delete

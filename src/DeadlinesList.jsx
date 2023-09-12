@@ -35,7 +35,24 @@ const statuses = {
   },
 };
 
-const StatusChip = ({ status, setDeadlines }) => {
+const StatusChip = ({ status, id, setDeadlines }) => {
+  const nextStatus = {
+    "Not Started": "In Progress",
+    "In Progress": "Completed",
+    Completed: "Not Started",
+  }[status];
+
+  const cycleStatus = () => {
+    setDeadlines((current) => {
+      return current.map((deadline) => {
+        if (deadline.id === id) {
+          return { ...deadline, status: nextStatus };
+        }
+        return deadline;
+      });
+    });
+  };
+
   return (
     <Chip
       variant="solid"
@@ -43,21 +60,7 @@ const StatusChip = ({ status, setDeadlines }) => {
       color={statuses.color[status]}
       startDecorator={statuses.icon[status]}
       onClick={() => {
-        setDeadlines((current) => {
-          return current.map((deadline) => {
-            if (deadline.status === status) {
-              if (status === "Not Started") {
-                return { ...deadline, status: "In Progress" };
-              } else if (status === "In Progress") {
-                return { ...deadline, status: "Completed" };
-              } else {
-                return { ...deadline, status: "Not Started" };
-              }
-            } else {
-              return deadline;
-            }
-          });
-        });
+        cycleStatus();
       }}
     >
       {status}
@@ -79,6 +82,19 @@ const TypeChip = ({ type }) => {
 };
 
 const DeadlineCard = ({ deadline, index, setDeadlines, setArchived }) => {
+  const deleteDeadline = () => {
+    setDeadlines((current) => {
+      return current.filter((_, i) => i !== index);
+    });
+  };
+
+  const archiveDeadline = () => {
+    setArchived((current) => {
+      return [...current, deadline];
+    });
+    deleteDeadline();
+  };
+
   return (
     <Card
       variant="soft"
@@ -96,18 +112,25 @@ const DeadlineCard = ({ deadline, index, setDeadlines, setArchived }) => {
             alignItems: "center",
           }}
         >
+          {/* Title */}
           <Typography level="title-lg">
             {deadline.title.toUpperCase()}
+            {/* ID for debug TODO: remove */}
+            {" "}
+            {deadline.id}
           </Typography>
+          {/* Type */}
           {deadline.type && (
             <TypeChip type={deadline.type} sx={{ ml: "auto" }} />
           )}
         </Box>
+        {/* Date */}
         {deadline.date && (
           <Typography level="body-sm" startDecorator={<FaCalendarDay />}>
             {deadline.date}
           </Typography>
         )}
+        {/* Details */}
         <Typography level="body-md">{deadline.details}</Typography>
         <CardActions buttonFlex="0 1 120px">
           <Button variant="solid" color="primary">
@@ -119,12 +142,7 @@ const DeadlineCard = ({ deadline, index, setDeadlines, setArchived }) => {
             color="warning"
             sx={{ ml: "auto" }}
             onClick={() => {
-              setArchived((current) => {
-                return [...current, deadline];
-              });
-              setDeadlines((current) => {
-                return current.filter((_, i) => i !== index);
-              });
+              archiveDeadline();
             }}
           >
             Arhive
@@ -134,9 +152,7 @@ const DeadlineCard = ({ deadline, index, setDeadlines, setArchived }) => {
             variant="plain"
             color="danger"
             onClick={() => {
-              setDeadlines((current) => {
-                return current.filter((_, i) => i !== index);
-              });
+              deleteDeadline();
             }}
           >
             Delete
@@ -149,7 +165,9 @@ const DeadlineCard = ({ deadline, index, setDeadlines, setArchived }) => {
           orientation="horizontal"
           sx={{ display: "flex", justifyContent: "space-between" }}
         >
-          <StatusChip status={deadline.status} setDeadlines={setDeadlines} />
+          {/* Status */}
+          <StatusChip status={deadline.status} id={deadline.id} setDeadlines={setDeadlines} />
+          {/* Days left */}
           {deadline.date && (
             <Typography
               startDecorator={<FaCalendarDay />}
