@@ -7,10 +7,18 @@ import {
   Typography,
   useColorScheme,
 } from "@mui/joy";
-import { FaArchive, FaCalendar, FaMoon, FaSun } from "react-icons/fa";
+import {
+  FaArchive,
+  FaBook,
+  FaCalendar,
+  FaMoon,
+  FaPlus,
+  FaSun,
+} from "react-icons/fa";
 import NewDeadlineForm from "./NewDeadlineForm";
 import DeadlinesList from "./DeadlinesList";
 import ArchiveList from "./ArchiveList";
+import Courses from "./Courses";
 
 function ModeToggle() {
   const { mode, setMode } = useColorScheme();
@@ -44,6 +52,7 @@ function ModeToggle() {
 }
 
 function App() {
+  // Deadlines
   const [deadlines, setDeadlines] = useState(() => {
     const localValue = JSON.parse(localStorage.getItem("deadlines"));
     if (localValue == null) return [];
@@ -53,6 +62,7 @@ function App() {
     localStorage.setItem("deadlines", JSON.stringify(deadlines));
   }, [deadlines]);
 
+  // Archive
   const [archived, setArchived] = useState(() => {
     const localValue = JSON.parse(localStorage.getItem("archived"));
     if (localValue == null) return [];
@@ -61,6 +71,16 @@ function App() {
   useEffect(() => {
     localStorage.setItem("archived", JSON.stringify(archived));
   }, [archived]);
+
+  // Courses
+  const [courses, setCourses] = useState(() => {
+    const localValue = JSON.parse(localStorage.getItem("courses"));
+    if (localValue == null) return [];
+    return localValue;
+  });
+  useEffect(() => {
+    localStorage.setItem("courses", JSON.stringify(courses));
+  }, [courses]);
 
   return (
     <>
@@ -83,10 +103,32 @@ function App() {
           alignItems: "center",
         }}
       >
-        {/* NEW DEADLINES FORM */}
-        <NewDeadlineForm setDeadlines={setDeadlines} sx={{ mt: 2 }} />
+        <Stack
+          direction={{ xs: "column", md: "row" }}
+          spacing={2}
+          sx={{ pt: 2, maxWidth: "80%" }}
+        >
+          <Sheet sx={{ width: "50%" }}>
+            {/* Courses */}
+            <Typography level="title-lg" startDecorator={<FaBook />}>
+              Courses
+            </Typography>
+            <Typography level="body-md">
+              Add and manage your courses.
+            </Typography>
+            <Courses courses={courses} setCourses={setCourses} />
+          </Sheet>
+          <Sheet sx={{ width: "50%" }}>
+            {/* Deadlines FORM */}
+            <Typography startDecorator={<FaPlus />} level="title-lg">
+              New Deadline
+            </Typography>
+            <Typography level="body-md">Add a new deadline.</Typography>
+            <NewDeadlineForm setDeadlines={setDeadlines} />
+          </Sheet>
+        </Stack>
 
-        {/* DEADLINES LIST */}
+        {/* Deadlines LIST */}
         <Typography
           level="title-lg"
           startDecorator={<FaCalendar />}
@@ -94,13 +136,14 @@ function App() {
         >
           Deadlines
         </Typography>
+        <Typography level="body-md">View and manage your deadlines.</Typography>
         <DeadlinesList
           deadlines={deadlines}
           setDeadlines={setDeadlines}
           setArchived={setArchived}
         />
 
-        {/* ARCHIVED DEADLINES */}
+        {/* Archived Deadlines */}
         {archived.length != 0 && (
           <Typography level="title-lg" startDecorator={<FaArchive />}>
             Archived

@@ -43,9 +43,6 @@ export default function NewDeadlineForm({ setDeadlines, ...props }) {
         spacing={0.5}
         {...props}
       >
-        <Typography startDecorator={<FaPlus />} level="title-lg">
-          New Deadline
-        </Typography>
         <Input
           required
           value={newDeadline.title}
