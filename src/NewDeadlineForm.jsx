@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FaFlask, FaPlus } from "react-icons/fa";
+import { FaPlus } from "react-icons/fa";
 import {
   Button,
   Input,

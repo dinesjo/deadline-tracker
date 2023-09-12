@@ -8,18 +8,9 @@ import {
   CardOverflow,
   Chip,
   Divider,
-  IconButton,
-  Input,
   List,
   ListItem,
-  Option,
-  Select,
-  Sheet,
-  Stack,
-  Textarea,
-  Tooltip,
   Typography,
-  useColorScheme,
 } from "@mui/joy";
 import {
   FaArchive,
@@ -27,7 +18,6 @@ import {
   FaBatteryFull,
   FaBatteryHalf,
   FaCalendarDay,
-  FaTrash,
   FaTrashAlt,
 } from "react-icons/fa";
 import types from "./types";
