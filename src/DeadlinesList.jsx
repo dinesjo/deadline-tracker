@@ -122,7 +122,7 @@ const DeadlineCard = ({
       variant="soft"
       sx={{
         width: "70vw",
-        opacity: deadline.status === "Completed" ? 0.35 : 1,
+        opacity: deadline.status === "Completed" ? 0.45 : 1,
       }}
     >
       <CardOverflow sx={{ backgroundColor: course.color, py: 0.25 }}>
@@ -165,10 +165,10 @@ const DeadlineCard = ({
               ml: "auto",
               "--ButtonGroup-separatorColor": "none !important",
             }}
-            variant="plain"
+            variant={deadline.status === "Completed" ? "soft" : "plain"}
           >
             <IconButton
-              color="warning"
+              color={deadline.status === "Completed" ? "primary" : "warning"}
               onClick={() => {
                 archiveDeadline();
               }}
@@ -179,6 +179,13 @@ const DeadlineCard = ({
             <IconButton
               color="danger"
               onClick={() => {
+                // Bring up confirmation modal
+                if (
+                  !window.confirm(
+                    "Are you sure you want to delete this deadline?\nTHIS CANNOT BE UNDONE."
+                  )
+                )
+                  return;
                 deleteDeadline();
               }}
               title="Delete"
@@ -296,43 +303,45 @@ export default function DeadlinesList({
         </List>
       </TabPanel>
       {/* Course[i]-tabs */}
-      {courses.map((course, index) => (
-        <TabPanel value={index + 1}>
-          <List>
-            {deadlines.length === 0 && (
-              <ListItem key={index}>
-                <Alert variant="soft" color="neutral">
-                  <Box>
-                    <Typography level="title-lg">No Deadlines</Typography>
-                    <Typography level="body-sm">
-                      You have no deadlines. Add one from above.
-                    </Typography>
-                  </Box>
-                </Alert>
-              </ListItem>
-            )}
-            {deadlines
-              .sort((a, b) => new Date(a.date) - new Date(b.date))
-              .map((deadline, index) => (
-                <>
-                  {course.name === deadline.course && (
-                    <ListItem key={deadline.id}>
-                      <DeadlineCard
-                        deadline={deadline}
-                        index={index}
-                        setDeadlines={setDeadlines}
-                        setArchived={setArchived}
-                        course={courses.find(
-                          (course) => course.name === deadline.course
-                        )}
-                      />
-                    </ListItem>
-                  )}
-                </>
-              ))}
-          </List>
-        </TabPanel>
-      ))}
+      {courses
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .map((course, index) => (
+          <TabPanel value={index + 1}>
+            <List>
+              {deadlines.length === 0 && (
+                <ListItem key={index}>
+                  <Alert variant="soft" color="neutral">
+                    <Box>
+                      <Typography level="title-lg">No Deadlines</Typography>
+                      <Typography level="body-sm">
+                        You have no deadlines. Add one from above.
+                      </Typography>
+                    </Box>
+                  </Alert>
+                </ListItem>
+              )}
+              {deadlines
+                .sort((a, b) => new Date(a.date) - new Date(b.date))
+                .map((deadline, index) => (
+                  <>
+                    {course.name === deadline.course && (
+                      <ListItem key={deadline.id}>
+                        <DeadlineCard
+                          deadline={deadline}
+                          index={index}
+                          setDeadlines={setDeadlines}
+                          setArchived={setArchived}
+                          course={courses.find(
+                            (course) => course.name === deadline.course
+                          )}
+                        />
+                      </ListItem>
+                    )}
+                  </>
+                ))}
+            </List>
+          </TabPanel>
+        ))}
     </Tabs>
   );
 }

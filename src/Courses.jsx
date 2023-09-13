@@ -142,48 +142,50 @@ export default function Courses({
             </Box>
           </Alert>
         )}
-        {courses.map((course, index) => (
-          <Chip
-            key={index}
-            sx={{
-              color: course.color,
-            }}
-            onClick={() => {
-              // Rename course
-              const newName = prompt("New name:", course.name);
-              if (
-                newName &&
-                newName !== "" &&
-                !courses.some((course) => course.name === newName)
-              ) {
-                // Rename
-                renameCourse(index, newName);
-              }
-            }}
-            endDecorator={
-              <ChipDelete
-                onClick={() => {
-                  // Bring up confirmation modal IF there are deadlines with this course
-                  if (
-                    deadlines.some(
-                      (deadline) => deadline.course === course.name
-                    )
-                  ) {
+        {courses
+          .sort((a, b) => a.name.localeCompare(b.name))
+          .map((course, index) => (
+            <Chip
+              key={index}
+              sx={{
+                color: course.color,
+              }}
+              onClick={() => {
+                // Rename course
+                const newName = prompt("New name:", course.name);
+                if (
+                  newName &&
+                  newName !== "" &&
+                  !courses.some((course) => course.name === newName)
+                ) {
+                  // Rename
+                  renameCourse(index, newName);
+                }
+              }}
+              endDecorator={
+                <ChipDelete
+                  onClick={() => {
+                    // Bring up confirmation modal IF there are deadlines with this course
                     if (
-                      !window.confirm(
-                        "Are you sure you want to delete this course? This will also delete all deadlines with this course."
+                      deadlines.some(
+                        (deadline) => deadline.course === course.name
                       )
-                    )
-                      return;
-                  }
-                  removeCourse(index);
-                }}
-              />
-            }
-          >
-            {course.name}
-          </Chip>
-        ))}
+                    ) {
+                      if (
+                        !window.confirm(
+                          "Are you sure you want to delete this course? This will also delete all deadlines with this course."
+                        )
+                      )
+                        return;
+                    }
+                    removeCourse(index);
+                  }}
+                />
+              }
+            >
+              {course.name}
+            </Chip>
+          ))}
       </Stack>
     </>
   );

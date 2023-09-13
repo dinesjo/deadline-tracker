@@ -86,6 +86,13 @@ export default function ArchiveList({ archived, setArchived, setDeadlines }) {
                   variant="plain"
                   color="danger"
                   onClick={() => {
+                    // Bring up confirmation modal
+                    if (
+                      !window.confirm(
+                        "Are you sure you want to delete this deadline?\nTHIS CANNOT BE UNDONE."
+                      )
+                    )
+                      return;
                     deleteArchived(index);
                   }}
                 >
