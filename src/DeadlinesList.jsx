@@ -196,15 +196,12 @@ export default function DeadlinesList({
   setArchived,
 }) {
   return (
-    <List sx={{ width: 500 }}>
+    <List sx={{ maxWidth: 500 }}>
       {deadlines.length === 0 && (
         <ListItem>
           <Alert
             variant="soft"
             color="neutral"
-            sx={{
-              width: "100%",
-            }}
           >
             <Box>
               <Typography

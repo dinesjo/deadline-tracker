@@ -84,6 +84,7 @@ function App() {
 
   return (
     <>
+      {/* "navbar" */}
       <Stack
         direction="row"
         justifyContent="center"
@@ -93,6 +94,8 @@ function App() {
       >
         <ModeToggle />
       </Stack>
+
+      {/* Main content */}
       <Sheet
         sx={{
           width: "100vw",
@@ -108,7 +111,7 @@ function App() {
           spacing={2}
           sx={{ pt: 2, maxWidth: "80%" }}
         >
-          <Sheet sx={{ width: "50%" }}>
+          <Sheet>
             {/* Courses */}
             <Typography level="title-lg" startDecorator={<FaBook />}>
               Courses
@@ -118,7 +121,7 @@ function App() {
             </Typography>
             <Courses courses={courses} setCourses={setCourses} />
           </Sheet>
-          <Sheet sx={{ width: "50%" }}>
+          <Sheet>
             {/* Deadlines FORM */}
             <Typography startDecorator={<FaCalendarPlus />} level="title-lg">
               New Deadline

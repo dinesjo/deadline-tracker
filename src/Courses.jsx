@@ -110,7 +110,22 @@ export default function Courses({ courses, setCourses }) {
             key={index}
             sx={{
               color: course.color,
-              fontWeight: "bold",
+            }}
+            onClick={() => {
+              // Rename course
+              const newName = prompt("New name:", course.name);
+              if (
+                newName &&
+                newName !== "" &&
+                !courses.some((course) => course.name === newName)
+              ) {
+                // Update name
+                setCourses((current) => {
+                  const newCourses = [...current];
+                  newCourses[index].name = newName;
+                  return newCourses;
+                });
+              }
             }}
             endDecorator={
               <ChipDelete
