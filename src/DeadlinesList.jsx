@@ -102,12 +102,21 @@ const DeadlineCard = ({ deadline, index, setDeadlines, setArchived }) => {
     deleteDeadline();
   };
 
+  const daysLeft = () => {
+    if (!deadline.date) return null;
+    const days = Math.ceil(
+      (new Date(deadline.date).getTime() - new Date().getTime()) /
+        (1000 * 60 * 60 * 24)
+    );
+    return days;
+  };
+
   return (
     <Card
       variant="soft"
       sx={{
         width: "70vw",
-        opacity: deadline.status === "Completed" ? 0.5 : 1,
+        opacity: deadline.status === "Completed" ? 0.35 : 1,
       }}
     >
       <CardContent>
@@ -183,8 +192,14 @@ const DeadlineCard = ({ deadline, index, setDeadlines, setArchived }) => {
           {deadline.date && (
             <Typography
               startDecorator={<FaCalendarDay />}
-              level="body-sm"
-              color="primary"
+              level={daysLeft() < 7 ? "body-md" : "body-sm"}
+              color={
+                daysLeft() < 3
+                  ? "danger"
+                  : daysLeft() < 7
+                  ? "warning"
+                  : "neutral"
+              }
             >
               {Math.ceil(
                 (new Date(deadline.date).getTime() - new Date().getTime()) /
@@ -251,16 +266,18 @@ export default function DeadlinesList({
               </Alert>
             </ListItem>
           )}
-          {deadlines.map((deadline, index) => (
-            <ListItem key={deadline.id}>
-              <DeadlineCard
-                deadline={deadline}
-                index={index}
-                setDeadlines={setDeadlines}
-                setArchived={setArchived}
-              />
-            </ListItem>
-          ))}
+          {deadlines
+            .sort((a, b) => new Date(a.date) - new Date(b.date))
+            .map((deadline, index) => (
+              <ListItem key={deadline.id}>
+                <DeadlineCard
+                  deadline={deadline}
+                  index={index}
+                  setDeadlines={setDeadlines}
+                  setArchived={setArchived}
+                />
+              </ListItem>
+            ))}
         </List>
       </TabPanel>
       {/* Course[i]-tabs */}
@@ -279,20 +296,22 @@ export default function DeadlinesList({
                 </Alert>
               </ListItem>
             )}
-            {deadlines.map((deadline, index) => (
-              <>
-                {course.name === deadline.course && (
-                  <ListItem key={deadline.id}>
-                    <DeadlineCard
-                      deadline={deadline}
-                      index={index}
-                      setDeadlines={setDeadlines}
-                      setArchived={setArchived}
-                    />
-                  </ListItem>
-                )}
-              </>
-            ))}
+            {deadlines
+              .sort((a, b) => new Date(a.date) - new Date(b.date))
+              .map((deadline, index) => (
+                <>
+                  {course.name === deadline.course && (
+                    <ListItem key={deadline.id}>
+                      <DeadlineCard
+                        deadline={deadline}
+                        index={index}
+                        setDeadlines={setDeadlines}
+                        setArchived={setArchived}
+                      />
+                    </ListItem>
+                  )}
+                </>
+              ))}
           </List>
         </TabPanel>
       ))}
