@@ -7,7 +7,6 @@ import {
   Select,
   Stack,
   Textarea,
-  Typography,
 } from "@mui/joy";
 import types from "./types";
 
@@ -112,6 +111,7 @@ export default function NewDeadlineForm({ setDeadlines, courses, ...props }) {
         </Select>
         {/* Course */}
         <Select
+          required
           onChange={(e) => {
             e &&
               setNewDeadline({

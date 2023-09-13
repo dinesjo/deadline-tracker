@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import {
   Button,
+  Modal,
+  ModalClose,
+  ModalDialog,
   Sheet,
   Stack,
   Tooltip,
@@ -51,6 +54,76 @@ function ModeToggle() {
   );
 }
 
+const ManageCoursesModal = ({ ...props }) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <Button
+        variant="solid"
+        color="neutral"
+        startDecorator={<FaBook />}
+        onClick={() => setOpen(true)}
+      >
+        Manage Courses
+      </Button>
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
+      >
+        <ModalDialog>
+          <ModalClose />
+          <Typography level="title-lg" startDecorator={<FaBook />}>
+            Manage Courses
+          </Typography>
+          <Typography level="body-md" sx={{ mb: 2 }}>
+            Add, rename, and remove courses.
+          </Typography>
+          <Courses open={open} setOpen={setOpen} {...props} />
+        </ModalDialog>
+      </Modal>
+    </>
+  );
+};
+
+const NewDeadlineFormModal = ({ courses, setDeadlines }) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <Button
+        variant="solid"
+        color="primary"
+        startDecorator={<FaCalendarPlus />}
+        onClick={() => setOpen(true)}
+      >
+        New Deadline
+      </Button>
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
+      >
+        <ModalDialog>
+          <ModalClose />
+          <Typography
+            level="title-lg"
+            startDecorator={<FaCalendarPlus />}
+            sx={{ mb: 2 }}
+          >
+            New Deadline
+          </Typography>
+          <NewDeadlineForm
+            open={open}
+            setOpen={setOpen}
+            courses={courses}
+            setDeadlines={setDeadlines}
+          />
+        </ModalDialog>
+      </Modal>
+    </>
+  );
+};
+
 function App() {
   // Deadlines
   const [deadlines, setDeadlines] = useState(() => {
@@ -99,7 +172,7 @@ function App() {
       <Sheet
         sx={{
           width: "100vw",
-          height: "100vh",
+          minHeight: "100vh",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
@@ -111,31 +184,21 @@ function App() {
           spacing={2}
           sx={{ pt: 2, maxWidth: "80%" }}
         >
-          <Sheet>
-            {/* Courses */}
-            <Typography level="title-lg" startDecorator={<FaBook />}>
-              Courses
-            </Typography>
-            <Typography level="body-md">
-              Add and manage your courses.
-            </Typography>
-            <Courses courses={courses} setCourses={setCourses} />
-          </Sheet>
-          <Sheet>
-            {/* Deadlines FORM */}
-            <Typography startDecorator={<FaCalendarPlus />} level="title-lg">
-              New Deadline
-            </Typography>
-            <Typography level="body-md">Add a new deadline.</Typography>
-            <NewDeadlineForm setDeadlines={setDeadlines} courses={courses} />
-          </Sheet>
+          {/* Manage Courses modal */}
+          <ManageCoursesModal
+            courses={courses}
+            setCourses={setCourses}
+            deadlines={deadlines}
+            setDeadlines={setDeadlines}
+          />
+          <NewDeadlineFormModal courses={courses} setDeadlines={setDeadlines} />
         </Stack>
 
         {/* Deadlines LIST */}
         <Typography
           level="title-lg"
           startDecorator={<FaCalendarAlt />}
-          sx={{ mt: 2 }}
+          sx={{ mt: 3 }}
         >
           Deadlines
         </Typography>

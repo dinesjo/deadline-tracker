@@ -23,7 +23,7 @@ const colorCodes = [
   "#FF9900",
 ];
 
-export default function Courses({ courses, setCourses }) {
+export default function Courses({ courses, setCourses, deadlines, setDeadlines }) {
   const [newCourse, setNewCourse] = useState({
     name: "", // unique
     color: "",
@@ -46,6 +46,12 @@ export default function Courses({ courses, setCourses }) {
   const removeCourse = (index) => {
     setCourses((current) => {
       return current.filter((_, i) => i !== index);
+    });
+    // Remove deadlines with this course
+    setDeadlines((current) => {
+      return current.filter(
+        (deadline) => deadline.course !== courses[index].name
+      );
     });
   };
   const getRandomColorCode = () => {
@@ -130,6 +136,19 @@ export default function Courses({ courses, setCourses }) {
             endDecorator={
               <ChipDelete
                 onClick={() => {
+                  // Bring up confirmation modal IF there are deadlines with this course
+                  if (
+                    deadlines.some(
+                      (deadline) => deadline.course === course.name
+                    )
+                  ) {
+                    if (
+                      !window.confirm(
+                        "Are you sure you want to delete this course? This will also delete all deadlines with this course."
+                      )
+                    )
+                      return;
+                  }
                   removeCourse(index);
                 }}
               />

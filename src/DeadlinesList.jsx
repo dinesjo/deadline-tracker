@@ -2,17 +2,16 @@ import React from "react";
 import {
   Alert,
   Box,
-  Button,
+  ButtonGroup,
   Card,
   CardActions,
   CardContent,
   CardOverflow,
   Chip,
   Divider,
-  Grid,
+  IconButton,
   List,
   ListItem,
-  ListItemDecorator,
   Tab,
   TabList,
   TabPanel,
@@ -24,7 +23,6 @@ import {
   FaBatteryEmpty,
   FaBatteryFull,
   FaBatteryHalf,
-  FaBook,
   FaCalendarDay,
   FaTrashAlt,
 } from "react-icons/fa";
@@ -137,31 +135,36 @@ const DeadlineCard = ({ deadline, index, setDeadlines, setArchived }) => {
         )}
         {/* Details */}
         <Typography level="body-md">{deadline.details}</Typography>
-        <CardActions buttonFlex="0 1 120px">
+        <CardActions>
           {/* <Button variant="solid" color="primary">
             Docs
           </Button> */}
-          <Button
-            startDecorator={<FaArchive />}
-            variant="plain"
-            color="warning"
-            sx={{ ml: "auto" }}
-            onClick={() => {
-              archiveDeadline();
+          <ButtonGroup
+            sx={{
+              ml: "auto",
+              "--ButtonGroup-separatorColor": "none !important",
             }}
-          >
-            Arhive
-          </Button>
-          <Button
-            startDecorator={<FaTrashAlt />}
             variant="plain"
-            color="danger"
-            onClick={() => {
-              deleteDeadline();
-            }}
           >
-            Delete
-          </Button>
+            <IconButton
+              color="warning"
+              onClick={() => {
+                archiveDeadline();
+              }}
+              title="Archive"
+            >
+              <FaArchive />
+            </IconButton>
+            <IconButton
+              color="danger"
+              onClick={() => {
+                deleteDeadline();
+              }}
+              title="Delete"
+            >
+              <FaTrashAlt />
+            </IconButton>
+          </ButtonGroup>
         </CardActions>
       </CardContent>
       <CardOverflow>
@@ -237,7 +240,7 @@ export default function DeadlinesList({
       <TabPanel value={0}>
         <List>
           {deadlines.length === 0 && (
-            <ListItem>
+            <ListItem key={0}>
               <Alert variant="soft" color="neutral">
                 <Box>
                   <Typography level="title-lg">No Deadlines</Typography>
@@ -249,7 +252,7 @@ export default function DeadlinesList({
             </ListItem>
           )}
           {deadlines.map((deadline, index) => (
-            <ListItem key={index}>
+            <ListItem key={deadline.id}>
               <DeadlineCard
                 deadline={deadline}
                 index={index}
@@ -265,7 +268,7 @@ export default function DeadlinesList({
         <TabPanel value={index + 1}>
           <List>
             {deadlines.length === 0 && (
-              <ListItem>
+              <ListItem key={index}>
                 <Alert variant="soft" color="neutral">
                   <Box>
                     <Typography level="title-lg">No Deadlines</Typography>
@@ -279,7 +282,7 @@ export default function DeadlinesList({
             {deadlines.map((deadline, index) => (
               <>
                 {course.name === deadline.course && (
-                  <ListItem key={index}>
+                  <ListItem key={deadline.id}>
                     <DeadlineCard
                       deadline={deadline}
                       index={index}
