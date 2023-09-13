@@ -144,6 +144,7 @@ function App() {
           deadlines={deadlines}
           setDeadlines={setDeadlines}
           setArchived={setArchived}
+          courses={courses}
         />
 
         {/* Archived Deadlines */}

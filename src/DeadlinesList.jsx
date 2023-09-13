@@ -9,8 +9,14 @@ import {
   CardOverflow,
   Chip,
   Divider,
+  Grid,
   List,
   ListItem,
+  ListItemDecorator,
+  Tab,
+  TabList,
+  TabPanel,
+  Tabs,
   Typography,
 } from "@mui/joy";
 import {
@@ -18,6 +24,7 @@ import {
   FaBatteryEmpty,
   FaBatteryFull,
   FaBatteryHalf,
+  FaBook,
   FaCalendarDay,
   FaTrashAlt,
 } from "react-icons/fa";
@@ -73,9 +80,10 @@ const TypeChip = ({ type }) => {
   return (
     <Chip
       variant="plain"
-      color={types.color[type]}
-      startDecorator={types.icon[type]}
-      onClick={() => {}}
+      sx={{
+        color: types.find((t) => t.name === type).color,
+      }}
+      startDecorator={types.find((t) => t.name === type).icon}
     >
       {type}
     </Chip>
@@ -100,10 +108,9 @@ const DeadlineCard = ({ deadline, index, setDeadlines, setArchived }) => {
     <Card
       variant="soft"
       sx={{
-        width: "100%",
-        borderWidth: 3,
+        width: "70vw",
+        opacity: deadline.status === "Completed" ? 0.5 : 1,
       }}
-      color={statuses.color[deadline.status]}
     >
       <CardContent>
         <Box
@@ -116,7 +123,6 @@ const DeadlineCard = ({ deadline, index, setDeadlines, setArchived }) => {
           {/* Title */}
           <Typography level="title-lg">
             {deadline.title.toUpperCase()}
-            {/* ID for debug TODO: remove */} {deadline.id}
           </Typography>
           {/* Type */}
           {deadline.type && (
@@ -132,9 +138,9 @@ const DeadlineCard = ({ deadline, index, setDeadlines, setArchived }) => {
         {/* Details */}
         <Typography level="body-md">{deadline.details}</Typography>
         <CardActions buttonFlex="0 1 120px">
-          <Button variant="solid" color="primary">
+          {/* <Button variant="solid" color="primary">
             Docs
-          </Button>
+          </Button> */}
           <Button
             startDecorator={<FaArchive />}
             variant="plain"
@@ -194,38 +200,99 @@ export default function DeadlinesList({
   deadlines,
   setDeadlines,
   setArchived,
+  courses,
 }) {
   return (
-    <List sx={{ maxWidth: 500 }}>
-      {deadlines.length === 0 && (
-        <ListItem>
-          <Alert
-            variant="soft"
-            color="neutral"
+    <Tabs defaultValue={0}>
+      {/* Tab buttons and # indicator */}
+      <TabList>
+        <Tab value={0}>
+          All{" "}
+          <Chip variant="outlined" size="sm" color="neutral" sx={{ ml: 1 }}>
+            {deadlines.length}
+          </Chip>
+        </Tab>
+        {courses.map((course, index) => (
+          <Tab
+            value={index + 1}
+            sx={{
+              color: course.color,
+            }}
+            disabled={
+              deadlines.filter((deadline) => deadline.course === course.name)
+                .length === 0
+            }
           >
-            <Box>
-              <Typography
-                level="title-lg"
-              >
-                No Deadlines
-              </Typography>
-              <Typography level="body-sm">
-                You have no deadlines. Add one from above.
-              </Typography>
-            </Box>
-          </Alert>
-        </ListItem>
-      )}
-      {deadlines.map((deadline, index) => (
-        <ListItem key={index}>
-          <DeadlineCard
-            deadline={deadline}
-            index={index}
-            setDeadlines={setDeadlines}
-            setArchived={setArchived}
-          />
-        </ListItem>
+            {course.name}
+            <Chip variant="outlined" color="neutral" size="sm" sx={{ ml: 1 }}>
+              {
+                deadlines.filter((deadline) => deadline.course === course.name)
+                  .length
+              }
+            </Chip>
+          </Tab>
+        ))}
+      </TabList>
+      {/* ALL-tab */}
+      <TabPanel value={0}>
+        <List>
+          {deadlines.length === 0 && (
+            <ListItem>
+              <Alert variant="soft" color="neutral">
+                <Box>
+                  <Typography level="title-lg">No Deadlines</Typography>
+                  <Typography level="body-sm">
+                    You have no deadlines. Add one from above.
+                  </Typography>
+                </Box>
+              </Alert>
+            </ListItem>
+          )}
+          {deadlines.map((deadline, index) => (
+            <ListItem key={index}>
+              <DeadlineCard
+                deadline={deadline}
+                index={index}
+                setDeadlines={setDeadlines}
+                setArchived={setArchived}
+              />
+            </ListItem>
+          ))}
+        </List>
+      </TabPanel>
+      {/* Course[i]-tabs */}
+      {courses.map((course, index) => (
+        <TabPanel value={index + 1}>
+          <List>
+            {deadlines.length === 0 && (
+              <ListItem>
+                <Alert variant="soft" color="neutral">
+                  <Box>
+                    <Typography level="title-lg">No Deadlines</Typography>
+                    <Typography level="body-sm">
+                      You have no deadlines. Add one from above.
+                    </Typography>
+                  </Box>
+                </Alert>
+              </ListItem>
+            )}
+            {deadlines.map((deadline, index) => (
+              <>
+                {course.name === deadline.course && (
+                  <ListItem key={index}>
+                    <DeadlineCard
+                      deadline={deadline}
+                      index={index}
+                      setDeadlines={setDeadlines}
+                      setArchived={setArchived}
+                    />
+                  </ListItem>
+                )}
+              </>
+            ))}
+          </List>
+        </TabPanel>
       ))}
-    </List>
+    </Tabs>
   );
 }
