@@ -10,9 +10,9 @@ import {
 import {
   FaArchive,
   FaBook,
-  FaCalendar,
+  FaCalendarAlt,
+  FaCalendarPlus,
   FaMoon,
-  FaPlus,
   FaSun,
 } from "react-icons/fa";
 import NewDeadlineForm from "./NewDeadlineForm";
@@ -120,7 +120,7 @@ function App() {
           </Sheet>
           <Sheet sx={{ width: "50%" }}>
             {/* Deadlines FORM */}
-            <Typography startDecorator={<FaPlus />} level="title-lg">
+            <Typography startDecorator={<FaCalendarPlus />} level="title-lg">
               New Deadline
             </Typography>
             <Typography level="body-md">Add a new deadline.</Typography>
@@ -131,7 +131,7 @@ function App() {
         {/* Deadlines LIST */}
         <Typography
           level="title-lg"
-          startDecorator={<FaCalendar />}
+          startDecorator={<FaCalendarAlt />}
           sx={{ mt: 2 }}
         >
           Deadlines

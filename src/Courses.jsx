@@ -1,29 +1,24 @@
 import {
   Alert,
   Box,
-  Button,
-  Card,
-  CardContent,
   Chip,
   ChipDelete,
   IconButton,
   Input,
-  List,
-  ListItem,
-  Sheet,
   Stack,
   Typography,
 } from "@mui/joy";
 import { useState } from "react";
-import { FaPlus, FaTrashAlt } from "react-icons/fa";
+import {
+  FaPlus,
+} from "react-icons/fa";
 
 const colorCodes = [
   "#FF5733",
   "#3399FF",
   "#FFCC00",
-  "#66FF66",
   "#9933CC",
-  "#FF3366",
+  "#FF5577",
   "#33FF99",
   "#CC66FF",
   "#66CC33",
@@ -101,7 +96,11 @@ export default function Courses({ courses, setCourses }) {
         {courses.length === 0 && (
           <Alert variant="soft" color="neutral">
             <Box>
-              <Typography level="title-lg">No Courses</Typography>
+              <Typography
+                level="title-lg"
+              >
+                No Courses
+              </Typography>
               <Typography level="body-sm">
                 You have no courses. Add one from above.
               </Typography>
@@ -113,6 +112,7 @@ export default function Courses({ courses, setCourses }) {
             key={index}
             sx={{
               color: course.color,
+              fontWeight: "bold",
             }}
             endDecorator={
               <ChipDelete

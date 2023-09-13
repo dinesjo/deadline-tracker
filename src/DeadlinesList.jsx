@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  Alert,
   Box,
   Button,
   Card,
@@ -115,9 +116,7 @@ const DeadlineCard = ({ deadline, index, setDeadlines, setArchived }) => {
           {/* Title */}
           <Typography level="title-lg">
             {deadline.title.toUpperCase()}
-            {/* ID for debug TODO: remove */}
-            {" "}
-            {deadline.id}
+            {/* ID for debug TODO: remove */} {deadline.id}
           </Typography>
           {/* Type */}
           {deadline.type && (
@@ -166,7 +165,11 @@ const DeadlineCard = ({ deadline, index, setDeadlines, setArchived }) => {
           sx={{ display: "flex", justifyContent: "space-between" }}
         >
           {/* Status */}
-          <StatusChip status={deadline.status} id={deadline.id} setDeadlines={setDeadlines} />
+          <StatusChip
+            status={deadline.status}
+            id={deadline.id}
+            setDeadlines={setDeadlines}
+          />
           {/* Days left */}
           {deadline.date && (
             <Typography
@@ -196,19 +199,24 @@ export default function DeadlinesList({
     <List sx={{ width: 500 }}>
       {deadlines.length === 0 && (
         <ListItem>
-          <Card
-            variant="plain"
+          <Alert
+            variant="soft"
+            color="neutral"
             sx={{
               width: "100%",
             }}
           >
-            <CardContent>
-              <Typography level="title-lg">No Deadlines</Typography>
-              <Typography level="body-md">
+            <Box>
+              <Typography
+                level="title-lg"
+              >
+                No Deadlines
+              </Typography>
+              <Typography level="body-sm">
                 You have no deadlines. Add one from above.
               </Typography>
-            </CardContent>
-          </Card>
+            </Box>
+          </Alert>
         </ListItem>
       )}
       {deadlines.map((deadline, index) => (
