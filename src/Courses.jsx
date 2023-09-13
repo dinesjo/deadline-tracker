@@ -23,25 +23,56 @@ const colorCodes = [
   "#FF9900",
 ];
 
-export default function Courses({ courses, setCourses, deadlines, setDeadlines }) {
+export default function Courses({
+  courses,
+  setCourses,
+  deadlines,
+  setDeadlines,
+}) {
   const [newCourse, setNewCourse] = useState({
     name: "", // unique
     color: "",
   });
-  const addCourse = () => {
-    if (
-      newCourse.name === "" ||
-      courses.some((course) => course.name === newCourse.name)
-    )
-      return; // TODO: Show error message
+  const addCourse = (name) => {
+    // Require unique name
+    if (name === "" || courses.some((course) => course.name === name)) return; // TODO: Show error message
+
+    // Add new course
     setCourses((current) => [
       ...current,
       {
-        name: newCourse.name,
+        name: name,
         color: getRandomColorCode(),
       },
     ]);
+
+    // Reset user input state
     setNewCourse({ name: "", color: "" });
+  };
+  const renameCourse = (index, newName) => {
+    // Require unique name
+    if (newName === "" || courses.some((course) => course.name === newName))
+      return; // TODO: Show error message
+
+    // Rename course
+    setCourses((current) => {
+      return current.map((course, i) => {
+        if (i === index) {
+          return { ...course, name: newName };
+        }
+        return course;
+      });
+    });
+
+    // Update deadlines with this course
+    setDeadlines((current) => {
+      return current.map((deadline) => {
+        if (deadline.course === courses[index].name) {
+          return { ...deadline, course: newName };
+        }
+        return deadline;
+      });
+    });
   };
   const removeCourse = (index) => {
     setCourses((current) => {
@@ -75,7 +106,7 @@ export default function Courses({ courses, setCourses, deadlines, setDeadlines }
         endDecorator={
           <IconButton
             onClick={() => {
-              addCourse();
+              addCourse(newCourse.name);
             }}
           >
             <FaPlus />
@@ -87,7 +118,7 @@ export default function Courses({ courses, setCourses, deadlines, setDeadlines }
         value={newCourse.name}
         onKeyDown={(e) => {
           if (e.key === "Enter") {
-            addCourse();
+            addCourse(newCourse.name);
           }
         }}
       />
@@ -125,12 +156,8 @@ export default function Courses({ courses, setCourses, deadlines, setDeadlines }
                 newName !== "" &&
                 !courses.some((course) => course.name === newName)
               ) {
-                // Update name
-                setCourses((current) => {
-                  const newCourses = [...current];
-                  newCourses[index].name = newName;
-                  return newCourses;
-                });
+                // Rename
+                renameCourse(index, newName);
               }
             }}
             endDecorator={

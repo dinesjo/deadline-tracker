@@ -88,7 +88,13 @@ const TypeChip = ({ type }) => {
   );
 };
 
-const DeadlineCard = ({ deadline, index, setDeadlines, setArchived }) => {
+const DeadlineCard = ({
+  deadline,
+  index,
+  setDeadlines,
+  setArchived,
+  course,
+}) => {
   const deleteDeadline = () => {
     setDeadlines((current) => {
       return current.filter((_, i) => i !== index);
@@ -119,6 +125,12 @@ const DeadlineCard = ({ deadline, index, setDeadlines, setArchived }) => {
         opacity: deadline.status === "Completed" ? 0.35 : 1,
       }}
     >
+      <CardOverflow sx={{ backgroundColor: course.color, py: 0.25 }}>
+        <Typography level="title-md" fontWeight={700} sx={{ color: "black" }}>
+          {course.name}
+        </Typography>
+        <Divider inset="context" />
+      </CardOverflow>
       <CardContent>
         <Box
           sx={{
@@ -275,6 +287,9 @@ export default function DeadlinesList({
                   index={index}
                   setDeadlines={setDeadlines}
                   setArchived={setArchived}
+                  course={courses.find(
+                    (course) => course.name === deadline.course
+                  )}
                 />
               </ListItem>
             ))}
@@ -307,6 +322,9 @@ export default function DeadlinesList({
                         index={index}
                         setDeadlines={setDeadlines}
                         setArchived={setArchived}
+                        course={courses.find(
+                          (course) => course.name === deadline.course
+                        )}
                       />
                     </ListItem>
                   )}
