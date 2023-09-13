@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import {
   Button,
   Input,
+  ListItemDecorator,
   Option,
   Select,
   Stack,
@@ -10,12 +11,13 @@ import {
 } from "@mui/joy";
 import types from "./types";
 
-export default function NewDeadlineForm({ setDeadlines, ...props }) {
+export default function NewDeadlineForm({ setDeadlines, courses, ...props }) {
   const [newDeadline, setNewDeadline] = useState({
     title: "",
     details: "",
     date: new Date().toISOString().slice(0, 10),
     type: "",
+    course: "",
     status: "",
     id: "",
   });
@@ -31,6 +33,7 @@ export default function NewDeadlineForm({ setDeadlines, ...props }) {
             details: newDeadline.details,
             date: newDeadline.date,
             type: newDeadline.type,
+            course: newDeadline.course,
             status: "Not Started",
             id: crypto.randomUUID(),
           },
@@ -38,10 +41,8 @@ export default function NewDeadlineForm({ setDeadlines, ...props }) {
         console.log("New deadline submitted:", newDeadline);
       }}
     >
-      <Stack
-        spacing={0.5}
-        {...props}
-      >
+      <Stack spacing={0.5} {...props}>
+        {/* Title */}
         <Input
           required
           value={newDeadline.title}
@@ -51,6 +52,7 @@ export default function NewDeadlineForm({ setDeadlines, ...props }) {
             setNewDeadline({ ...newDeadline, title: e.target.value })
           }
         />
+        {/* Details */}
         <Textarea
           sx={{ height: "4em", overflow: "hidden", resize: "vertical" }}
           value={newDeadline.details}
@@ -60,6 +62,7 @@ export default function NewDeadlineForm({ setDeadlines, ...props }) {
             setNewDeadline({ ...newDeadline, details: e.target.value })
           }
         />
+        {/* Date */}
         <Input
           type="date"
           slotProps={{
@@ -72,6 +75,7 @@ export default function NewDeadlineForm({ setDeadlines, ...props }) {
             setNewDeadline({ ...newDeadline, date: e.target.value })
           }
         />
+        {/* Type */}
         <Select
           onChange={(e) => {
             e &&
@@ -81,19 +85,60 @@ export default function NewDeadlineForm({ setDeadlines, ...props }) {
               });
           }}
           placeholder="Type"
+          value={newDeadline.type}
+          startDecorator={
+            newDeadline.type && (
+              // Icon for selected item
+              <ListItemDecorator
+                sx={{
+                  color: types.find((type) => type.name === newDeadline.type)
+                    ?.color,
+                }}
+              >
+                {types.find((type) => type.name === newDeadline.type)?.icon}
+              </ListItemDecorator>
+            )
+          }
+          sx={{
+            color: types.find((type) => type.name === newDeadline.type)?.color,
+          }}
         >
-          <Option value="lab" color="primary" variant="plain">
-            <Typography startDecorator={types.icon["Lab"]}>Lab</Typography>
-          </Option>
-          <Option value="assignment" color="warning" variant="plain">
-            <Typography startDecorator={types.icon["Assignment"]}>
-              Assignment
-            </Typography>
-          </Option>
-          <Option value="exam" color="danger" variant="plain">
-            <Typography startDecorator={types.icon["Exam"]}>Exam</Typography>
-          </Option>
+          {types.map((type, index) => (
+            <Option key={index} value={type.name} sx={{ color: type.color }}>
+              <ListItemDecorator>{type.icon}</ListItemDecorator>
+              {type.name}
+            </Option>
+          ))}
         </Select>
+        {/* Course */}
+        <Select
+          onChange={(e) => {
+            e &&
+              setNewDeadline({
+                ...newDeadline,
+                course: e.target.textContent,
+              });
+          }}
+          placeholder="Course"
+          value={newDeadline.course}
+          sx={{
+            color: courses.find((course) => course.name === newDeadline.course)
+              ?.color,
+          }}
+        >
+          {courses.map((course, index) => (
+            <Option
+              key={index}
+              value={course.name}
+              sx={{
+                color: course.color,
+              }}
+            >
+              {course.name}
+            </Option>
+          ))}
+        </Select>
+        {/* Submit */}
         <Button type="submit">Submit</Button>
       </Stack>
     </form>

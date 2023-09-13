@@ -124,7 +124,7 @@ function App() {
               New Deadline
             </Typography>
             <Typography level="body-md">Add a new deadline.</Typography>
-            <NewDeadlineForm setDeadlines={setDeadlines} />
+            <NewDeadlineForm setDeadlines={setDeadlines} courses={courses} />
           </Sheet>
         </Stack>
 

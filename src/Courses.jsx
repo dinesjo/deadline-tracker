@@ -9,9 +9,7 @@ import {
   Typography,
 } from "@mui/joy";
 import { useState } from "react";
-import {
-  FaPlus,
-} from "react-icons/fa";
+import { FaPlus } from "react-icons/fa";
 
 const colorCodes = [
   "#FF5733",
@@ -31,7 +29,11 @@ export default function Courses({ courses, setCourses }) {
     color: "",
   });
   const addCourse = () => {
-    if (newCourse.name === "") return;
+    if (
+      newCourse.name === "" ||
+      courses.some((course) => course.name === newCourse.name)
+    )
+      return; // TODO: Show error message
     setCourses((current) => [
       ...current,
       {
@@ -96,11 +98,7 @@ export default function Courses({ courses, setCourses }) {
         {courses.length === 0 && (
           <Alert variant="soft" color="neutral">
             <Box>
-              <Typography
-                level="title-lg"
-              >
-                No Courses
-              </Typography>
+              <Typography level="title-lg">No Courses</Typography>
               <Typography level="body-sm">
                 You have no courses. Add one from above.
               </Typography>
