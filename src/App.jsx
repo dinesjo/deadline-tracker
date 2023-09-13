@@ -100,7 +100,11 @@ const NewDeadlineFormModal = ({ courses, setDeadlines }) => {
       </Button>
       <Modal
         open={open}
-        onClose={() => setOpen(false)}
+        onClose={(_event, reason) => {
+          // Don't close modal if user pressed escape key
+          // (because that's how some users will close the date picker and Select)
+          if (reason !== "escapeKeyDown") setOpen(false);
+        }}
         sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
       >
         <ModalDialog>

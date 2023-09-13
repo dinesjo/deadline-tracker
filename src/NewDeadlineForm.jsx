@@ -10,7 +10,12 @@ import {
 } from "@mui/joy";
 import types from "./types";
 
-export default function NewDeadlineForm({ setDeadlines, courses, ...props }) {
+export default function NewDeadlineForm({
+  setDeadlines,
+  courses,
+  setOpen,
+  ...props
+}) {
   const [newDeadline, setNewDeadline] = useState({
     title: "",
     details: "",
@@ -38,6 +43,7 @@ export default function NewDeadlineForm({ setDeadlines, courses, ...props }) {
           },
         ]);
         console.log("New deadline submitted:", newDeadline);
+        setOpen(false); // Close modal
       }}
     >
       <Stack spacing={0.5} {...props}>
