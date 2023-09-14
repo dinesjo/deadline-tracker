@@ -20,10 +20,10 @@ import {
 } from "@mui/joy";
 import {
   FaArchive,
-  FaBatteryEmpty,
-  FaBatteryFull,
-  FaBatteryHalf,
   FaCalendarDay,
+  FaCheckCircle,
+  FaRegCircle,
+  FaSpinner,
   FaTrashAlt,
 } from "react-icons/fa";
 import types from "./types";
@@ -35,9 +35,9 @@ const statuses = {
     Completed: "success",
   },
   icon: {
-    "Not Started": <FaBatteryEmpty />,
-    "In Progress": <FaBatteryHalf />,
-    Completed: <FaBatteryFull />,
+    "Not Started": <FaRegCircle />,
+    "In Progress": <FaSpinner />,
+    Completed: <FaCheckCircle />,
   },
 };
 
@@ -61,7 +61,7 @@ const StatusChip = ({ status, id, setDeadlines }) => {
 
   return (
     <Chip
-      variant="solid"
+      variant={status === "Completed" ? "outlined" : "solid"}
       size="sm"
       color={statuses.color[status]}
       startDecorator={statuses.icon[status]}
@@ -77,7 +77,7 @@ const StatusChip = ({ status, id, setDeadlines }) => {
 const TypeChip = ({ type }) => {
   return (
     <Chip
-      variant="plain"
+      variant="soft"
       sx={{
         color: types.find((t) => t.name === type).color,
       }}
@@ -122,11 +122,18 @@ const DeadlineCard = ({
       variant="soft"
       sx={{
         width: "70vw",
-        opacity: deadline.status === "Completed" ? 0.45 : 1,
+        opacity: deadline.status === "Completed" ? 0.6 : 1,
       }}
     >
       <CardOverflow sx={{ backgroundColor: course.color, py: 0.25 }}>
-        <Typography level="title-md" fontWeight={700} sx={{ color: "black" }}>
+        {/* Course */}
+        <Typography
+          level="title-md"
+          fontWeight={700}
+          sx={{
+            color: "black",
+          }}
+        >
           {course.name}
         </Typography>
         <Divider inset="context" />
@@ -140,7 +147,13 @@ const DeadlineCard = ({
           }}
         >
           {/* Title */}
-          <Typography level="title-lg">
+          <Typography
+            level="title-lg"
+            sx={{
+              textDecoration:
+                deadline.status === "Completed" ? "line-through" : "none",
+            }}
+          >
             {deadline.title.toUpperCase()}
           </Typography>
           {/* Type */}
@@ -165,10 +178,10 @@ const DeadlineCard = ({
               ml: "auto",
               "--ButtonGroup-separatorColor": "none !important",
             }}
-            variant={deadline.status === "Completed" ? "soft" : "plain"}
+            variant="plain"
           >
             <IconButton
-              color={deadline.status === "Completed" ? "primary" : "warning"}
+              color="warning"
               onClick={() => {
                 archiveDeadline();
               }}
@@ -286,7 +299,15 @@ export default function DeadlinesList({
             </ListItem>
           )}
           {deadlines
-            .sort((a, b) => new Date(a.date) - new Date(b.date))
+            .sort((a, b) => {
+              if (a.status === b.status) {
+                return new Date(a.date) - new Date(b.date);
+              } else if (a.status === "Completed") {
+                return 1;
+              } else if (b.status === "Completed") {
+                return -1;
+              }
+            })
             .map((deadline, index) => (
               <ListItem key={deadline.id}>
                 <DeadlineCard
@@ -321,7 +342,15 @@ export default function DeadlinesList({
                 </ListItem>
               )}
               {deadlines
-                .sort((a, b) => new Date(a.date) - new Date(b.date))
+                .sort((a, b) => {
+                  if (a.status === b.status) {
+                    return new Date(a.date) - new Date(b.date);
+                  } else if (a.status === "Completed") {
+                    return 1;
+                  } else if (b.status === "Completed") {
+                    return -1;
+                  }
+                })
                 .map((deadline, index) => (
                   <>
                     {course.name === deadline.course && (

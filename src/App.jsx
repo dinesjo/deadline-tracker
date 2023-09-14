@@ -88,6 +88,27 @@ const ManageCoursesModal = ({ ...props }) => {
 
 const NewDeadlineFormModal = ({ courses, setDeadlines }) => {
   const [open, setOpen] = useState(false);
+  const [newDeadline, setNewDeadline] = useState(() => {
+    const localValue = JSON.parse(localStorage.getItem("newDeadline"));
+    if (localValue == null)
+      return {
+        title: "",
+        details: "",
+        date: new Date().toISOString().slice(0, 10),
+        type: "",
+        course: "",
+        status: "",
+        id: "",
+      };
+    return localValue;
+  });
+
+  useEffect(() => {
+    if (!open) {
+      localStorage.setItem("newDeadline", JSON.stringify(newDeadline));
+    }
+  }, [open, newDeadline]);
+
   return (
     <>
       <Button
@@ -121,6 +142,8 @@ const NewDeadlineFormModal = ({ courses, setDeadlines }) => {
             setOpen={setOpen}
             courses={courses}
             setDeadlines={setDeadlines}
+            newDeadline={newDeadline}
+            setNewDeadline={setNewDeadline}
           />
         </ModalDialog>
       </Modal>

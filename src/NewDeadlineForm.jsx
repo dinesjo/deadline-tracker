@@ -9,23 +9,16 @@ import {
   Textarea,
 } from "@mui/joy";
 import types from "./types";
+import { FaBackspace, FaBroom } from "react-icons/fa";
 
 export default function NewDeadlineForm({
   setDeadlines,
   courses,
   setOpen,
+  newDeadline,
+  setNewDeadline,
   ...props
 }) {
-  const [newDeadline, setNewDeadline] = useState({
-    title: "",
-    details: "",
-    date: new Date().toISOString().slice(0, 10),
-    type: "",
-    course: "",
-    status: "",
-    id: "",
-  });
-
   return (
     <form
       onSubmit={(e) => {
@@ -43,9 +36,47 @@ export default function NewDeadlineForm({
           },
         ]);
         console.log("New deadline submitted:", newDeadline);
-        setOpen(false); // Close modal
+        // Reset user input state
+        setNewDeadline({
+          title: "",
+          details: "",
+          date: new Date().toISOString().slice(0, 10),
+          type: "",
+          course: "",
+          status: "",
+          id: "",
+        });
+        setOpen(false); // close modal
       }}
     >
+      {/* Clear form button */}
+      <Button
+        variant="soft"
+        color="neutral"
+        startDecorator={<FaBackspace />}
+        sx={{
+          mb: 2,
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        onClick={() => {
+          // Reset user input state
+          setNewDeadline({
+            title: "",
+            details: "",
+            date: new Date().toISOString().slice(0, 10),
+            type: "",
+            course: "",
+            status: "",
+            id: "",
+          });
+        }}
+      >
+        Clear form
+      </Button>
+
       <Stack spacing={0.5} {...props}>
         {/* Title */}
         <Input
