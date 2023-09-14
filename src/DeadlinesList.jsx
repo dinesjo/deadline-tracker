@@ -1,7 +1,9 @@
 import React from "react";
+import { useState } from "react";
 import {
   Alert,
   Box,
+  Button,
   ButtonGroup,
   Card,
   CardActions,
@@ -10,18 +12,28 @@ import {
   Chip,
   Divider,
   IconButton,
+  Input,
   List,
   ListItem,
+  ListItemDecorator,
+  Modal,
+  ModalClose,
+  ModalDialog,
+  Option,
+  Select,
   Tab,
   TabList,
   TabPanel,
   Tabs,
+  Textarea,
   Typography,
 } from "@mui/joy";
 import {
   FaArchive,
   FaCalendarDay,
+  FaCheck,
   FaCheckCircle,
+  FaEdit,
   FaRegCircle,
   FaSpinner,
   FaTrashAlt,
@@ -89,11 +101,12 @@ const TypeChip = ({ type }) => {
 };
 
 const DeadlineCard = ({
-  deadline,
   index,
+  deadline,
   setDeadlines,
   setArchived,
   course,
+  courses,
 }) => {
   const deleteDeadline = () => {
     setDeadlines((current) => {
@@ -117,6 +130,8 @@ const DeadlineCard = ({
     return days;
   };
 
+  const [editing, setEditing] = useState(false);
+
   return (
     <Card
       variant="soft"
@@ -125,18 +140,73 @@ const DeadlineCard = ({
         opacity: deadline.status === "Completed" ? 0.6 : 1,
       }}
     >
-      <CardOverflow sx={{ backgroundColor: course.color, py: 0.25 }}>
+      <CardOverflow
+        sx={{
+          backgroundColor: course.color,
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          pr: 0,
+        }}
+      >
         {/* Course */}
-        <Typography
-          level="title-md"
-          fontWeight={700}
+        {editing ? (
+          <Select
+            required
+            onChange={(e) => {
+              setDeadlines((current) => {
+                return current.map((d) => {
+                  if (d.id === deadline.id) {
+                    return { ...d, course: e.target.textContent };
+                  }
+                  return d;
+                });
+              });
+            }}
+            value={deadline.course}
+            sx={{
+              color: courses.find((course) => course.name === deadline.course)
+                ?.color,
+            }}
+          >
+            {courses.map((course, index) => (
+              <Option
+                key={index}
+                value={course.name}
+                sx={{
+                  color: course.color,
+                }}
+              >
+                {course.name}
+              </Option>
+            ))}
+          </Select>
+        ) : (
+          <Typography
+            level="title-md"
+            fontWeight={700}
+            sx={{
+              color: "black",
+            }}
+          >
+            {course.name}
+          </Typography>
+        )}
+        {/* Edit button */}
+        <IconButton
+          onClick={() => {
+            setEditing(!editing);
+          }}
+          title={editing ? "Save" : "Edit"}
+          color={editing ? "primary" : "neutral"}
+          variant={editing ? "solid" : "plain"}
           sx={{
-            color: "black",
+            borderRadius: 0,
           }}
         >
-          {course.name}
-        </Typography>
-        <Divider inset="context" />
+          {editing ? <FaCheck /> : <FaEdit />}
+        </IconButton>
       </CardOverflow>
       <CardContent>
         <Box
@@ -147,65 +217,174 @@ const DeadlineCard = ({
           }}
         >
           {/* Title */}
-          <Typography
-            level="title-lg"
-            sx={{
-              textDecoration:
-                deadline.status === "Completed" ? "line-through" : "none",
-            }}
-          >
-            {deadline.title.toUpperCase()}
-          </Typography>
-          {/* Type */}
-          {deadline.type && (
-            <TypeChip type={deadline.type} sx={{ ml: "auto" }} />
+          {editing ? (
+            <Input
+              type="text"
+              value={deadline.title}
+              onChange={(e) => {
+                setDeadlines((current) => {
+                  return current.map((d) => {
+                    if (d.id === deadline.id) {
+                      return { ...d, title: e.target.value };
+                    }
+                    return d;
+                  });
+                });
+              }}
+            />
+          ) : (
+            <Typography
+              level="title-lg"
+              sx={{
+                textDecoration:
+                  deadline.status === "Completed" ? "line-through" : "none",
+              }}
+            >
+              {deadline.title}
+            </Typography>
           )}
+          {/* Type */}
+          {deadline.type &&
+            (editing ? (
+              <Select
+                sx={{
+                  width: "fit-content",
+                  color: types.find((type) => type.name === deadline.type)
+                    ?.color,
+                }}
+                size="sm"
+                value={deadline.type}
+                onChange={(e) => {
+                  setDeadlines((current) => {
+                    return current.map((d) => {
+                      if (d.id === deadline.id) {
+                        return { ...d, type: e.target.textContent };
+                      }
+                      return d;
+                    });
+                  });
+                }}
+                startDecorator={
+                  deadline.type && (
+                    // Icon for selected item
+                    <ListItemDecorator
+                      sx={{
+                        color: types.find((type) => type.name === deadline.type)
+                          ?.color,
+                      }}
+                    >
+                      {types.find((type) => type.name === deadline.type)?.icon}
+                    </ListItemDecorator>
+                  )
+                }
+              >
+                {types.map((type, index) => (
+                  <Option
+                    key={index}
+                    value={type.name}
+                    sx={{ color: type.color }}
+                  >
+                    <ListItemDecorator>{type.icon}</ListItemDecorator>
+                    {type.name}
+                  </Option>
+                ))}
+              </Select>
+            ) : (
+              <TypeChip type={deadline.type} sx={{ ml: "auto" }} />
+            ))}
         </Box>
         {/* Date */}
-        {deadline.date && (
-          <Typography level="body-sm" startDecorator={<FaCalendarDay />}>
-            {deadline.date}
-          </Typography>
+        {editing ? (
+          <Input
+            type="date"
+            slotProps={{
+              input: {
+                min: "2023-09-10T00:00",
+              },
+            }}
+            size="sm"
+            value={deadline.date}
+            sx={{
+              width: "fit-content",
+            }}
+            onChange={(e) =>
+              setDeadlines((current) => {
+                return current.map((d) => {
+                  if (d.id === deadline.id) {
+                    return { ...d, date: e.target.value };
+                  }
+                  return d;
+                });
+              })
+            }
+          />
+        ) : (
+          deadline.date && (
+            <Typography level="body-sm" startDecorator={<FaCalendarDay />}>
+              {deadline.date}
+            </Typography>
+          )
         )}
         {/* Details */}
-        <Typography level="body-md">{deadline.details}</Typography>
+        {editing ? (
+          <Textarea
+            sx={{ height: "4em", overflow: "hidden", resize: "vertical" }}
+            value={deadline.details}
+            type="textarea"
+            placeholder="Details"
+            onChange={(e) =>
+              setDeadlines((current) => {
+                return current.map((d) => {
+                  if (d.id === deadline.id) {
+                    return { ...d, details: e.target.value };
+                  }
+                  return d;
+                });
+              })
+            }
+          />
+        ) : (
+          <Typography level="body-md">{deadline.details}</Typography>
+        )}
         <CardActions>
           {/* <Button variant="solid" color="primary">
             Docs
           </Button> */}
-          <ButtonGroup
-            sx={{
-              ml: "auto",
-              "--ButtonGroup-separatorColor": "none !important",
-            }}
-            variant="plain"
-          >
-            <IconButton
-              color="warning"
-              onClick={() => {
-                archiveDeadline();
+          {!editing && ( // Hide buttons while editing
+            <ButtonGroup
+              sx={{
+                ml: "auto",
+                "--ButtonGroup-separatorColor": "none !important",
               }}
-              title="Archive"
+              variant="plain"
             >
-              <FaArchive />
-            </IconButton>
-            <IconButton
-              color="danger"
-              onClick={() => {
-                // Bring up confirmation modal
-                if (
-                  !window.confirm(
-                    "Are you sure you want to delete this deadline?\nTHIS CANNOT BE UNDONE."
+              <IconButton
+                color="warning"
+                onClick={() => {
+                  archiveDeadline();
+                }}
+                title="Archive"
+              >
+                <FaArchive />
+              </IconButton>
+              <IconButton
+                color="danger"
+                onClick={() => {
+                  // Bring up confirmation modal
+                  if (
+                    !window.confirm(
+                      "Are you sure you want to delete this deadline?\nTHIS CANNOT BE UNDONE."
+                    )
                   )
-                )
-                  return;
-                deleteDeadline();
-              }}
-              title="Delete"
-            >
-              <FaTrashAlt />
-            </IconButton>
-          </ButtonGroup>
+                    return;
+                  deleteDeadline();
+                }}
+                title="Delete"
+              >
+                <FaTrashAlt />
+              </IconButton>
+            </ButtonGroup>
+          )}
         </CardActions>
       </CardContent>
       <CardOverflow>
@@ -318,6 +497,7 @@ export default function DeadlinesList({
                   course={courses.find(
                     (course) => course.name === deadline.course
                   )}
+                  courses={courses}
                 />
               </ListItem>
             ))}
@@ -363,6 +543,7 @@ export default function DeadlinesList({
                           course={courses.find(
                             (course) => course.name === deadline.course
                           )}
+                          courses={courses}
                         />
                       </ListItem>
                     )}
