@@ -59,7 +59,7 @@ const ManageCoursesModal = ({ ...props }) => {
   return (
     <>
       <Button
-        variant="solid"
+        variant="outlined"
         color="neutral"
         startDecorator={<FaBook />}
         onClick={() => setOpen(true)}
@@ -151,6 +151,38 @@ const NewDeadlineFormModal = ({ courses, setDeadlines }) => {
   );
 };
 
+const ArchiveModal = ({ ...props }) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <Button
+        variant="outlined"
+        color="neutral"
+        startDecorator={<FaArchive />}
+        onClick={() => setOpen(true)}
+      >
+        Archived
+      </Button>
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
+      >
+        <ModalDialog>
+          <ModalClose />
+          <Typography level="title-lg" startDecorator={<FaArchive />}>
+            Archived
+          </Typography>
+          <Typography level="body-md" sx={{ mb: 2 }}>
+            View and restore archived deadlines.
+          </Typography>
+          <ArchiveList {...props} />
+        </ModalDialog>
+      </Modal>
+    </>
+  );
+};
+
 function App() {
   // Deadlines
   const [deadlines, setDeadlines] = useState(() => {
@@ -199,10 +231,9 @@ function App() {
       <Sheet
         sx={{
           width: "100vw",
-          minHeight: "100vh",
+          minHeight: "calc(100vh - 56px)", // subtract height of navbar
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center",
           alignItems: "center",
         }}
       >
@@ -219,6 +250,12 @@ function App() {
             setDeadlines={setDeadlines}
           />
           <NewDeadlineFormModal courses={courses} setDeadlines={setDeadlines} />
+          <ArchiveModal
+            archived={archived}
+            setArchived={setArchived}
+            setDeadlines={setDeadlines}
+            courses={courses}
+          />
         </Stack>
 
         {/* Deadlines LIST */}
@@ -235,18 +272,6 @@ function App() {
           setDeadlines={setDeadlines}
           setArchived={setArchived}
           courses={courses}
-        />
-
-        {/* Archived Deadlines */}
-        {archived.length != 0 && (
-          <Typography level="title-lg" startDecorator={<FaArchive />}>
-            Archived
-          </Typography>
-        )}
-        <ArchiveList
-          archived={archived}
-          setArchived={setArchived}
-          setDeadlines={setDeadlines}
         />
       </Sheet>
     </>
