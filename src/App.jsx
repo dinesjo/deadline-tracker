@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import {
+  Alert,
+  AspectRatio,
+  Box,
   Button,
   Modal,
   ModalClose,
@@ -15,6 +18,7 @@ import {
   FaBook,
   FaCalendarAlt,
   FaCalendarPlus,
+  FaInfoCircle,
   FaMoon,
   FaSun,
 } from "react-icons/fa";
@@ -76,9 +80,20 @@ const ManageCoursesModal = ({ ...props }) => {
           <Typography level="title-lg" startDecorator={<FaBook />}>
             Manage Courses
           </Typography>
-          <Typography level="body-md" sx={{ mb: 2 }}>
+          <Typography level="body-md">
             Add, rename, and remove courses.
           </Typography>
+          <Alert
+            variant="soft"
+            color="primary"
+            size="md"
+            sx={{ mt: 1, mb: 1.5 }}
+            startDecorator={<FaInfoCircle />}
+          >
+            <Typography level="title-md">
+              Click a course to rename it
+            </Typography>
+          </Alert>
           <Courses open={open} setOpen={setOpen} {...props} />
         </ModalDialog>
       </Modal>
@@ -248,6 +263,8 @@ function App() {
             setCourses={setCourses}
             deadlines={deadlines}
             setDeadlines={setDeadlines}
+            archived={archived}
+            setArchived={setArchived}
           />
           <NewDeadlineFormModal courses={courses} setDeadlines={setDeadlines} />
           <ArchiveModal

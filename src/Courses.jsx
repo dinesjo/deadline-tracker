@@ -1,6 +1,7 @@
 import {
   Alert,
   Box,
+  Button,
   Chip,
   ChipDelete,
   IconButton,
@@ -9,7 +10,7 @@ import {
   Typography,
 } from "@mui/joy";
 import { useState } from "react";
-import { FaPlus } from "react-icons/fa";
+import { FaPalette, FaPlus } from "react-icons/fa";
 
 const colorCodes = [
   "#FF5733",
@@ -28,6 +29,8 @@ export default function Courses({
   setCourses,
   deadlines,
   setDeadlines,
+  archived,
+  setArchived,
 }) {
   const [newCourse, setNewCourse] = useState({
     name: "", // unique
@@ -80,6 +83,12 @@ export default function Courses({
     });
     // Remove deadlines with this course
     setDeadlines((current) => {
+      return current.filter(
+        (deadline) => deadline.course !== courses[index].name
+      );
+    });
+    // Remove archived with this course
+    setArchived((current) => {
       return current.filter(
         (deadline) => deadline.course !== courses[index].name
       );
@@ -169,11 +178,14 @@ export default function Courses({
                     if (
                       deadlines.some(
                         (deadline) => deadline.course === course.name
+                      ) ||
+                      archived.some(
+                        (deadline) => deadline.course === course.name
                       )
                     ) {
                       if (
                         !window.confirm(
-                          "Are you sure you want to delete this course? This will also delete all deadlines with this course."
+                          "Are you sure you want to delete this course? This will also delete all deadlines with this course. Even archived ones.\nTHIS CANNOT BE UNDONE."
                         )
                       )
                         return;
