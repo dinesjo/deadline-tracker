@@ -1,5 +1,5 @@
 import React from "react";
-import { FaFilePdf, FaFlask, FaExclamationTriangle } from "react-icons/fa";
+import { FaFilePdf, FaFlask, FaExclamationTriangle, FaComments } from "react-icons/fa";
 
 const types = [
   {
@@ -17,6 +17,11 @@ const types = [
     color: "#FFCC00",
     icon: <FaExclamationTriangle />,
   },
+  {
+    name: "Seminar",
+    color: "#00CC66",
+    icon: <FaComments />,
+  }
 ];
 
 export default types;
