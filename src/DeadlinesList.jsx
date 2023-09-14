@@ -16,9 +16,6 @@ import {
   List,
   ListItem,
   ListItemDecorator,
-  Modal,
-  ModalClose,
-  ModalDialog,
   Option,
   Select,
   Tab,
@@ -121,6 +118,17 @@ const DeadlineCard = ({
     deleteDeadline();
   };
 
+  const editDeadline = (property, newValue) => {
+    setDeadlines((current) => {
+      return current.map((d) => {
+        if (d.id === deadline.id) {
+          return { ...d, [property]: newValue };
+        }
+        return d;
+      });
+    });
+  };
+
   const daysLeft = () => {
     if (!deadline.date) return null;
     const days = Math.ceil(
@@ -155,14 +163,7 @@ const DeadlineCard = ({
           <Select
             required
             onChange={(e) => {
-              setDeadlines((current) => {
-                return current.map((d) => {
-                  if (d.id === deadline.id) {
-                    return { ...d, course: e.target.textContent };
-                  }
-                  return d;
-                });
-              });
+              editDeadline("course", e.target.textContent);
             }}
             value={deadline.course}
             sx={{
@@ -202,6 +203,7 @@ const DeadlineCard = ({
           color={editing ? "primary" : "neutral"}
           variant={editing ? "solid" : "plain"}
           sx={{
+            color: editing ? "white" : "black",
             borderRadius: 0,
           }}
         >
@@ -222,14 +224,7 @@ const DeadlineCard = ({
               type="text"
               value={deadline.title}
               onChange={(e) => {
-                setDeadlines((current) => {
-                  return current.map((d) => {
-                    if (d.id === deadline.id) {
-                      return { ...d, title: e.target.value };
-                    }
-                    return d;
-                  });
-                });
+                editDeadline("title", e.target.value);
               }}
             />
           ) : (
@@ -255,14 +250,7 @@ const DeadlineCard = ({
                 size="sm"
                 value={deadline.type}
                 onChange={(e) => {
-                  setDeadlines((current) => {
-                    return current.map((d) => {
-                      if (d.id === deadline.id) {
-                        return { ...d, type: e.target.textContent };
-                      }
-                      return d;
-                    });
-                  });
+                  editDeadline("type", e.target.textContent);
                 }}
                 startDecorator={
                   deadline.type && (
@@ -307,16 +295,7 @@ const DeadlineCard = ({
             sx={{
               width: "fit-content",
             }}
-            onChange={(e) =>
-              setDeadlines((current) => {
-                return current.map((d) => {
-                  if (d.id === deadline.id) {
-                    return { ...d, date: e.target.value };
-                  }
-                  return d;
-                });
-              })
-            }
+            onChange={(e) => editDeadline("date", e.target.value)}
           />
         ) : (
           deadline.date && (
@@ -332,16 +311,7 @@ const DeadlineCard = ({
             value={deadline.details}
             type="textarea"
             placeholder="Details"
-            onChange={(e) =>
-              setDeadlines((current) => {
-                return current.map((d) => {
-                  if (d.id === deadline.id) {
-                    return { ...d, details: e.target.value };
-                  }
-                  return d;
-                });
-              })
-            }
+            onChange={(e) => editDeadline("details", e.target.value)}
           />
         ) : (
           <Typography level="body-md">{deadline.details}</Typography>
@@ -359,7 +329,7 @@ const DeadlineCard = ({
               variant="plain"
             >
               <IconButton
-                color="warning"
+                color="neutral"
                 onClick={() => {
                   archiveDeadline();
                 }}
