@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import {
   Alert,
-  AspectRatio,
-  Box,
   Button,
   Modal,
   ModalClose,
@@ -18,7 +16,7 @@ import {
   FaBook,
   FaCalendarAlt,
   FaCalendarPlus,
-  FaInfoCircle,
+  FaEdit,
   FaMoon,
   FaSun,
 } from "react-icons/fa";
@@ -81,18 +79,16 @@ const ManageCoursesModal = ({ ...props }) => {
             Manage Courses
           </Typography>
           <Typography level="body-md">
-            Add, rename, and remove courses.
+            Add, edit, and remove courses.
           </Typography>
           <Alert
             variant="soft"
             color="primary"
             size="md"
             sx={{ mt: 1, mb: 1.5 }}
-            startDecorator={<FaInfoCircle />}
+            startDecorator={<FaEdit />}
           >
-            <Typography level="title-md">
-              Click a course to rename it
-            </Typography>
+            <Typography level="title-md">Click a course to edit it</Typography>
           </Alert>
           <Courses open={open} setOpen={setOpen} {...props} />
         </ModalDialog>

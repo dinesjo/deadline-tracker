@@ -1,28 +1,133 @@
 import {
   Alert,
   Box,
-  Button,
   Chip,
   ChipDelete,
+  Grid,
   IconButton,
   Input,
+  Modal,
+  ModalDialog,
   Stack,
   Typography,
 } from "@mui/joy";
 import { useState } from "react";
-import { FaPalette, FaPlus } from "react-icons/fa";
+import { FaPlus } from "react-icons/fa";
 
 const colorCodes = [
+  "#FF3333",
   "#FF5733",
-  "#3399FF",
+  "#FF9900",
   "#FFCC00",
+  "#66CC33",
+  "#008800",
+  "#3399FF",
+  "#3366FF",
   "#9933CC",
   "#FF5577",
-  "#33FF99",
-  "#CC66FF",
-  "#66CC33",
-  "#FF9900",
 ];
+
+const CourseChip = ({
+  course,
+  index,
+  renameCourse,
+  removeCourse,
+  setCourses,
+  changeColor,
+}) => {
+  const [open, setOpen] = useState(false); // edit course popup
+
+  return (
+    <>
+      <Modal
+        open={open}
+        onClose={() => {
+          setOpen(false);
+        }}
+      >
+        <ModalDialog
+          sx={{
+            width: "100%",
+            maxWidth: "20em",
+            p: 3,
+          }}
+        >
+          <Typography level="title-md">Edit Course</Typography>
+          <Input
+            placeholder="Course Name"
+            value={course.name}
+            onChange={(e) => {
+              renameCourse(index, e.target.value);
+            }}
+          />
+          <Typography level="title-md" sx={{ mt: 1 }}>
+            Change color
+          </Typography>
+          <Grid
+            container
+            spacing={1}
+            sx={{ mt: 1, display: "flex", justifyContent: "center" }}
+          >
+            {colorCodes.map((color, i) => (
+              <Grid
+                key={i}
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <IconButton
+                  sx={{
+                    backgroundColor: color,
+                    borderRadius: "50%",
+                    p: 0,
+                    border: color == course.color ? "4px dashed white" : "none",
+                  }}
+                  onClick={() => {
+                    changeColor(index, color);
+                    setOpen(false);
+                  }}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        </ModalDialog>
+      </Modal>
+      <Chip
+        key={index}
+        sx={{
+          color: course.color,
+          fontWeight: "bold",
+        }}
+        onClick={() => {
+          setOpen(true);
+        }}
+        endDecorator={
+          <ChipDelete
+            onClick={() => {
+              // Bring up confirmation modal IF there are deadlines with this course
+              if (
+                deadlines.some((deadline) => deadline.course === course.name) ||
+                archived.some((deadline) => deadline.course === course.name)
+              ) {
+                if (
+                  !window.confirm(
+                    "Are you sure you want to delete this course? This will also delete all deadlines with this course. Even archived ones.\nTHIS CANNOT BE UNDONE."
+                  )
+                )
+                  return;
+              }
+              removeCourse(index);
+            }}
+          />
+        }
+      >
+        {course.name}
+      </Chip>
+    </>
+  );
+};
 
 export default function Courses({
   courses,
@@ -74,6 +179,16 @@ export default function Courses({
           return { ...deadline, course: newName };
         }
         return deadline;
+      });
+    });
+  };
+  const changeColor = (index, color) => {
+    setCourses((current) => {
+      return current.map((course, i) => {
+        if (i === index) {
+          return { ...course, color: color };
+        }
+        return course;
       });
     });
   };
@@ -154,49 +269,15 @@ export default function Courses({
         {courses
           .sort((a, b) => a.name.localeCompare(b.name))
           .map((course, index) => (
-            <Chip
+            <CourseChip
               key={index}
-              sx={{
-                color: course.color,
-              }}
-              onClick={() => {
-                // Rename course
-                const newName = prompt("New name:", course.name);
-                if (
-                  newName &&
-                  newName !== "" &&
-                  !courses.some((course) => course.name === newName)
-                ) {
-                  // Rename
-                  renameCourse(index, newName);
-                }
-              }}
-              endDecorator={
-                <ChipDelete
-                  onClick={() => {
-                    // Bring up confirmation modal IF there are deadlines with this course
-                    if (
-                      deadlines.some(
-                        (deadline) => deadline.course === course.name
-                      ) ||
-                      archived.some(
-                        (deadline) => deadline.course === course.name
-                      )
-                    ) {
-                      if (
-                        !window.confirm(
-                          "Are you sure you want to delete this course? This will also delete all deadlines with this course. Even archived ones.\nTHIS CANNOT BE UNDONE."
-                        )
-                      )
-                        return;
-                    }
-                    removeCourse(index);
-                  }}
-                />
-              }
-            >
-              {course.name}
-            </Chip>
+              course={course}
+              index={index}
+              renameCourse={renameCourse}
+              changeColor={changeColor}
+              removeCourse={removeCourse}
+              setCourses={setCourses}
+            />
           ))}
       </Stack>
     </>
