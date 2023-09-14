@@ -402,10 +402,10 @@ export default function DeadlinesList({
   courses,
 }) {
   return (
-    <Tabs defaultValue={0}>
+    <Tabs defaultValue={-1}>
       {/* Tab buttons and # indicator */}
       <TabList>
-        <Tab value={0}>
+        <Tab value={-1}>
           All{" "}
           <Chip variant="outlined" size="sm" color="neutral" sx={{ ml: 1 }}>
             {deadlines.length}
@@ -413,7 +413,7 @@ export default function DeadlinesList({
         </Tab>
         {courses.map((course, index) => (
           <Tab
-            value={index + 1}
+            value={index}
             sx={{
               color: course.color,
             }}
@@ -421,6 +421,7 @@ export default function DeadlinesList({
               deadlines.filter((deadline) => deadline.course === course.name)
                 .length === 0
             }
+            key={index}
           >
             {course.name}
             <Chip variant="outlined" color="neutral" size="sm" sx={{ ml: 1 }}>
@@ -433,10 +434,10 @@ export default function DeadlinesList({
         ))}
       </TabList>
       {/* ALL-tab */}
-      <TabPanel value={0}>
+      <TabPanel value={-1}>
         <List>
           {deadlines.length === 0 && (
-            <ListItem key={0}>
+            <ListItem key={-1}>
               <Alert variant="soft" color="neutral">
                 <Box>
                   <Typography level="title-lg">No Deadlines</Typography>
@@ -477,7 +478,7 @@ export default function DeadlinesList({
       {courses
         .sort((a, b) => a.name.localeCompare(b.name))
         .map((course, index) => (
-          <TabPanel value={index + 1}>
+          <TabPanel value={index} key={index}>
             <List>
               {deadlines.length === 0 && (
                 <ListItem key={index}>
@@ -502,22 +503,20 @@ export default function DeadlinesList({
                   }
                 })
                 .map((deadline, index) => (
-                  <>
+                  <ListItem key={deadline.id}>
                     {course.name === deadline.course && (
-                      <ListItem key={deadline.id}>
-                        <DeadlineCard
-                          deadline={deadline}
-                          index={index}
-                          setDeadlines={setDeadlines}
-                          setArchived={setArchived}
-                          course={courses.find(
-                            (course) => course.name === deadline.course
-                          )}
-                          courses={courses}
-                        />
-                      </ListItem>
+                      <DeadlineCard
+                        deadline={deadline}
+                        index={index}
+                        setDeadlines={setDeadlines}
+                        setArchived={setArchived}
+                        course={courses.find(
+                          (course) => course.name === deadline.course
+                        )}
+                        courses={courses}
+                      />
                     )}
-                  </>
+                  </ListItem>
                 ))}
             </List>
           </TabPanel>
