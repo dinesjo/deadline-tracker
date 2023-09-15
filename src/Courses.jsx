@@ -7,6 +7,7 @@ import {
   IconButton,
   Input,
   Modal,
+  ModalClose,
   ModalDialog,
   Stack,
   Typography,
@@ -52,6 +53,7 @@ const CourseChip = ({
             p: 3,
           }}
         >
+          <ModalClose />
           <Typography level="title-md">Edit Course</Typography>
           <Input
             placeholder="Course Name"
@@ -82,6 +84,10 @@ const CourseChip = ({
                     backgroundColor: color,
                     borderRadius: "50%",
                     p: 0,
+                    ":hover": {
+                      backgroundColor: color,
+                      border: "4px dashed white",
+                    },
                     border: color == course.color ? "4px dashed white" : "none",
                   }}
                   onClick={() => {

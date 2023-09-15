@@ -98,14 +98,29 @@ const TypeChip = ({ type }) => {
   );
 };
 
+const NoDeadlinesAlert = () => {
+  return (
+    <Alert
+      variant="soft"
+      color="neutral"
+      sx={{ display: "flex", justifyContent: "center" }}
+    >
+      <Typography level="body-md">
+        You have no deadlines. Add one from above.
+      </Typography>
+    </Alert>
+  );
+};
+
 const DeadlineCard = ({
   index,
   deadline,
   setDeadlines,
   setArchived,
-  course,
   courses,
 }) => {
+  const course = courses.find((course) => course.name === deadline.course);
+
   const deleteDeadline = () => {
     setDeadlines((current) => {
       return current.filter((_, i) => i !== index);
@@ -395,15 +410,46 @@ const DeadlineCard = ({
   );
 };
 
+const TabPanelForCourse = ({ index, columns, deadlines, ...props }) => {
+  return (
+    <TabPanel value={index}>
+      <Grid container spacing={4} columns={columns}>
+        {deadlines.length === 0 && (
+          <Grid key={index} xs={12}>
+            <NoDeadlinesAlert />
+          </Grid>
+        )}
+        {deadlines
+          .sort((a, b) => {
+            return new Date(a.date) - new Date(b.date);
+          })
+          .map((deadline) => (
+            <Grid xs={12} sm={6} lg={4} key={deadline.id}>
+              <DeadlineCard {...props} deadline={deadline} />
+            </Grid>
+          ))}
+      </Grid>
+    </TabPanel>
+  );
+};
+
 export default function DeadlinesList({
   deadlines,
   setDeadlines,
   setArchived,
   courses,
 }) {
+  // Number of columns in grid
+  let columns = 12;
+  if (deadlines.length === 1) {
+    columns = 4;
+  } else if (deadlines.length === 2) {
+    columns = 8; // Share between two
+  }
+
   return (
     <Tabs defaultValue={-1}>
-      {/* Tab buttons and # indicator */}
+      {/* Tab buttons and number indicator */}
       <TabList>
         <Tab value={-1}>
           All{" "}
@@ -434,92 +480,29 @@ export default function DeadlinesList({
         ))}
       </TabList>
       {/* ALL-tab */}
-      <TabPanel value={-1}>
-        <Grid container spacing={4}>
-          {deadlines.length === 0 && (
-            <Grid key={-1}>
-              <Alert variant="soft" color="neutral">
-                <Box>
-                  <Typography level="title-lg">No Deadlines</Typography>
-                  <Typography level="body-sm">
-                    You have no deadlines. Add one from above.
-                  </Typography>
-                </Box>
-              </Alert>
-            </Grid>
-          )}
-          {deadlines
-            .sort((a, b) => {
-              if (a.status === b.status) {
-                return new Date(a.date) - new Date(b.date);
-              } else if (a.status === "Completed") {
-                return 1;
-              } else if (b.status === "Completed") {
-                return -1;
-              }
-            })
-            .map((deadline, index) => (
-              <Grid xs={12} sm={6} lg={4} key={deadline.id}>
-                <DeadlineCard
-                  deadline={deadline}
-                  index={index}
-                  setDeadlines={setDeadlines}
-                  setArchived={setArchived}
-                  course={courses.find(
-                    (course) => course.name === deadline.course
-                  )}
-                  courses={courses}
-                />
-              </Grid>
-            ))}
-        </Grid>
-      </TabPanel>
+      <TabPanelForCourse
+        index={-1}
+        columns={columns}
+        deadlines={deadlines}
+        setDeadlines={setDeadlines}
+        setArchived={setArchived}
+        courses={courses}
+      />
       {/* Course[i]-tabs */}
       {courses
         .sort((a, b) => a.name.localeCompare(b.name))
         .map((course, index) => (
-          <TabPanel value={index} key={index}>
-            <Grid container>
-              {deadlines.length === 0 && (
-                <Grid key={index}>
-                  <Alert variant="soft" color="neutral">
-                    <Box>
-                      <Typography level="title-lg">No Deadlines</Typography>
-                      <Typography level="body-sm">
-                        You have no deadlines. Add one from above.
-                      </Typography>
-                    </Box>
-                  </Alert>
-                </Grid>
-              )}
-              {deadlines
-                .sort((a, b) => {
-                  if (a.status === b.status) {
-                    return new Date(a.date) - new Date(b.date);
-                  } else if (a.status === "Completed") {
-                    return 1;
-                  } else if (b.status === "Completed") {
-                    return -1;
-                  }
-                })
-                .map((deadline, index) => (
-                  <Grid key={deadline.id}>
-                    {course.name === deadline.course && (
-                      <DeadlineCard
-                        deadline={deadline}
-                        index={index}
-                        setDeadlines={setDeadlines}
-                        setArchived={setArchived}
-                        course={courses.find(
-                          (course) => course.name === deadline.course
-                        )}
-                        courses={courses}
-                      />
-                    )}
-                  </Grid>
-                ))}
-            </Grid>
-          </TabPanel>
+          <TabPanelForCourse
+            index={index}
+            columns={columns}
+            deadlines={deadlines.filter(
+              (deadline) => deadline.course === course.name
+            )}
+            setDeadlines={setDeadlines}
+            setArchived={setArchived}
+            courses={courses}
+            key={index}
+          />
         ))}
     </Tabs>
   );

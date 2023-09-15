@@ -62,7 +62,7 @@ const ManageCoursesModal = ({ ...props }) => {
     <>
       <Button
         variant="outlined"
-        color="neutral"
+        color="purple"
         startDecorator={<FaBook />}
         onClick={() => setOpen(true)}
       >
@@ -168,7 +168,7 @@ const ArchiveModal = ({ ...props }) => {
     <>
       <Button
         variant="outlined"
-        color="neutral"
+        color="brown"
         startDecorator={<FaArchive />}
         onClick={() => setOpen(true)}
       >
@@ -253,7 +253,7 @@ function App() {
           spacing={2}
           sx={{ pt: 2, maxWidth: "80%" }}
         >
-          {/* Manage Courses modal */}
+          {/* Manage Courses */}
           <ManageCoursesModal
             courses={courses}
             setCourses={setCourses}
@@ -262,7 +262,9 @@ function App() {
             archived={archived}
             setArchived={setArchived}
           />
+          {/* New form */}
           <NewDeadlineFormModal courses={courses} setDeadlines={setDeadlines} />
+          {/* Archive */}
           <ArchiveModal
             archived={archived}
             setArchived={setArchived}
@@ -280,7 +282,9 @@ function App() {
           Deadlines
         </Typography>
         <Typography level="body-md">View and manage your deadlines.</Typography>
-        <Sheet sx={{ maxWidth: { xs: "100%", md: "80%" }, mt: 2 }}>
+        <Sheet
+          sx={{ width: { xs: "100%", sm: "90%", md: "80%", lg: "60%" }, mt: 2 }}
+        >
           <DeadlinesList
             deadlines={deadlines}
             setDeadlines={setDeadlines}
