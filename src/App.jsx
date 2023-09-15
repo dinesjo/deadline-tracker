@@ -280,12 +280,14 @@ function App() {
           Deadlines
         </Typography>
         <Typography level="body-md">View and manage your deadlines.</Typography>
-        <DeadlinesList
-          deadlines={deadlines}
-          setDeadlines={setDeadlines}
-          setArchived={setArchived}
-          courses={courses}
-        />
+        <Sheet sx={{ maxWidth: { xs: "100%", md: "80%" }, mt: 2 }}>
+          <DeadlinesList
+            deadlines={deadlines}
+            setDeadlines={setDeadlines}
+            setArchived={setArchived}
+            courses={courses}
+          />
+        </Sheet>
       </Sheet>
     </>
   );

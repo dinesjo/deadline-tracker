@@ -11,6 +11,7 @@ import {
   CardOverflow,
   Chip,
   Divider,
+  Grid,
   IconButton,
   Input,
   List,
@@ -144,7 +145,6 @@ const DeadlineCard = ({
     <Card
       variant="soft"
       sx={{
-        width: "70vw",
         opacity: deadline.status === "Completed" ? 0.6 : 1,
       }}
     >
@@ -435,9 +435,9 @@ export default function DeadlinesList({
       </TabList>
       {/* ALL-tab */}
       <TabPanel value={-1}>
-        <List>
+        <Grid container spacing={4}>
           {deadlines.length === 0 && (
-            <ListItem key={-1}>
+            <Grid key={-1}>
               <Alert variant="soft" color="neutral">
                 <Box>
                   <Typography level="title-lg">No Deadlines</Typography>
@@ -446,7 +446,7 @@ export default function DeadlinesList({
                   </Typography>
                 </Box>
               </Alert>
-            </ListItem>
+            </Grid>
           )}
           {deadlines
             .sort((a, b) => {
@@ -459,7 +459,7 @@ export default function DeadlinesList({
               }
             })
             .map((deadline, index) => (
-              <ListItem key={deadline.id}>
+              <Grid xs={12} sm={6} lg={4} key={deadline.id}>
                 <DeadlineCard
                   deadline={deadline}
                   index={index}
@@ -470,18 +470,18 @@ export default function DeadlinesList({
                   )}
                   courses={courses}
                 />
-              </ListItem>
+              </Grid>
             ))}
-        </List>
+        </Grid>
       </TabPanel>
       {/* Course[i]-tabs */}
       {courses
         .sort((a, b) => a.name.localeCompare(b.name))
         .map((course, index) => (
           <TabPanel value={index} key={index}>
-            <List>
+            <Grid container>
               {deadlines.length === 0 && (
-                <ListItem key={index}>
+                <Grid key={index}>
                   <Alert variant="soft" color="neutral">
                     <Box>
                       <Typography level="title-lg">No Deadlines</Typography>
@@ -490,7 +490,7 @@ export default function DeadlinesList({
                       </Typography>
                     </Box>
                   </Alert>
-                </ListItem>
+                </Grid>
               )}
               {deadlines
                 .sort((a, b) => {
@@ -503,7 +503,7 @@ export default function DeadlinesList({
                   }
                 })
                 .map((deadline, index) => (
-                  <ListItem key={deadline.id}>
+                  <Grid key={deadline.id}>
                     {course.name === deadline.course && (
                       <DeadlineCard
                         deadline={deadline}
@@ -516,9 +516,9 @@ export default function DeadlinesList({
                         courses={courses}
                       />
                     )}
-                  </ListItem>
+                  </Grid>
                 ))}
-            </List>
+            </Grid>
           </TabPanel>
         ))}
     </Tabs>
