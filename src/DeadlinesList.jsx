@@ -71,7 +71,7 @@ const StatusChip = ({ status, id, setDeadlines }) => {
 
   return (
     <Chip
-      variant={status === "Completed" ? "outlined" : "solid"}
+      variant="soft"
       size="sm"
       color={statuses.color[status]}
       startDecorator={statuses.icon[status]}
@@ -388,7 +388,11 @@ const DeadlineCard = ({
           {deadline.date && (
             <Typography
               startDecorator={<FaCalendarDay />}
-              level={daysLeft() < 7 ? "body-md" : "body-sm"}
+              level={
+                daysLeft() < 3 && deadline.status != "Completed"
+                  ? "body-md"
+                  : "body-sm"
+              }
               color={
                 daysLeft() < 3
                   ? "danger"
@@ -397,11 +401,7 @@ const DeadlineCard = ({
                   : "neutral"
               }
             >
-              {Math.ceil(
-                (new Date(deadline.date).getTime() - new Date().getTime()) /
-                  (1000 * 60 * 60 * 24)
-              )}{" "}
-              day(s) left
+              {daysLeft()} day(s) left
             </Typography>
           )}
         </CardContent>
