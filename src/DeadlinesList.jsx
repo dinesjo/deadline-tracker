@@ -123,7 +123,7 @@ const DeadlineCard = ({
 
   const deleteDeadline = () => {
     setDeadlines((current) => {
-      return current.filter((_, i) => i !== index);
+      return current.filter((d) => d.id !== deadline.id);
     });
   };
 
