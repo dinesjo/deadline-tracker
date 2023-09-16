@@ -78,6 +78,35 @@ export default function NewDeadlineForm({
       </Button>
 
       <Stack spacing={0.5} {...props}>
+        {/* Course */}
+        <Select
+          required
+          onChange={(e) => {
+            e &&
+              setNewDeadline({
+                ...newDeadline,
+                course: e.target.textContent,
+              });
+          }}
+          placeholder="Course"
+          value={newDeadline.course}
+          sx={{
+            color: courses.find((course) => course.name === newDeadline.course)
+              ?.color,
+          }}
+        >
+          {courses.map((course, index) => (
+            <Option
+              key={index}
+              value={course.name}
+              sx={{
+                color: course.color,
+              }}
+            >
+              {course.name}
+            </Option>
+          ))}
+        </Select>
         {/* Title */}
         <Input
           required
@@ -96,19 +125,6 @@ export default function NewDeadlineForm({
           placeholder="Details"
           onChange={(e) =>
             setNewDeadline({ ...newDeadline, details: e.target.value })
-          }
-        />
-        {/* Date */}
-        <Input
-          type="date"
-          slotProps={{
-            input: {
-              min: "2023-09-10T00:00",
-            },
-          }}
-          value={newDeadline.date}
-          onChange={(e) =>
-            setNewDeadline({ ...newDeadline, date: e.target.value })
           }
         />
         {/* Type */}
@@ -146,35 +162,19 @@ export default function NewDeadlineForm({
             </Option>
           ))}
         </Select>
-        {/* Course */}
-        <Select
-          required
-          onChange={(e) => {
-            e &&
-              setNewDeadline({
-                ...newDeadline,
-                course: e.target.textContent,
-              });
+        {/* Date */}
+        <Input
+          type="date"
+          slotProps={{
+            input: {
+              min: "2023-09-10T00:00",
+            },
           }}
-          placeholder="Course"
-          value={newDeadline.course}
-          sx={{
-            color: courses.find((course) => course.name === newDeadline.course)
-              ?.color,
-          }}
-        >
-          {courses.map((course, index) => (
-            <Option
-              key={index}
-              value={course.name}
-              sx={{
-                color: course.color,
-              }}
-            >
-              {course.name}
-            </Option>
-          ))}
-        </Select>
+          value={newDeadline.date}
+          onChange={(e) =>
+            setNewDeadline({ ...newDeadline, date: e.target.value })
+          }
+        />
         {/* Submit */}
         <Button type="submit">Submit</Button>
       </Stack>

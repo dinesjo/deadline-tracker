@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import {
   Alert,
   Button,
+  Chip,
   Modal,
   ModalClose,
   ModalDialog,
@@ -173,6 +174,9 @@ const ArchiveModal = ({ ...props }) => {
         onClick={() => setOpen(true)}
       >
         Archived
+        <Chip variant="outlined" size="sm" color="neutral" sx={{ ml: 1 }}>
+          {props.archived.length}
+        </Chip>
       </Button>
       <Modal
         open={open}
@@ -249,7 +253,7 @@ function App() {
         }}
       >
         <Stack
-          direction={{ xs: "column", md: "row" }}
+          direction={{ xs: "column", sm: "row" }}
           spacing={2}
           sx={{ pt: 2, maxWidth: "80%" }}
         >

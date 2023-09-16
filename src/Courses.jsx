@@ -15,7 +15,7 @@ import {
 import { useState } from "react";
 import { FaPlus } from "react-icons/fa";
 
-const colorCodes = [
+const courseColors = [
   "#FF3333",
   "#FF5733",
   "#FF9900",
@@ -34,6 +34,8 @@ const CourseChip = ({
   renameCourse,
   removeCourse,
   setCourses,
+  deadlines,
+  archived,
   changeColor,
 }) => {
   const [open, setOpen] = useState(false); // edit course popup
@@ -70,7 +72,7 @@ const CourseChip = ({
             spacing={1}
             sx={{ mt: 1, display: "flex", justifyContent: "center" }}
           >
-            {colorCodes.map((color, i) => (
+            {courseColors.map((color, i) => (
               <Grid
                 key={i}
                 sx={{
@@ -217,11 +219,11 @@ export default function Courses({
   };
   const getRandomColorCode = () => {
     // Get random color code
-    const color = colorCodes[Math.floor(Math.random() * colorCodes.length)];
+    const color = courseColors[Math.floor(Math.random() * courseColors.length)];
 
     // Try again if color is already used and there are more colors available
     if (
-      colorCodes.length > courses.length &&
+      courseColors.length > courses.length &&
       courses.some((course) => course.color === color)
     )
       return getRandomColorCode();
@@ -283,6 +285,8 @@ export default function Courses({
               changeColor={changeColor}
               removeCourse={removeCourse}
               setCourses={setCourses}
+              deadlines={deadlines}
+              archived={archived}
             />
           ))}
       </Stack>

@@ -3,7 +3,6 @@ import { useState } from "react";
 import {
   Alert,
   Box,
-  Button,
   ButtonGroup,
   Card,
   CardActions,
@@ -14,8 +13,6 @@ import {
   Grid,
   IconButton,
   Input,
-  List,
-  ListItem,
   ListItemDecorator,
   Option,
   Select,
@@ -41,7 +38,7 @@ import types from "./types";
 const statuses = {
   color: {
     "Not Started": "neutral",
-    "In Progress": "warning",
+    "In Progress": "primary",
     Completed: "success",
   },
   icon: {
@@ -112,13 +109,7 @@ const NoDeadlinesAlert = () => {
   );
 };
 
-const DeadlineCard = ({
-  index,
-  deadline,
-  setDeadlines,
-  setArchived,
-  courses,
-}) => {
+const DeadlineCard = ({ deadline, setDeadlines, setArchived, courses }) => {
   const course = courses.find((course) => course.name === deadline.course);
 
   const deleteDeadline = () => {
@@ -160,7 +151,7 @@ const DeadlineCard = ({
     <Card
       variant="soft"
       sx={{
-        opacity: deadline.status === "Completed" ? 0.6 : 1,
+        opacity: deadline.status === "Completed" && !editing ? 0.6 : 1,
       }}
     >
       <CardOverflow
@@ -394,9 +385,9 @@ const DeadlineCard = ({
                   : "body-sm"
               }
               color={
-                daysLeft() < 3
+                daysLeft() < 3 && deadline.status != "Completed"
                   ? "danger"
-                  : daysLeft() < 7
+                  : daysLeft() < 7 && deadline.status != "Completed"
                   ? "warning"
                   : "neutral"
               }
@@ -413,7 +404,12 @@ const DeadlineCard = ({
 const TabPanelForCourse = ({ index, columns, deadlines, ...props }) => {
   return (
     <TabPanel value={index}>
-      <Grid container spacing={4} columns={columns}>
+      <Grid
+        container
+        spacing={4}
+        columns={columns}
+        sx={{ justifyContent: "center" }}
+      >
         {deadlines.length === 0 && (
           <Grid key={index} xs={12}>
             <NoDeadlinesAlert />
@@ -450,7 +446,7 @@ export default function DeadlinesList({
   return (
     <Tabs defaultValue={-1}>
       {/* Tab buttons and number indicator */}
-      <TabList>
+      <TabList sx={{ overflow: "auto" }}>
         <Tab value={-1}>
           All{" "}
           <Chip variant="outlined" size="sm" color="neutral" sx={{ ml: 1 }}>
