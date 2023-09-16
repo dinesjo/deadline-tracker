@@ -446,8 +446,13 @@ export default function DeadlinesList({
   return (
     <Tabs defaultValue={-1}>
       {/* Tab buttons and number indicator */}
-      <TabList sx={{ overflow: "auto" }}>
-        <Tab value={-1}>
+      <TabList sx={{ overflowX: "auto" }}>
+        <Tab
+          value={-1}
+          sx={{
+            minWidth: "fit-content",
+          }}
+        >
           All{" "}
           <Chip variant="outlined" size="sm" color="neutral" sx={{ ml: 1 }}>
             {deadlines.length}
@@ -458,6 +463,7 @@ export default function DeadlinesList({
             value={index}
             sx={{
               color: course.color,
+              minWidth: "fit-content",
             }}
             disabled={
               deadlines.filter((deadline) => deadline.course === course.name)
