@@ -211,6 +211,9 @@ const DeadlineCard = ({ deadline, setDeadlines, setArchived, courses }) => {
           sx={{
             color: editing ? "white" : "black",
             borderRadius: 0,
+            ":hover": {
+              color: course.color,
+            },
           }}
         >
           {editing ? <FaCheck /> : <FaEdit />}
@@ -367,7 +370,10 @@ const DeadlineCard = ({ deadline, setDeadlines, setArchived, courses }) => {
         <Divider inset="context" />
         <CardContent
           orientation="horizontal"
-          sx={{ display: "flex", justifyContent: "space-between" }}
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+          }}
         >
           {/* Status */}
           <StatusChip
@@ -391,6 +397,7 @@ const DeadlineCard = ({ deadline, setDeadlines, setArchived, courses }) => {
                   ? "warning"
                   : "neutral"
               }
+              noWrap
             >
               {daysLeft()} day(s) left
             </Typography>
