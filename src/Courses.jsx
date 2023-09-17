@@ -28,115 +28,6 @@ const courseColors = [
   "#FF5577",
 ];
 
-const CourseChip = ({
-  course,
-  index,
-  renameCourse,
-  removeCourse,
-  setCourses,
-  deadlines,
-  archived,
-  changeColor,
-}) => {
-  const [open, setOpen] = useState(false); // edit course popup
-
-  return (
-    <>
-      <Modal
-        open={open}
-        onClose={() => {
-          setOpen(false);
-        }}
-      >
-        <ModalDialog
-          sx={{
-            width: "100%",
-            maxWidth: "20em",
-            p: 3,
-          }}
-        >
-          <ModalClose />
-          <Typography level="title-md">Edit Course</Typography>
-          <Input
-            placeholder="Course Name"
-            value={course.name}
-            onChange={(e) => {
-              renameCourse(index, e.target.value);
-            }}
-          />
-          <Typography level="title-md" sx={{ mt: 1 }}>
-            Change color
-          </Typography>
-          <Grid
-            container
-            spacing={1}
-            sx={{ mt: 1, display: "flex", justifyContent: "center" }}
-          >
-            {courseColors.map((color, i) => (
-              <Grid
-                key={i}
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <IconButton
-                  sx={{
-                    backgroundColor: color,
-                    borderRadius: "50%",
-                    p: 0,
-                    ":hover": {
-                      backgroundColor: color,
-                      border: "4px dashed white",
-                    },
-                    border: color == course.color ? "4px dashed white" : "none",
-                  }}
-                  onClick={() => {
-                    changeColor(index, color);
-                    setOpen(false);
-                  }}
-                />
-              </Grid>
-            ))}
-          </Grid>
-        </ModalDialog>
-      </Modal>
-      <Chip
-        key={index}
-        sx={{
-          color: course.color,
-          fontWeight: "bold",
-        }}
-        onClick={() => {
-          setOpen(true);
-        }}
-        endDecorator={
-          <ChipDelete
-            onClick={() => {
-              // Bring up confirmation modal IF there are deadlines with this course
-              if (
-                deadlines.some((deadline) => deadline.course === course.name) ||
-                archived.some((deadline) => deadline.course === course.name)
-              ) {
-                if (
-                  !window.confirm(
-                    "Are you sure you want to delete this course? This will also delete all deadlines with this course. Even archived ones.\nTHIS CANNOT BE UNDONE."
-                  )
-                )
-                  return;
-              }
-              removeCourse(index);
-            }}
-          />
-        }
-      >
-        {course.name}
-      </Chip>
-    </>
-  );
-};
-
 export default function Courses({
   courses,
   setCourses,
@@ -290,6 +181,115 @@ export default function Courses({
             />
           ))}
       </Stack>
+    </>
+  );
+}
+
+function CourseChip({
+  course,
+  index,
+  renameCourse,
+  removeCourse,
+  setCourses,
+  deadlines,
+  archived,
+  changeColor,
+}) {
+  const [open, setOpen] = useState(false); // edit course popup
+
+  return (
+    <>
+      <Modal
+        open={open}
+        onClose={() => {
+          setOpen(false);
+        }}
+      >
+        <ModalDialog
+          sx={{
+            width: "100%",
+            maxWidth: "20em",
+            p: 3,
+          }}
+        >
+          <ModalClose />
+          <Typography level="title-md">Edit Course</Typography>
+          <Input
+            placeholder="Course Name"
+            value={course.name}
+            onChange={(e) => {
+              renameCourse(index, e.target.value);
+            }}
+          />
+          <Typography level="title-md" sx={{ mt: 1 }}>
+            Change color
+          </Typography>
+          <Grid
+            container
+            spacing={1}
+            sx={{ mt: 1, display: "flex", justifyContent: "center" }}
+          >
+            {courseColors.map((color, i) => (
+              <Grid
+                key={i}
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <IconButton
+                  sx={{
+                    backgroundColor: color,
+                    borderRadius: "50%",
+                    p: 0,
+                    ":hover": {
+                      backgroundColor: color,
+                      border: "4px dashed white",
+                    },
+                    border: color == course.color ? "4px dashed white" : "none",
+                  }}
+                  onClick={() => {
+                    changeColor(index, color);
+                    setOpen(false);
+                  }}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        </ModalDialog>
+      </Modal>
+      <Chip
+        key={index}
+        sx={{
+          color: course.color,
+          fontWeight: "bold",
+        }}
+        onClick={() => {
+          setOpen(true);
+        }}
+        endDecorator={
+          <ChipDelete
+            onClick={() => {
+              // Bring up confirmation modal IF there are deadlines with this course
+              if (
+                deadlines.some((deadline) => deadline.course === course.name) ||
+                archived.some((deadline) => deadline.course === course.name)
+              ) {
+                if (
+                  !window.confirm(
+                    "Are you sure you want to delete this course? This will also delete all deadlines with this course. Even archived ones.\nTHIS CANNOT BE UNDONE."
+                  )
+                )
+                  return;
+              }
+              removeCourse(index);
+            }}
+          />
+        }
+      >
+        {course.name}
+      </Chip>
     </>
   );
 }

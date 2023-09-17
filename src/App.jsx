@@ -27,170 +27,7 @@ import ArchiveList from "./ArchiveList";
 import Courses from "./Courses";
 import Deadline from "./deadline";
 
-function ModeToggle() {
-  const { mode, setMode } = useColorScheme();
-  const [mounted, setMounted] = useState(false);
-
-  // necessary for server-side rendering
-  // because mode is undefined on the server
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-  if (!mounted) {
-    return null;
-  }
-
-  return (
-    <Tooltip
-      title={mode === "light" ? "Dark Mode" : "Light Mode"}
-      variant="soft"
-    >
-      <Button
-        variant="plain"
-        color="neutral"
-        onClick={() => {
-          setMode(mode === "light" ? "dark" : "light");
-        }}
-      >
-        {mode === "light" ? <FaMoon /> : <FaSun />}
-      </Button>
-    </Tooltip>
-  );
-}
-
-const ManageCoursesModal = ({ ...props }) => {
-  const [open, setOpen] = useState(false);
-  return (
-    <>
-      <Button
-        variant="outlined"
-        color="purple"
-        startDecorator={<FaBook />}
-        onClick={() => setOpen(true)}
-      >
-        Manage Courses
-      </Button>
-      <Modal
-        open={open}
-        onClose={() => setOpen(false)}
-        sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
-      >
-        <ModalDialog>
-          <ModalClose />
-          <Typography level="title-lg" startDecorator={<FaBook />}>
-            Manage Courses
-          </Typography>
-          <Typography level="body-md">
-            Add, edit, and remove courses.
-          </Typography>
-          <Alert
-            variant="soft"
-            color="primary"
-            size="md"
-            sx={{ mt: 1, mb: 1.5 }}
-            startDecorator={<FaEdit />}
-          >
-            <Typography level="title-md">Click a course to edit it</Typography>
-          </Alert>
-          <Courses open={open} setOpen={setOpen} {...props} />
-        </ModalDialog>
-      </Modal>
-    </>
-  );
-};
-
-const NewDeadlineFormModal = ({ courses, setDeadlines }) => {
-  const [open, setOpen] = useState(false);
-  const [newDeadline, setNewDeadline] = useState(() => {
-    const localValue = JSON.parse(localStorage.getItem("newDeadline"));
-    if (localValue == null) return new Deadline();
-    return localValue;
-  });
-
-  useEffect(() => {
-    if (!open) {
-      localStorage.setItem("newDeadline", JSON.stringify(newDeadline));
-    }
-  }, [open, newDeadline]);
-
-  return (
-    <>
-      <Button
-        variant="solid"
-        color="primary"
-        startDecorator={<FaCalendarPlus />}
-        onClick={() => setOpen(true)}
-      >
-        New Deadline
-      </Button>
-      <Modal
-        open={open}
-        onClose={(_event, reason) => {
-          // Don't close modal if user pressed escape key
-          // (because that's how some users will close the date picker and Select)
-          if (reason !== "escapeKeyDown") setOpen(false);
-        }}
-        sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
-      >
-        <ModalDialog>
-          <ModalClose />
-          <Typography
-            level="title-lg"
-            startDecorator={<FaCalendarPlus />}
-            sx={{ mb: 2 }}
-          >
-            New Deadline
-          </Typography>
-          <NewDeadlineForm
-            open={open}
-            setOpen={setOpen}
-            courses={courses}
-            setDeadlines={setDeadlines}
-            newDeadline={newDeadline}
-            setNewDeadline={setNewDeadline}
-          />
-        </ModalDialog>
-      </Modal>
-    </>
-  );
-};
-
-const ArchiveModal = ({ ...props }) => {
-  const [open, setOpen] = useState(false);
-  return (
-    <>
-      <Button
-        variant="outlined"
-        color="brown"
-        startDecorator={<FaArchive />}
-        onClick={() => setOpen(true)}
-      >
-        Archived
-        <Chip variant="outlined" size="sm" color="neutral" sx={{ ml: 1 }}>
-          {props.archived.length}
-        </Chip>
-      </Button>
-      <Modal
-        open={open}
-        onClose={() => setOpen(false)}
-        sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
-      >
-        <ModalDialog>
-          <ModalClose />
-          <Typography level="title-lg" startDecorator={<FaArchive />}>
-            Archived
-          </Typography>
-          <Typography level="body-md" sx={{ mb: 2 }}>
-            View and restore archived deadlines.
-          </Typography>
-          <ArchiveList {...props} />
-        </ModalDialog>
-      </Modal>
-    </>
-  );
-};
-
-function App() {
+export default function App() {
   // Deadlines
   const [deadlines, setDeadlines] = useState(() => {
     const localValue = JSON.parse(localStorage.getItem("deadlines"));
@@ -293,4 +130,165 @@ function App() {
   );
 }
 
-export default App;
+function ManageCoursesModal({ ...props }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <Button
+        variant="outlined"
+        color="purple"
+        startDecorator={<FaBook />}
+        onClick={() => setOpen(true)}
+      >
+        Manage Courses
+      </Button>
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
+      >
+        <ModalDialog>
+          <ModalClose />
+          <Typography level="title-lg" startDecorator={<FaBook />}>
+            Manage Courses
+          </Typography>
+          <Typography level="body-md">
+            Add, edit, and remove courses.
+          </Typography>
+          <Alert
+            variant="soft"
+            color="primary"
+            size="md"
+            sx={{ mt: 1, mb: 1.5 }}
+            startDecorator={<FaEdit />}
+          >
+            <Typography level="title-md">Click a course to edit it</Typography>
+          </Alert>
+          <Courses open={open} setOpen={setOpen} {...props} />
+        </ModalDialog>
+      </Modal>
+    </>
+  );
+}
+
+function NewDeadlineFormModal({ courses, setDeadlines }) {
+  const [open, setOpen] = useState(false);
+  const [newDeadline, setNewDeadline] = useState(() => {
+    const localValue = JSON.parse(sessionStorage.getItem("newDeadline"));
+    if (localValue == null) return new Deadline();
+    return localValue;
+  });
+
+  useEffect(() => {
+    if (!open) {
+      sessionStorage.setItem("newDeadline", JSON.stringify(newDeadline));
+    }
+  }, [open, newDeadline]);
+
+  return (
+    <>
+      <Button
+        variant="solid"
+        color="primary"
+        startDecorator={<FaCalendarPlus />}
+        onClick={() => setOpen(true)}
+      >
+        New Deadline
+      </Button>
+      <Modal
+        open={open}
+        onClose={(_event, reason) => {
+          // Don't close modal if user pressed escape key
+          // (because that's how some users will close the date picker and Select)
+          if (reason !== "escapeKeyDown") setOpen(false);
+        }}
+        sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
+      >
+        <ModalDialog>
+          <ModalClose />
+          <Typography
+            level="title-lg"
+            startDecorator={<FaCalendarPlus />}
+            sx={{ mb: 2 }}
+          >
+            New Deadline
+          </Typography>
+          <NewDeadlineForm
+            open={open}
+            setOpen={setOpen}
+            courses={courses}
+            setDeadlines={setDeadlines}
+            newDeadline={newDeadline}
+            setNewDeadline={setNewDeadline}
+          />
+        </ModalDialog>
+      </Modal>
+    </>
+  );
+}
+
+function ArchiveModal({ ...props }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <Button
+        variant="outlined"
+        color="brown"
+        startDecorator={<FaArchive />}
+        onClick={() => setOpen(true)}
+      >
+        Archived
+        <Chip variant="outlined" size="sm" color="neutral" sx={{ ml: 1 }}>
+          {props.archived.length}
+        </Chip>
+      </Button>
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
+      >
+        <ModalDialog>
+          <ModalClose />
+          <Typography level="title-lg" startDecorator={<FaArchive />}>
+            Archived
+          </Typography>
+          <Typography level="body-md" sx={{ mb: 2 }}>
+            View and restore archived deadlines.
+          </Typography>
+          <ArchiveList {...props} />
+        </ModalDialog>
+      </Modal>
+    </>
+  );
+}
+
+function ModeToggle() {
+  const { mode, setMode } = useColorScheme();
+  const [mounted, setMounted] = useState(false);
+
+  // necessary for server-side rendering
+  // because mode is undefined on the server
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  if (!mounted) {
+    return null;
+  }
+
+  return (
+    <Tooltip
+      title={mode === "light" ? "Dark Mode" : "Light Mode"}
+      variant="soft"
+    >
+      <Button
+        variant="plain"
+        color="neutral"
+        onClick={() => {
+          setMode(mode === "light" ? "dark" : "light");
+        }}
+      >
+        {mode === "light" ? <FaMoon /> : <FaSun />}
+      </Button>
+    </Tooltip>
+  );
+}

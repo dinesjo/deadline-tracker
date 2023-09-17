@@ -11,66 +11,6 @@ import types from "./types";
 import { FaBackspace } from "react-icons/fa";
 import Deadline from "./deadline";
 
-// Select course component for a general deadline
-export function SelectCourse({ deadline, onChange, courses }) {
-  return (
-    <Select
-      onChange={onChange}
-      placeholder="Course"
-      value={deadline.course}
-      sx={{
-        color: courses.find((course) => course.name === deadline.course)?.color,
-      }}
-    >
-      {courses.map((course, index) => (
-        <Option
-          key={index}
-          value={course.name}
-          sx={{
-            color: course.color,
-          }}
-        >
-          {course.name}
-        </Option>
-      ))}
-    </Select>
-  );
-}
-
-export function SelectType({ deadline, onChange }) {
-  const type = types.find((type) => type.name === deadline.type);
-
-  return (
-    <Select
-      onChange={onChange}
-      placeholder="Type"
-      value={deadline.type}
-      startDecorator={
-        deadline.type && (
-          // Icon for selected item
-          <ListItemDecorator
-            sx={{
-              color: type?.color,
-            }}
-          >
-            {type?.icon}
-          </ListItemDecorator>
-        )
-      }
-      sx={{
-        color: type?.color,
-      }}
-    >
-      {types.map((type, index) => (
-        <Option key={index} value={type.name} sx={{ color: type.color }}>
-          <ListItemDecorator>{type.icon}</ListItemDecorator>
-          {type.name}
-        </Option>
-      ))}
-    </Select>
-  );
-}
-
 export default function NewDeadlineForm({
   setDeadlines,
   courses,
@@ -183,5 +123,64 @@ export default function NewDeadlineForm({
         <Button type="submit">Submit</Button>
       </Stack>
     </form>
+  );
+}
+
+export function SelectCourse({ deadline, onChange, courses }) {
+  return (
+    <Select
+      onChange={onChange}
+      placeholder="Course"
+      value={deadline.course}
+      sx={{
+        color: courses.find((course) => course.name === deadline.course)?.color,
+      }}
+    >
+      {courses.map((course, index) => (
+        <Option
+          key={index}
+          value={course.name}
+          sx={{
+            color: course.color,
+          }}
+        >
+          {course.name}
+        </Option>
+      ))}
+    </Select>
+  );
+}
+
+export function SelectType({ deadline, onChange }) {
+  const type = types.find((type) => type.name === deadline.type);
+
+  return (
+    <Select
+      onChange={onChange}
+      placeholder="Type"
+      value={deadline.type}
+      startDecorator={
+        deadline.type && (
+          // Icon for selected item
+          <ListItemDecorator
+            sx={{
+              color: type?.color,
+            }}
+          >
+            {type?.icon}
+          </ListItemDecorator>
+        )
+      }
+      sx={{
+        color: type?.color,
+      }}
+    >
+      {types.map((type, index) => (
+        <Option key={index} value={type.name} sx={{ color: type.color }}>
+          <ListItemDecorator>{type.icon}</ListItemDecorator>
+          {type.name}
+        </Option>
+      ))}
+    </Select>
   );
 }

@@ -13,9 +13,6 @@ import {
   Grid,
   IconButton,
   Input,
-  ListItemDecorator,
-  Option,
-  Select,
   Tab,
   TabList,
   TabPanel,
@@ -49,68 +46,88 @@ const statuses = {
   },
 };
 
-const StatusChip = ({ status, id, setDeadlines }) => {
-  const nextStatus = {
-    "Not Started": "In Progress",
-    "In Progress": "Completed",
-    Completed: "Not Started",
-  }[status];
-
-  const cycleStatus = () => {
-    setDeadlines((current) => {
-      return current.map((deadline) => {
-        if (deadline.id === id) {
-          return { ...deadline, status: nextStatus };
-        }
-        return deadline;
-      });
-    });
-  };
+export default function DeadlinesList({
+  deadlines,
+  setDeadlines,
+  setArchived,
+  courses,
+}) {
+  // Number of columns in grid
+  let columns = 12;
+  if (deadlines.length === 1) {
+    columns = 4;
+  } else if (deadlines.length === 2) {
+    columns = 8; // Share between two
+  }
 
   return (
-    <Chip
-      variant="soft"
-      size="sm"
-      color={statuses.color[status]}
-      startDecorator={statuses.icon[status]}
-      onClick={() => {
-        cycleStatus();
-      }}
-    >
-      {status}
-    </Chip>
+    <Tabs defaultValue={-1}>
+      {/* Tab buttons and number indicator */}
+      <TabList sx={{ overflowX: "auto" }}>
+        <Tab
+          value={-1}
+          sx={{
+            minWidth: "fit-content",
+          }}
+        >
+          All{" "}
+          <Chip variant="outlined" size="sm" color="neutral" sx={{ ml: 1 }}>
+            {deadlines.length}
+          </Chip>
+        </Tab>
+        {courses.map((course, index) => (
+          <Tab
+            value={index}
+            sx={{
+              color: course.color,
+              minWidth: "fit-content",
+            }}
+            disabled={
+              deadlines.filter((deadline) => deadline.course === course.name)
+                .length === 0
+            }
+            key={index}
+          >
+            {course.name}
+            <Chip variant="outlined" color="neutral" size="sm" sx={{ ml: 1 }}>
+              {
+                deadlines.filter((deadline) => deadline.course === course.name)
+                  .length
+              }
+            </Chip>
+          </Tab>
+        ))}
+      </TabList>
+      {/* ALL-tab */}
+      <TabPanelForCourse
+        index={-1}
+        columns={columns}
+        deadlines={deadlines}
+        setDeadlines={setDeadlines}
+        setArchived={setArchived}
+        courses={courses}
+      />
+      {/* Course[i]-tabs */}
+      {courses
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .map((course, index) => (
+          <TabPanelForCourse
+            index={index}
+            columns={columns}
+            deadlines={deadlines.filter(
+              (deadline) => deadline.course === course.name
+            )}
+            setDeadlines={setDeadlines}
+            setArchived={setArchived}
+            courses={courses}
+            key={index}
+          />
+        ))}
+    </Tabs>
   );
-};
+}
 
-const TypeChip = ({ type }) => {
-  return (
-    <Chip
-      variant="soft"
-      sx={{
-        color: types.find((t) => t.name === type).color,
-      }}
-      startDecorator={types.find((t) => t.name === type).icon}
-    >
-      {type}
-    </Chip>
-  );
-};
-
-const NoDeadlinesAlert = () => {
-  return (
-    <Alert
-      variant="soft"
-      color="neutral"
-      sx={{ display: "flex", justifyContent: "center" }}
-    >
-      <Typography level="body-md">
-        You have no deadlines. Add one from above.
-      </Typography>
-    </Alert>
-  );
-};
-
-const DeadlineCard = ({ deadline, setDeadlines, setArchived, courses }) => {
+function DeadlineCard({ deadline, setDeadlines, setArchived, courses }) {
   const course = courses.find((course) => course.name === deadline.course);
 
   const deleteDeadline = () => {
@@ -363,9 +380,9 @@ const DeadlineCard = ({ deadline, setDeadlines, setArchived, courses }) => {
       </CardOverflow>
     </Card>
   );
-};
+}
 
-const TabPanelForCourse = ({ index, columns, deadlines, ...props }) => {
+function TabPanelForCourse({ index, columns, deadlines, ...props }) {
   return (
     <TabPanel value={index}>
       <Grid
@@ -391,85 +408,65 @@ const TabPanelForCourse = ({ index, columns, deadlines, ...props }) => {
       </Grid>
     </TabPanel>
   );
-};
+}
 
-export default function DeadlinesList({
-  deadlines,
-  setDeadlines,
-  setArchived,
-  courses,
-}) {
-  // Number of columns in grid
-  let columns = 12;
-  if (deadlines.length === 1) {
-    columns = 4;
-  } else if (deadlines.length === 2) {
-    columns = 8; // Share between two
-  }
+function StatusChip({ status, id, setDeadlines }) {
+  const nextStatus = {
+    "Not Started": "In Progress",
+    "In Progress": "Completed",
+    Completed: "Not Started",
+  }[status];
+
+  const cycleStatus = () => {
+    setDeadlines((current) => {
+      return current.map((deadline) => {
+        if (deadline.id === id) {
+          return { ...deadline, status: nextStatus };
+        }
+        return deadline;
+      });
+    });
+  };
 
   return (
-    <Tabs defaultValue={-1}>
-      {/* Tab buttons and number indicator */}
-      <TabList sx={{ overflowX: "auto" }}>
-        <Tab
-          value={-1}
-          sx={{
-            minWidth: "fit-content",
-          }}
-        >
-          All{" "}
-          <Chip variant="outlined" size="sm" color="neutral" sx={{ ml: 1 }}>
-            {deadlines.length}
-          </Chip>
-        </Tab>
-        {courses.map((course, index) => (
-          <Tab
-            value={index}
-            sx={{
-              color: course.color,
-              minWidth: "fit-content",
-            }}
-            disabled={
-              deadlines.filter((deadline) => deadline.course === course.name)
-                .length === 0
-            }
-            key={index}
-          >
-            {course.name}
-            <Chip variant="outlined" color="neutral" size="sm" sx={{ ml: 1 }}>
-              {
-                deadlines.filter((deadline) => deadline.course === course.name)
-                  .length
-              }
-            </Chip>
-          </Tab>
-        ))}
-      </TabList>
-      {/* ALL-tab */}
-      <TabPanelForCourse
-        index={-1}
-        columns={columns}
-        deadlines={deadlines}
-        setDeadlines={setDeadlines}
-        setArchived={setArchived}
-        courses={courses}
-      />
-      {/* Course[i]-tabs */}
-      {courses
-        .sort((a, b) => a.name.localeCompare(b.name))
-        .map((course, index) => (
-          <TabPanelForCourse
-            index={index}
-            columns={columns}
-            deadlines={deadlines.filter(
-              (deadline) => deadline.course === course.name
-            )}
-            setDeadlines={setDeadlines}
-            setArchived={setArchived}
-            courses={courses}
-            key={index}
-          />
-        ))}
-    </Tabs>
+    <Chip
+      variant="soft"
+      size="sm"
+      color={statuses.color[status]}
+      startDecorator={statuses.icon[status]}
+      onClick={() => {
+        cycleStatus();
+      }}
+    >
+      {status}
+    </Chip>
+  );
+}
+
+function TypeChip({ type }) {
+  return (
+    <Chip
+      variant="soft"
+      sx={{
+        color: types.find((t) => t.name === type).color,
+      }}
+      startDecorator={types.find((t) => t.name === type).icon}
+    >
+      {type}
+    </Chip>
+  );
+}
+
+function NoDeadlinesAlert() {
+  return (
+    <Alert
+      variant="soft"
+      color="neutral"
+      sx={{ display: "flex", justifyContent: "center" }}
+    >
+      <Typography level="body-md">
+        You have no deadlines. Add one from above.
+      </Typography>
+    </Alert>
   );
 }
