@@ -1,4 +1,3 @@
-import React from "react";
 import { FaFilePdf, FaFlask, FaExclamationTriangle, FaComments } from "react-icons/fa";
 
 const types = [

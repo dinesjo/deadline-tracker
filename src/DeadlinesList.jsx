@@ -34,6 +34,7 @@ import {
   FaTrashAlt,
 } from "react-icons/fa";
 import types from "./types";
+import { SelectCourse, SelectType } from "./NewDeadlineForm";
 
 const statuses = {
   color: {
@@ -166,29 +167,13 @@ const DeadlineCard = ({ deadline, setDeadlines, setArchived, courses }) => {
       >
         {/* Course */}
         {editing ? (
-          <Select
-            required
+          <SelectCourse
+            courses={courses}
+            deadline={deadline}
             onChange={(e) => {
               editDeadline("course", e.target.textContent);
             }}
-            value={deadline.course}
-            sx={{
-              color: courses.find((course) => course.name === deadline.course)
-                ?.color,
-            }}
-          >
-            {courses.map((course, index) => (
-              <Option
-                key={index}
-                value={course.name}
-                sx={{
-                  color: course.color,
-                }}
-              >
-                {course.name}
-              </Option>
-            ))}
-          </Select>
+          />
         ) : (
           <Typography
             level="title-md"
@@ -250,44 +235,16 @@ const DeadlineCard = ({ deadline, setDeadlines, setArchived, courses }) => {
           {/* Type */}
           {deadline.type &&
             (editing ? (
-              <Select
-                sx={{
-                  width: "fit-content",
-                  color: types.find((type) => type.name === deadline.type)
-                    ?.color,
-                }}
-                size="sm"
-                value={deadline.type}
+              <SelectType
+                deadline={deadline}
                 onChange={(e) => {
                   editDeadline("type", e.target.textContent);
                 }}
-                startDecorator={
-                  deadline.type && (
-                    // Icon for selected item
-                    <ListItemDecorator
-                      sx={{
-                        color: types.find((type) => type.name === deadline.type)
-                          ?.color,
-                      }}
-                    >
-                      {types.find((type) => type.name === deadline.type)?.icon}
-                    </ListItemDecorator>
-                  )
-                }
-              >
-                {types.map((type, index) => (
-                  <Option
-                    key={index}
-                    value={type.name}
-                    sx={{ color: type.color }}
-                  >
-                    <ListItemDecorator>{type.icon}</ListItemDecorator>
-                    {type.name}
-                  </Option>
-                ))}
-              </Select>
+              />
             ) : (
-              <TypeChip type={deadline.type} sx={{ ml: "auto" }} />
+              deadline.type && (
+                <TypeChip type={deadline.type} sx={{ ml: "auto" }} />
+              )
             ))}
         </Box>
         {/* Date */}

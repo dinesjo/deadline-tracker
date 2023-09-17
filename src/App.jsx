@@ -25,6 +25,7 @@ import NewDeadlineForm from "./NewDeadlineForm";
 import DeadlinesList from "./DeadlinesList";
 import ArchiveList from "./ArchiveList";
 import Courses from "./Courses";
+import Deadline from "./deadline";
 
 function ModeToggle() {
   const { mode, setMode } = useColorScheme();
@@ -102,16 +103,7 @@ const NewDeadlineFormModal = ({ courses, setDeadlines }) => {
   const [open, setOpen] = useState(false);
   const [newDeadline, setNewDeadline] = useState(() => {
     const localValue = JSON.parse(localStorage.getItem("newDeadline"));
-    if (localValue == null)
-      return {
-        title: "",
-        details: "",
-        date: new Date().toISOString().slice(0, 10),
-        type: "",
-        course: "",
-        status: "",
-        id: "",
-      };
+    if (localValue == null) return new Deadline();
     return localValue;
   });
 

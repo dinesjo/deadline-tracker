@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Button,
   Input,
@@ -9,14 +8,75 @@ import {
   Textarea,
 } from "@mui/joy";
 import types from "./types";
-import { FaBackspace, FaBroom } from "react-icons/fa";
+import { FaBackspace } from "react-icons/fa";
+import Deadline from "./deadline";
+
+// Select course component for a general deadline
+export function SelectCourse({ deadline, onChange, courses }) {
+  return (
+    <Select
+      onChange={onChange}
+      placeholder="Course"
+      value={deadline.course}
+      sx={{
+        color: courses.find((course) => course.name === deadline.course)?.color,
+      }}
+    >
+      {courses.map((course, index) => (
+        <Option
+          key={index}
+          value={course.name}
+          sx={{
+            color: course.color,
+          }}
+        >
+          {course.name}
+        </Option>
+      ))}
+    </Select>
+  );
+}
+
+export function SelectType({ deadline, onChange }) {
+  const type = types.find((type) => type.name === deadline.type);
+
+  return (
+    <Select
+      onChange={onChange}
+      placeholder="Type"
+      value={deadline.type}
+      startDecorator={
+        deadline.type && (
+          // Icon for selected item
+          <ListItemDecorator
+            sx={{
+              color: type?.color,
+            }}
+          >
+            {type?.icon}
+          </ListItemDecorator>
+        )
+      }
+      sx={{
+        color: type?.color,
+      }}
+    >
+      {types.map((type, index) => (
+        <Option key={index} value={type.name} sx={{ color: type.color }}>
+          <ListItemDecorator>{type.icon}</ListItemDecorator>
+          {type.name}
+        </Option>
+      ))}
+    </Select>
+  );
+}
 
 export default function NewDeadlineForm({
   setDeadlines,
   courses,
-  setOpen,
   newDeadline,
   setNewDeadline,
+  setOpen,
   ...props
 }) {
   return (
@@ -25,27 +85,19 @@ export default function NewDeadlineForm({
         e.preventDefault();
         setDeadlines((current) => [
           ...current,
-          {
-            title: newDeadline.title,
-            details: newDeadline.details,
-            date: newDeadline.date,
-            type: newDeadline.type,
-            course: newDeadline.course,
-            status: "Not Started",
-            id: crypto.randomUUID(),
-          },
+          new Deadline(
+            newDeadline.title,
+            newDeadline.details,
+            newDeadline.date,
+            newDeadline.type,
+            newDeadline.course,
+            "Not Started",
+            crypto.randomUUID()
+          ),
         ]);
         console.log("New deadline submitted:", newDeadline);
         // Reset user input state
-        setNewDeadline({
-          title: "",
-          details: "",
-          date: new Date().toISOString().slice(0, 10),
-          type: "",
-          course: "",
-          status: "",
-          id: "",
-        });
+        setNewDeadline(new Deadline());
         setOpen(false); // close modal
       }}
     >
@@ -63,15 +115,7 @@ export default function NewDeadlineForm({
         }}
         onClick={() => {
           // Reset user input state
-          setNewDeadline({
-            title: "",
-            details: "",
-            date: new Date().toISOString().slice(0, 10),
-            type: "",
-            course: "",
-            status: "",
-            id: "",
-          });
+          setNewDeadline(new Deadline());
         }}
       >
         Clear form
@@ -79,34 +123,18 @@ export default function NewDeadlineForm({
 
       <Stack spacing={0.5} {...props}>
         {/* Course */}
-        <Select
-          required
+        <SelectCourse
+          deadline={newDeadline}
+          setDeadline={setNewDeadline}
+          courses={courses}
           onChange={(e) => {
             e &&
-              setNewDeadline({
-                ...newDeadline,
+              setNewDeadline((current) => ({
+                ...current,
                 course: e.target.textContent,
-              });
+              }));
           }}
-          placeholder="Course"
-          value={newDeadline.course}
-          sx={{
-            color: courses.find((course) => course.name === newDeadline.course)
-              ?.color,
-          }}
-        >
-          {courses.map((course, index) => (
-            <Option
-              key={index}
-              value={course.name}
-              sx={{
-                color: course.color,
-              }}
-            >
-              {course.name}
-            </Option>
-          ))}
-        </Select>
+        />
         {/* Title */}
         <Input
           required
@@ -128,7 +156,8 @@ export default function NewDeadlineForm({
           }
         />
         {/* Type */}
-        <Select
+        <SelectType
+          deadline={newDeadline}
           onChange={(e) => {
             e &&
               setNewDeadline({
@@ -136,32 +165,7 @@ export default function NewDeadlineForm({
                 type: e.target.textContent,
               });
           }}
-          placeholder="Type"
-          value={newDeadline.type}
-          startDecorator={
-            newDeadline.type && (
-              // Icon for selected item
-              <ListItemDecorator
-                sx={{
-                  color: types.find((type) => type.name === newDeadline.type)
-                    ?.color,
-                }}
-              >
-                {types.find((type) => type.name === newDeadline.type)?.icon}
-              </ListItemDecorator>
-            )
-          }
-          sx={{
-            color: types.find((type) => type.name === newDeadline.type)?.color,
-          }}
-        >
-          {types.map((type, index) => (
-            <Option key={index} value={type.name} sx={{ color: type.color }}>
-              <ListItemDecorator>{type.icon}</ListItemDecorator>
-              {type.name}
-            </Option>
-          ))}
-        </Select>
+        />
         {/* Date */}
         <Input
           type="date"
