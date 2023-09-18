@@ -69,6 +69,15 @@ export default function App() {
         sx={{ width: "100vw", px: 2, py: 1 }}
       >
         <ModeToggle />
+        <Alert
+          variant="soft"
+          color="neutral"
+          sx={{ display: "flex", justifyContent: "center" }}
+        >
+          <Typography level="body-sm">
+            <b>Disclaimer:</b> light more in experimental
+          </Typography>
+        </Alert>
       </Stack>
 
       {/* Main content */}
