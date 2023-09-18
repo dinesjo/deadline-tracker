@@ -335,7 +335,6 @@ function DeadlineCard({ deadline, setDeadlines, setArchived, courses }) {
           {/* Days left */}
           {deadline.date && (
             <Typography
-              startDecorator={<FaCalendarDay />}
               level={
                 daysLeft() < 3 && deadline.status != "Completed"
                   ? "body-md"
@@ -350,7 +349,7 @@ function DeadlineCard({ deadline, setDeadlines, setArchived, courses }) {
               }
               noWrap
             >
-              {daysLeft()} day(s) left
+              {daysLeft()} day{daysLeft() != 1 ? "s" : ""} left
             </Typography>
           )}
         </CardContent>
