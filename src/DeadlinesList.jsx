@@ -54,14 +54,6 @@ export default function DeadlinesList({
   setArchived,
   courses,
 }) {
-  // Number of columns in grid
-  let columns = 12;
-  if (deadlines.length === 1) {
-    columns = 4;
-  } else if (deadlines.length === 2) {
-    columns = 8; // Share between two
-  }
-
   return (
     <Tabs defaultValue={-1}>
       {/* Tab buttons and number indicator */}
@@ -103,7 +95,6 @@ export default function DeadlinesList({
       {/* ALL-tab */}
       <TabPanelForCourse
         index={-1}
-        columns={columns}
         deadlines={deadlines}
         setDeadlines={setDeadlines}
         setArchived={setArchived}
@@ -115,7 +106,6 @@ export default function DeadlinesList({
         .map((course, index) => (
           <TabPanelForCourse
             index={index}
-            columns={columns}
             deadlines={deadlines.filter(
               (deadline) => deadline.course === course.name
             )}
@@ -126,6 +116,34 @@ export default function DeadlinesList({
           />
         ))}
     </Tabs>
+  );
+}
+
+function TabPanelForCourse({ index, deadlines, ...props }) {
+  return (
+    <TabPanel value={index}>
+      <Grid
+        container
+        spacing={4}
+        columns={12}
+        sx={{ justifyContent: "center" }}
+      >
+        {deadlines.length === 0 && (
+          <Grid key={index} xs={12}>
+            <NoDeadlinesAlert />
+          </Grid>
+        )}
+        {deadlines
+          .sort((a, b) => {
+            return new Date(a.date) - new Date(b.date);
+          })
+          .map((deadline) => (
+            <Grid xs={12} sm={6} lg={4} key={deadline.id}>
+              <DeadlineCard {...props} deadline={deadline} />
+            </Grid>
+          ))}
+      </Grid>
+    </TabPanel>
   );
 }
 
@@ -389,34 +407,6 @@ function DeadlineCard({ deadline, setDeadlines, setArchived, courses }) {
     );
     return days;
   }
-}
-
-function TabPanelForCourse({ index, columns, deadlines, ...props }) {
-  return (
-    <TabPanel value={index}>
-      <Grid
-        container
-        spacing={4}
-        columns={columns}
-        sx={{ justifyContent: "center" }}
-      >
-        {deadlines.length === 0 && (
-          <Grid key={index} xs={12}>
-            <NoDeadlinesAlert />
-          </Grid>
-        )}
-        {deadlines
-          .sort((a, b) => {
-            return new Date(a.date) - new Date(b.date);
-          })
-          .map((deadline) => (
-            <Grid xs={12} sm={6} lg={4} key={deadline.id}>
-              <DeadlineCard {...props} deadline={deadline} />
-            </Grid>
-          ))}
-      </Grid>
-    </TabPanel>
-  );
 }
 
 function StatusChip({ status, id, setDeadlines }) {
