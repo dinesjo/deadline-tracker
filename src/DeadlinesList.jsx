@@ -13,6 +13,7 @@ import {
   Grid,
   IconButton,
   Input,
+  Link,
   Tab,
   TabList,
   TabPanel,
@@ -26,6 +27,7 @@ import {
   FaCheck,
   FaCheckCircle,
   FaEdit,
+  FaGoogleDrive,
   FaRegCircle,
   FaSpinner,
   FaTrashAlt,
@@ -129,40 +131,6 @@ export default function DeadlinesList({
 
 function DeadlineCard({ deadline, setDeadlines, setArchived, courses }) {
   const course = courses.find((course) => course.name === deadline.course);
-
-  const deleteDeadline = () => {
-    setDeadlines((current) => {
-      return current.filter((d) => d.id !== deadline.id);
-    });
-  };
-
-  const archiveDeadline = () => {
-    setArchived((current) => {
-      return [...current, deadline];
-    });
-    deleteDeadline();
-  };
-
-  const editDeadline = (property, newValue) => {
-    setDeadlines((current) => {
-      return current.map((d) => {
-        if (d.id === deadline.id) {
-          return { ...d, [property]: newValue };
-        }
-        return d;
-      });
-    });
-  };
-
-  const daysLeft = () => {
-    if (!deadline.date) return null;
-    const days = Math.ceil(
-      (new Date(deadline.date).getTime() - new Date().getTime()) /
-        (1000 * 60 * 60 * 24)
-    );
-    return days;
-  };
-
   const [editing, setEditing] = useState(false);
 
   return (
@@ -300,9 +268,18 @@ function DeadlineCard({ deadline, setDeadlines, setArchived, courses }) {
           <Typography level="body-md">{deadline.details}</Typography>
         )}
         <CardActions>
-          {/* <Button variant="solid" color="primary">
-            Docs
-          </Button> */}
+          {!editing && course.googleDriveURL && (
+            <Link
+              variant="solid"
+              color="primary"
+              startDecorator={<FaGoogleDrive />}
+              href={course.googleDriveURL}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Open {course.name}
+            </Link>
+          )}
           {!editing && ( // Hide buttons while editing
             <ButtonGroup
               sx={{
@@ -380,6 +357,39 @@ function DeadlineCard({ deadline, setDeadlines, setArchived, courses }) {
       </CardOverflow>
     </Card>
   );
+
+  function deleteDeadline() {
+    setDeadlines((current) => {
+      return current.filter((d) => d.id !== deadline.id);
+    });
+  }
+
+  function archiveDeadline() {
+    setArchived((current) => {
+      return [...current, deadline];
+    });
+    deleteDeadline();
+  }
+
+  function editDeadline(property, newValue) {
+    setDeadlines((current) => {
+      return current.map((d) => {
+        if (d.id === deadline.id) {
+          return { ...d, [property]: newValue };
+        }
+        return d;
+      });
+    });
+  }
+
+  function daysLeft() {
+    if (!deadline.date) return null;
+    const days = Math.ceil(
+      (new Date(deadline.date).getTime() - new Date().getTime()) /
+        (1000 * 60 * 60 * 24)
+    );
+    return days;
+  }
 }
 
 function TabPanelForCourse({ index, columns, deadlines, ...props }) {
