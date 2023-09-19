@@ -66,7 +66,7 @@ export default function App() {
         justifyContent="center"
         alignItems="center"
         spacing={2}
-        sx={{ width: "100vw", px: 2, py: 1 }}
+        sx={{ width: "100vw", py: 1 }}
       >
         <ModeToggle />
         <Alert
@@ -84,7 +84,7 @@ export default function App() {
       <Sheet
         sx={{
           width: "100vw",
-          minHeight: "calc(100vh - 56px)", // subtract height of navbar
+          minHeight: "calc(100vh - 61px)", // subtract height of navbar
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
