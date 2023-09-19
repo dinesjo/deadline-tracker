@@ -3,6 +3,7 @@ import {
   Alert,
   Button,
   Chip,
+  Divider,
   Modal,
   ModalClose,
   ModalDialog,
@@ -70,12 +71,12 @@ export default function App() {
       >
         <ModeToggle />
         <Alert
-          variant="soft"
+          variant="outlined"
           color="neutral"
           sx={{ display: "flex", justifyContent: "center" }}
         >
           <Typography level="body-sm">
-            <b>Disclaimer:</b> light more in experimental
+            <b>Disclaimer:</b> <u>light</u> mode is experimental
           </Typography>
         </Alert>
       </Stack>
@@ -84,7 +85,7 @@ export default function App() {
       <Sheet
         sx={{
           width: "100vw",
-          minHeight: "calc(100vh - 61px)", // subtract height of navbar
+          minHeight: "calc(100vh - 63px)", // subtract height of navbar
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -133,6 +134,23 @@ export default function App() {
             setArchived={setArchived}
             courses={courses}
           />
+        </Sheet>
+
+        {/* Footer */}
+        <Sheet sx={{ width: "100%", position: "absolute", bottom: 0 }}>
+          <Divider />
+          <Stack
+            direction="row"
+            justifyContent="center"
+            alignItems="center"
+            spacing={2}
+            sx={{ width: "100vw", py: 1 }}
+          >
+            <Typography level="body-sm">
+              Please note that <b>data is stored locally</b> in your browser. If
+              you clear your browser data, <b>your deadlines will be lost</b>.
+            </Typography>
+          </Stack>
         </Sheet>
       </Sheet>
     </>
