@@ -444,7 +444,7 @@ function StatusChip({ status, id, setDeadlines }) {
 function TypeChip({ type }) {
   return (
     <Chip
-      variant="soft"
+      variant="outlined"
       sx={{
         color: types.find((t) => t.name === type).color,
       }}
