@@ -32,8 +32,15 @@ import Deadline from "./deadline";
 export default function App() {
   // Deadlines
   const [deadlines, setDeadlines] = useState(() => {
-    const localValue = JSON.parse(localStorage.getItem("deadlines"));
+    let localValue = JSON.parse(localStorage.getItem("deadlines"));
     if (localValue == null) return [];
+    // Replace "Submission" deadlines with "Hand-in" deadlines TODO: remove this in the future
+    localValue = localValue.map((deadline) => {
+      if (deadline.type === "Submission") {
+        deadline.type = "Hand-in";
+      }
+      return deadline;
+    });
     return localValue;
   });
   useEffect(() => {
@@ -42,8 +49,15 @@ export default function App() {
 
   // Archive
   const [archived, setArchived] = useState(() => {
-    const localValue = JSON.parse(localStorage.getItem("archived"));
+    let localValue = JSON.parse(localStorage.getItem("archived"));
     if (localValue == null) return [];
+    // Replace "Submission" deadlines with "Hand-in" deadlines TODO: remove this in the future
+    localValue = localValue.map((deadline) => {
+      if (deadline.type === "Submission") {
+        deadline.type = "Hand-in";
+      }
+      return deadline;
+    });
     return localValue;
   });
   useEffect(() => {
