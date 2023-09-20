@@ -1,26 +1,37 @@
-import { FaFilePdf, FaFlask, FaExclamationTriangle, FaComments } from "react-icons/fa";
+import {
+  FaFilePdf,
+  FaFlask,
+  FaExclamationTriangle,
+  FaComments,
+  FaChalkboardTeacher,
+} from "react-icons/fa";
 
 const types = [
   {
     name: "Lab",
-    color: "#FF5733",
+    color: "#3399FF",
     icon: <FaFlask />,
   },
   {
-    name: "Assignment",
-    color: "#3399FF",
-    icon: <FaFilePdf />,
-  },
-  {
-    name: "Exam",
+    name: "Hand-in",
     color: "#FFCC00",
-    icon: <FaExclamationTriangle />,
+    icon: <FaFilePdf />,
   },
   {
     name: "Seminar",
     color: "#00CC66",
     icon: <FaComments />,
-  }
+  },
+  {
+    name: "Presentation",
+    color: "#FF5577",
+    icon: <FaChalkboardTeacher />,
+  },
+  {
+    name: "Exam",
+    color: "#FF5030",
+    icon: <FaExclamationTriangle />,
+  },
 ];
 
 export default types;

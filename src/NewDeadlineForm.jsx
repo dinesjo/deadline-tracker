@@ -129,6 +129,7 @@ export default function NewDeadlineForm({
 export function SelectCourse({ deadline, onChange, courses }) {
   return (
     <Select
+      required
       onChange={onChange}
       placeholder="Course"
       value={deadline.course}
