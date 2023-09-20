@@ -19,6 +19,7 @@ import {
   FaCalendarAlt,
   FaCalendarPlus,
   FaEdit,
+  FaExclamationCircle,
   FaMoon,
   FaSun,
 } from "react-icons/fa";
@@ -76,7 +77,7 @@ export default function App() {
           sx={{ display: "flex", justifyContent: "center" }}
         >
           <Typography level="body-sm">
-            <b>Disclaimer:</b> <u>light</u> mode is experimental
+            <b>Note</b>: <u>light</u> mode is experimental
           </Typography>
         </Alert>
       </Stack>
@@ -137,7 +138,7 @@ export default function App() {
         </Sheet>
 
         {/* Footer */}
-        <Sheet sx={{ width: "100%", position: "absolute", bottom: 0 }}>
+        <Sheet sx={{ width: "100%", position: "relative", bottom: 0 }}>
           <Divider />
           <Stack
             direction="row"

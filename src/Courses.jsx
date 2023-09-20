@@ -1,9 +1,7 @@
 import {
   Alert,
-  Box,
   Chip,
   ChipDelete,
-  Divider,
   Grid,
   IconButton,
   Input,
@@ -14,7 +12,7 @@ import {
   Typography,
 } from "@mui/joy";
 import { useState } from "react";
-import { FaGoogleDrive, FaHeading, FaPalette, FaPlus } from "react-icons/fa";
+import { FaGoogleDrive, FaPalette, FaPlus } from "react-icons/fa";
 
 const courseColors = [
   "#FF3333",
