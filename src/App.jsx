@@ -34,9 +34,9 @@ export default function App() {
   const [deadlines, setDeadlines] = useState(() => {
     let localValue = JSON.parse(localStorage.getItem("deadlines"));
     if (localValue == null) return [];
-    // Replace "Submission" deadlines with "Hand-in" deadlines TODO: remove this in the future
+    // Replace "Assignment" deadlines with "Hand-in" deadlines TODO: remove this in the future
     localValue = localValue.map((deadline) => {
-      if (deadline.type === "Submission") {
+      if (deadline.type === "Assignment") {
         deadline.type = "Hand-in";
       }
       return deadline;
@@ -51,9 +51,9 @@ export default function App() {
   const [archived, setArchived] = useState(() => {
     let localValue = JSON.parse(localStorage.getItem("archived"));
     if (localValue == null) return [];
-    // Replace "Submission" deadlines with "Hand-in" deadlines TODO: remove this in the future
+    // Replace "Assignment" deadlines with "Hand-in" deadlines TODO: remove this in the future
     localValue = localValue.map((deadline) => {
-      if (deadline.type === "Submission") {
+      if (deadline.type === "Assignment") {
         deadline.type = "Hand-in";
       }
       return deadline;
