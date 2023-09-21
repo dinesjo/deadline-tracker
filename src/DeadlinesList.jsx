@@ -47,6 +47,8 @@ const statuses = {
   },
 };
 
+const isMobile = window.innerWidth < 600;
+
 export default function DeadlinesList({
   deadlines,
   setDeadlines,
@@ -303,7 +305,7 @@ function DeadlineCard({ deadline, setDeadlines, setArchived, courses }) {
                 ml: "auto",
                 "--ButtonGroup-separatorColor": "none !important",
               }}
-              variant="plain"
+              variant={isMobile ? "solid" : "plain"} // Solid btns on mobile
             >
               <IconButton
                 color="neutral"
@@ -428,7 +430,7 @@ function StatusChip({ status, id, setDeadlines }) {
 
   return (
     <Chip
-      variant="soft"
+      variant={status == "Not Started" ? "soft" : "solid"}
       size="sm"
       color={statuses.color[status]}
       startDecorator={statuses.icon[status]}

@@ -14,12 +14,12 @@ const types = [
   },
   {
     name: "Hand-in",
-    color: "#FFCC00",
+    color: "#E08A00",
     icon: <FaFilePdf />,
   },
   {
     name: "Seminar",
-    color: "#00CC66",
+    color: "#00AA66",
     icon: <FaComments />,
   },
   {

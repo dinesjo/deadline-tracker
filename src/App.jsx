@@ -36,7 +36,7 @@ export default function App() {
     if (localValue == null) return [];
     // Replace "Assignment" deadlines with "Hand-in" deadlines TODO: remove this in the future
     localValue = localValue.map((deadline) => {
-      if (deadline.type === "Assignment") {
+      if (deadline.type === "Assignment" || deadline.type === "") {
         deadline.type = "Hand-in";
       }
       return deadline;
@@ -53,7 +53,7 @@ export default function App() {
     if (localValue == null) return [];
     // Replace "Assignment" deadlines with "Hand-in" deadlines TODO: remove this in the future
     localValue = localValue.map((deadline) => {
-      if (deadline.type === "Assignment") {
+      if (deadline.type === "Assignment" || deadline.type === "") {
         deadline.type = "Hand-in";
       }
       return deadline;
@@ -85,15 +85,6 @@ export default function App() {
         sx={{ width: "100vw", py: 1 }}
       >
         <ModeToggle />
-        <Alert
-          variant="outlined"
-          color="neutral"
-          sx={{ display: "flex", justifyContent: "center" }}
-        >
-          <Typography level="body-sm">
-            <b>Note</b>: <u>light</u> mode is experimental
-          </Typography>
-        </Alert>
       </Stack>
 
       {/* Main content */}
