@@ -9,7 +9,17 @@ export default defineConfig(({ command }) => {
       registerType: 'autoUpdate', 
       devOptions: {
         enabled: true
-      }
+      },
+      manifest: {
+        icons: [
+          {
+            src: '/512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'any maskable',
+          },
+        ],
+      },
     })
     ],
   }
