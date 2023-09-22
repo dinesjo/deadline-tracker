@@ -19,7 +19,6 @@ import {
   FaCalendarAlt,
   FaCalendarPlus,
   FaEdit,
-  FaExclamationCircle,
   FaMoon,
   FaSun,
 } from "react-icons/fa";
@@ -28,6 +27,7 @@ import DeadlinesList from "./DeadlinesList";
 import ArchiveList from "./ArchiveList";
 import Courses from "./Courses";
 import Deadline from "./deadline";
+import logo from "../public/512.png";
 
 export default function App() {
   // Deadlines
@@ -84,6 +84,18 @@ export default function App() {
         spacing={2}
         sx={{ width: "100vw", py: 1 }}
       >
+        <Typography
+          startDecorator={
+            <img
+              src={logo}
+              alt="logo"
+              style={{ width: "30px", height: "30px" }}
+            />
+          }
+          level="title-lg"
+        >
+          Deadline Tracker
+        </Typography>
         <ModeToggle />
       </Stack>
 
