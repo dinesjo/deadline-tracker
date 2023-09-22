@@ -10,7 +10,7 @@ import {
 } from "@mui/joy";
 import DeadlineCard from "./components/DeadlineCard";
 
-const isMobile = window.innerWidth < 600;
+// const isMobile = window.innerWidth < 600;
 
 export default function DeadlinesList({
   deadlines,
