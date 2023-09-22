@@ -13,7 +13,7 @@ export default defineConfig(({ command }) => {
       manifest: {
         icons: [
           {
-            src: '/512.png',
+            src: command !== "serve" ? '/deadline-tracker/512.png' : '/512.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'any maskable',
