@@ -19,6 +19,7 @@ import {
   FaCalendarAlt,
   FaCalendarPlus,
   FaEdit,
+  FaExclamationTriangle,
   FaMoon,
   FaSun,
 } from "react-icons/fa";
@@ -153,23 +154,30 @@ export default function App() {
             courses={courses}
           />
         </Sheet>
+      </Sheet>
 
-        {/* Footer */}
-        <Sheet sx={{ width: "100%", position: "relative", bottom: 0 }}>
-          <Divider />
-          <Stack
-            direction="row"
-            justifyContent="center"
-            alignItems="center"
-            spacing={2}
-            sx={{ width: "100vw", py: 1 }}
-          >
-            <Typography level="body-sm">
-              Please note that <b>data is stored locally</b> in your browser. If
-              you clear your browser data, <b>your deadlines will be lost</b>.
-            </Typography>
-          </Stack>
-        </Sheet>
+      {/* Footer */}
+      <Divider />
+      <Sheet
+        sx={{
+          position: "relative",
+          bottom: 0,
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <Alert
+          variant="plain"
+          color="warning"
+          sx={{
+            textAlign: "center",
+            borderRadius: 0,
+          }}
+          startDecorator={<FaExclamationTriangle />}
+        >
+          Please note that data is stored locally in your browser. If you clear
+          your browser data, your deadlines will be lost.
+        </Alert>
       </Sheet>
     </>
   );
