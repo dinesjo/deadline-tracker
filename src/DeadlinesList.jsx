@@ -1,7 +1,9 @@
 import {
   Alert,
   Chip,
+  Divider,
   Grid,
+  Sheet,
   Tab,
   TabList,
   TabPanel,
@@ -9,6 +11,8 @@ import {
   Typography,
 } from "@mui/joy";
 import DeadlineCard from "./components/DeadlineCard";
+import { Fragment } from "react";
+import { FaCoffee } from "react-icons/fa";
 
 // const isMobile = window.innerWidth < 600;
 
@@ -84,11 +88,16 @@ export default function DeadlinesList({
 }
 
 function TabPanelForCourse({ index, deadlines, ...props }) {
+  const groupedDeadlines = groupDeadlinesByDate(deadlines);
+  const dates = Object.keys(groupedDeadlines).sort((a, b) => {
+    return new Date(a).getTime() - new Date(b).getTime();
+  });
+
   return (
     <TabPanel value={index}>
       <Grid
         container
-        spacing={4}
+        spacing={2}
         columns={12}
         sx={{ justifyContent: "center" }}
       >
@@ -97,18 +106,60 @@ function TabPanelForCourse({ index, deadlines, ...props }) {
             <NoDeadlinesAlert />
           </Grid>
         )}
-        {deadlines
-          .sort((a, b) => {
-            return new Date(a.date) - new Date(b.date);
-          })
-          .map((deadline) => (
-            <Grid xs={12} sm={6} lg={4} key={deadline.id}>
-              <DeadlineCard {...props} deadline={deadline} />
-            </Grid>
-          ))}
+        {dates.map((date, index) => (
+          <Fragment key={date}>
+            {/* Date Divider */}
+            <Divider sx={{ width: "100%", my: 2 }}>
+              {new Date(date).toLocaleDateString("en-US", {
+                weekday: "long",
+                month: "short",
+                day: "numeric",
+              })}
+            </Divider>
+
+            {groupedDeadlines[date].map((deadline) => (
+              <Grid xs={12} sm={6} lg={4} key={deadline.id}>
+                <DeadlineCard {...props} deadline={deadline} />
+              </Grid>
+            ))}
+            {index === dates.length - 1 ||
+            new Date(dates[index + 1]).getTime() - new Date(date).getTime() <=
+              86400000 * 3 ? (
+              ""
+            ) : (
+              <Fragment key={index}>
+                <Sheet
+                  sx={{
+                    display: "flex",
+                    justifyContent: "end",
+                    width: "100%",
+                    mt: 8,
+                    mb: -2,
+                  }}
+                >
+                  <Typography level="body-sm" startDecorator={<FaCoffee />}>
+                    Some time later...
+                  </Typography>
+                </Sheet>
+              </Fragment>
+            )}
+          </Fragment>
+        ))}
       </Grid>
     </TabPanel>
   );
+
+  // Helper function to group deadlines by date
+  function groupDeadlinesByDate(deadlines) {
+    return deadlines.reduce((groups, deadline) => {
+      const date = deadline.date;
+      if (!groups[date]) {
+        groups[date] = [];
+      }
+      groups[date].push(deadline);
+      return groups;
+    }, {});
+  }
 }
 
 function NoDeadlinesAlert() {
