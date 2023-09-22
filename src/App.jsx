@@ -27,7 +27,7 @@ import DeadlinesList from "./DeadlinesList";
 import ArchiveList from "./ArchiveList";
 import Courses from "./Courses";
 import Deadline from "./deadline";
-import logo from "../public/512.png";
+import logo from "../public/logo.png";
 
 export default function App() {
   // Deadlines
