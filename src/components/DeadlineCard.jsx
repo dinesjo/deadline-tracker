@@ -53,6 +53,22 @@ export default function DeadlineCard({
   const course = courses.find((course) => course.name === deadline.course);
   const [editing, setEditing] = useState(false);
   const daysLeft = getDaysLeft();
+  let daysLeftText;
+  let daysLeftColor = daysLeft < 3 ? "danger" : daysLeft < 7 ? "warning" : null;
+  switch (daysLeft) {
+    case 0:
+      daysLeftText = "Due today";
+      break;
+    case 1:
+      daysLeftText = "Due tomorrow";
+      break;
+    case -1:
+      daysLeftText = "Due yesterday";
+      break;
+    default:
+      daysLeftText = `${daysLeft} days left`;
+      break;
+  }
 
   return (
     <Card
@@ -261,16 +277,11 @@ export default function DeadlineCard({
                   ? "body-md"
                   : "body-sm"
               }
-              color={
-                daysLeft < 3 && deadline.status != "Completed"
-                  ? "danger"
-                  : daysLeft < 7 && deadline.status != "Completed"
-                  ? "warning"
-                  : "neutral"
-              }
+              color={daysLeftColor}
               noWrap
             >
-              {daysLeft} day{Math.abs(daysLeft) != 1 ? "s" : ""} left
+              {daysLeftText}
+              {/* {daysLeft} day{Math.abs(daysLeft) != 1 ? "s" : ""} left */}
               {/* {daysLeft}{daysLeft < 0 ? " overdue" : `day${daysLeft != 1 ? "s" : ""} left`} */}
               {/* {`${daysLeft} day${daysLeft != 1 ? "s" : ""} ${daysLeft < 0 ? "overdue" : "left"}`} */}
             </Typography>
