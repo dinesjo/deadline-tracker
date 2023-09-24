@@ -1,11 +1,8 @@
-import {
-  ListItemDecorator,
-  Option,
-  Select,
-} from "@mui/joy";
+import { IconButton, ListItemDecorator, Option, Select } from "@mui/joy";
 import types from "../../types";
+import { FaTimes } from "react-icons/fa";
 
-export default function SelectType({ deadline, onChange }) {
+export default function SelectType({ deadline, onChange, clearValue }) {
   const type = types.find((type) => type.name === deadline.type);
 
   return (
@@ -25,6 +22,27 @@ export default function SelectType({ deadline, onChange }) {
           </ListItemDecorator>
         )
       }
+      {...(deadline.type && {
+        // display the button and remove select indicator
+        // when user has selected a value
+        endDecorator: (
+          <IconButton
+            size="sm"
+            variant="plain"
+            color="neutral"
+            onMouseDown={(event) => {
+              // don't open the popup when clicking on this button
+              event.stopPropagation();
+            }}
+            onClick={() => {
+              clearValue();
+            }}
+          >
+            <FaTimes />
+          </IconButton>
+        ),
+        indicator: null,
+      })}
       sx={{
         color: type?.color,
       }}

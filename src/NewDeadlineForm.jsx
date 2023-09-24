@@ -103,6 +103,12 @@ export default function NewDeadlineForm({
                 type: e.target.textContent,
               });
           }}
+          clearValue={() => {
+            setNewDeadline((current) => ({
+              ...current,
+              type: null,
+            }));
+          }}
         />
         {/* Date */}
         <Input

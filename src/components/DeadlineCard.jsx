@@ -155,19 +155,21 @@ export default function DeadlineCard({
             </Typography>
           )}
           {/* Type */}
-          {deadline.type &&
-            (editing ? (
-              <SelectType
-                deadline={deadline}
-                onChange={(e) => {
-                  editDeadline("type", e.target.textContent);
-                }}
-              />
-            ) : (
-              deadline.type && (
-                <TypeChip type={deadline.type} sx={{ ml: "auto" }} />
-              )
-            ))}
+          {editing ? (
+            <SelectType
+              deadline={deadline}
+              onChange={(e) => {
+                e && editDeadline("type", e.target.textContent);
+              }}
+              clearValue={() => {
+                editDeadline("type", null);
+              }}
+            />
+          ) : (
+            deadline.type && (
+              <TypeChip type={deadline.type} sx={{ ml: "auto" }} />
+            )
+          )}
         </Box>
         {/* Date */}
         {editing ? (
@@ -359,6 +361,7 @@ function StatusChip({ status, id, setDeadlines }) {
 }
 
 function TypeChip({ type }) {
+  console.log("type", type);
   return (
     <Chip
       variant="outlined"
