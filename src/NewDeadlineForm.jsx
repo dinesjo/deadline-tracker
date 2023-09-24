@@ -1,8 +1,11 @@
 import {
+  AspectRatio,
+  Badge,
   Button,
   Input,
   Stack,
   Textarea,
+  Typography,
 } from "@mui/joy";
 import { FaBackspace } from "react-icons/fa";
 import Deadline from "./deadline";
@@ -74,15 +77,18 @@ export default function NewDeadlineForm({
           }}
         />
         {/* Title */}
-        <Input
-          required
-          value={newDeadline.title}
-          type="text"
-          placeholder="Title"
-          onChange={(e) =>
-            setNewDeadline({ ...newDeadline, title: e.target.value })
-          }
-        />
+        <Badge invisible={newDeadline.title}>
+          <Input
+            required
+            value={newDeadline.title}
+            type="text"
+            placeholder="Title"
+            onChange={(e) =>
+              setNewDeadline({ ...newDeadline, title: e.target.value })
+            }
+            sx={{ width: "100%" }}
+          />
+        </Badge>
         {/* Details */}
         <Textarea
           sx={{ height: "4em", overflow: "hidden", resize: "vertical" }}
@@ -111,20 +117,42 @@ export default function NewDeadlineForm({
           }}
         />
         {/* Date */}
-        <Input
-          type="date"
-          slotProps={{
-            input: {
-              min: "2023-09-10T00:00",
-            },
-          }}
-          value={newDeadline.date}
-          onChange={(e) =>
-            setNewDeadline({ ...newDeadline, date: e.target.value })
-          }
-        />
+        <Badge invisible={newDeadline.date}>
+          <Input
+            type="date"
+            slotProps={{
+              input: {
+                min: "2023-09-10T00:00",
+              },
+            }}
+            value={newDeadline.date}
+            onChange={(e) =>
+              setNewDeadline({ ...newDeadline, date: e.target.value })
+            }
+            sx={{
+              width: "100%",
+            }}
+          />
+        </Badge>
         {/* Submit */}
         <Button type="submit">Submit</Button>
+        {/* Required disclaimer */}
+        <Typography
+          level="body-xs"
+          startDecorator={
+            <AspectRatio
+              ratio={1}
+              sx={{
+                borderRadius: "50%",
+                width: "12px",
+              }}
+              color="primary"
+              variant="solid"
+            />
+          }
+        >
+          required
+        </Typography>
       </Stack>
     </form>
   );
