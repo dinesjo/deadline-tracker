@@ -13,6 +13,11 @@ export default function SelectCourse({ deadline, onChange, courses }) {
           color: courses.find((course) => course.name === deadline.course)
             ?.color,
         }}
+        slotProps={{
+          listbox: {
+            placement: "bottom-start",
+          },
+        }}
       >
         {courses.map((course, index) => (
           <Option
