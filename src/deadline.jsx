@@ -4,7 +4,7 @@ class Deadline {
     this.details = details || "";
     this.date = date || new Date().toISOString().slice(0, 10);
     this.type = type || null;
-    this.course = course || "";
+    this.course = course || null;
     this.status = status || "";
     this.id = id || "";
   }

@@ -2,7 +2,7 @@ import { Badge, Option, Select } from "@mui/joy";
 
 export default function SelectCourse({ deadline, onChange, courses }) {
   return (
-    <Badge invisible={deadline.course}>
+    <Badge invisible={deadline.course != null}>
       <Select
         required
         onChange={onChange}

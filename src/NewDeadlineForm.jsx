@@ -1,16 +1,9 @@
-import {
-  AspectRatio,
-  Badge,
-  Button,
-  Input,
-  Stack,
-  Textarea,
-  Typography,
-} from "@mui/joy";
+import { Badge, Button, Input, Stack, Textarea } from "@mui/joy";
 import { FaBackspace } from "react-icons/fa";
 import Deadline from "./deadline";
 import SelectCourse from "./components/form-components/SelectCourse";
 import SelectType from "./components/form-components/SelectType";
+import RequiredDisclaimer from "./components/form-components/RequiredDisclaimer";
 
 export default function NewDeadlineForm({
   setDeadlines,
@@ -137,22 +130,7 @@ export default function NewDeadlineForm({
         {/* Submit */}
         <Button type="submit">Submit</Button>
         {/* Required disclaimer */}
-        <Typography
-          level="body-xs"
-          startDecorator={
-            <AspectRatio
-              ratio={1}
-              sx={{
-                borderRadius: "50%",
-                width: "12px",
-              }}
-              color="primary"
-              variant="solid"
-            />
-          }
-        >
-          required
-        </Typography>
+        <RequiredDisclaimer />
       </Stack>
     </form>
   );
