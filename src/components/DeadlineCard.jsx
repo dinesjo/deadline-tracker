@@ -149,6 +149,9 @@ export default function DeadlineCard({
               sx={{
                 textDecoration:
                   deadline.status === "Completed" ? "line-through" : "none",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
               }}
             >
               {deadline.title}
@@ -361,7 +364,6 @@ function StatusChip({ status, id, setDeadlines }) {
 }
 
 function TypeChip({ type }) {
-  console.log("type", type);
   return (
     <Chip
       variant="outlined"
