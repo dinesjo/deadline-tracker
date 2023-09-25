@@ -2,6 +2,7 @@ import { useState } from "react";
 import {
   Badge,
   Box,
+  Button,
   ButtonGroup,
   Card,
   CardActions,
@@ -21,6 +22,7 @@ import {
   FaCheck,
   FaCheckCircle,
   FaEdit,
+  FaExclamationTriangle,
   FaGoogleDrive,
   FaRegCircle,
   FaSpinner,
@@ -45,7 +47,7 @@ const statuses = {
   },
 };
 
-const isMobile = window.innerWidth < 600;
+// const isMobile = window.innerWidth < 600;
 
 export default function DeadlineCard({
   deadline,
@@ -83,9 +85,10 @@ export default function DeadlineCard({
       }}
     >
       <Card
-        variant="soft"
+        variant="outlined"
         sx={{
           opacity: deadline.status === "Completed" && !editing ? 0.6 : 1,
+          // borderColor: course.color,
         }}
       >
         <CardOverflow
@@ -113,7 +116,7 @@ export default function DeadlineCard({
           ) : (
             <Typography
               level="title-md"
-              fontWeight={700}
+              fontWeight="xl"
               sx={{
                 color: "black",
               }}
@@ -159,7 +162,7 @@ export default function DeadlineCard({
                 color: editing ? "white" : "black",
                 borderRadius: 0,
                 ":hover": {
-                  color: course.color,
+                  color: !editing ? course.color : "",
                 },
               }}
             >
@@ -255,7 +258,7 @@ export default function DeadlineCard({
             />
           ) : (
             deadline.date && (
-              <Typography level="body-sm" startDecorator={<FaCalendarDay />}>
+              <Typography level="body-xs" startDecorator={<FaCalendarDay />}>
                 {deadline.date}
               </Typography>
             )
@@ -275,7 +278,7 @@ export default function DeadlineCard({
               }}
             />
           ) : (
-            <Typography level="body-md">{deadline.details}</Typography>
+            <Typography level="body-sm">{deadline.details}</Typography>
           )}
           <CardActions>
             {!editing && course.googleDriveURL && (
@@ -286,28 +289,40 @@ export default function DeadlineCard({
                 href={course.googleDriveURL}
                 target="_blank"
                 rel="noreferrer"
+                sx={{
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
               >
-                Open {course.name}
+                Drive
               </Link>
             )}
             {!editing && ( // Hide buttons while editing
-              <ButtonGroup
-                sx={{
-                  ml: "auto",
-                  "--ButtonGroup-separatorColor": "none !important",
-                }}
-                variant={isMobile ? "solid" : "plain"} // Solid btns on mobile
-              >
-                <IconButton
-                  color="neutral"
+              // <ButtonGroup
+              //   sx={{
+              //     ml: "auto",
+              //     "--ButtonGroup-separatorColor": "none !important",
+              //   }}
+              //   variant={isMobile ? "solid" : "plain"} // Solid btns on mobile
+              // >
+              <>
+                <Button
+                  size="sm"
+                  variant="plain"
+                  color="warning"
                   onClick={() => {
                     archiveDeadline();
                   }}
                   title="Archive"
+                  sx={{ ml: "auto" }}
+                  startDecorator={<FaArchive />}
                 >
-                  <FaArchive />
-                </IconButton>
-                <IconButton
+                  Archive
+                </Button>
+                <Button
+                  size="sm"
+                  variant="solid"
                   color="danger"
                   onClick={() => {
                     // Bring up confirmation modal
@@ -320,10 +335,12 @@ export default function DeadlineCard({
                     deleteDeadline();
                   }}
                   title="Delete"
+                  startDecorator={<FaTrashAlt />}
                 >
-                  <FaTrashAlt />
-                </IconButton>
-              </ButtonGroup>
+                  Delete
+                </Button>
+              </>
+              // </ButtonGroup>
             )}
           </CardActions>
           {/* Required Disclaimer */}
@@ -336,6 +353,8 @@ export default function DeadlineCard({
             sx={{
               display: "flex",
               justifyContent: "space-between",
+              alignItems: "center",
+              py: 1,
             }}
           >
             {/* Status */}
@@ -344,14 +363,12 @@ export default function DeadlineCard({
               id={deadline.id}
               setDeadlines={setDeadlines}
             />
+            <Divider orientation="vertical" />
             {/* Days left */}
             {deadline.date && (
               <Typography
-                level={
-                  daysLeft < 3 && deadline.status != "Completed"
-                    ? "body-md"
-                    : "body-sm"
-                }
+                level="body-sm"
+                startDecorator={daysLeft < 3 && <FaExclamationTriangle />}
                 color={daysLeftColor}
                 noWrap
               >
@@ -418,12 +435,16 @@ function StatusChip({ status, id, setDeadlines }) {
 
   return (
     <Chip
-      variant={status == "Not Started" ? "soft" : "solid"}
+      variant="soft"
       size="sm"
       color={statuses.color[status]}
       startDecorator={statuses.icon[status]}
       onClick={() => {
         cycleStatus();
+      }}
+      sx={{
+        py: 0.75,
+        px: 1.5,
       }}
     >
       {status}
@@ -434,7 +455,7 @@ function StatusChip({ status, id, setDeadlines }) {
 function TypeChip({ type }) {
   return (
     <Chip
-      variant="outlined"
+      variant="plain"
       sx={{
         color: types.find((t) => t.name === type).color,
       }}
