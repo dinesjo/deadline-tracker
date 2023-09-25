@@ -2,7 +2,7 @@ import { IconButton, ListItemDecorator, Option, Select } from "@mui/joy";
 import types from "../../types";
 import { FaTimes } from "react-icons/fa";
 
-export default function SelectType({ deadline, onChange, clearValue }) {
+export default function SelectType({ deadline, onChange, clearValue, width }) {
   const type = types.find((type) => type.name === deadline.type);
 
   return (
@@ -45,6 +45,12 @@ export default function SelectType({ deadline, onChange, clearValue }) {
       })}
       sx={{
         color: type?.color,
+        width: width,
+      }}
+      slotProps={{
+        listbox: {
+          placement: "bottom-start",
+        },
       }}
     >
       {types.map((type, index) => (

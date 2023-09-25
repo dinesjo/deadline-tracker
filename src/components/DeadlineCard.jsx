@@ -177,7 +177,10 @@ export default function DeadlineCard({
           >
             {/* Title */}
             {editing ? (
-              <Badge invisible={editedDeadline.title != ""}>
+              <Badge
+                invisible={editedDeadline.title != ""}
+                sx={{ width: 1 / 2 }}
+              >
                 <Input
                   required
                   type="text"
@@ -218,6 +221,7 @@ export default function DeadlineCard({
                 clearValue={() => {
                   setEditedDeadline((current) => ({ ...current, type: null }));
                 }}
+                width={1 / 2}
               />
             ) : (
               deadline.type && (
