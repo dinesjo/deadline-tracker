@@ -51,6 +51,7 @@ const statuses = {
 
 export default function DeadlineCard({
   deadline,
+  deadlines,
   setDeadlines,
   setArchived,
   courses,
@@ -85,9 +86,12 @@ export default function DeadlineCard({
       }}
     >
       <Card
+        id={`deadline-${deadline.id}`}
         variant="soft"
         sx={{
           opacity: deadline.status === "Completed" && !editing ? 0.6 : 1,
+          // Spring-like transition below
+          transition: "all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55)",
         }}
       >
         <CardOverflow
@@ -381,16 +385,33 @@ export default function DeadlineCard({
   );
 
   function deleteDeadline() {
-    setDeadlines((current) => {
-      return current.filter((d) => d.id !== deadline.id);
-    });
+    // Animate card deletion
+    const card = document.querySelector(`#deadline-${deadline.id}`);
+    card.style.opacity = 0;
+    card.style.transform = "scale(0)";
+    // Delete after animation
+    setTimeout(() => {
+      setDeadlines((current) => {
+        return current.filter((d) => d.id !== deadline.id);
+      });
+    }, 350);
   }
 
   function archiveDeadline() {
     setArchived((current) => {
       return [...current, deadline];
     });
-    deleteDeadline();
+
+    // Animate archive
+    animateArchive();
+
+    // If the only deadline during this date, delete date divider immediately
+    deleteDateDividerIfOnlyOneDeadline();
+
+    // Delete after animation
+    setTimeout(() => {
+      deleteDeadline();
+    }, 300);
   }
 
   function submitEdit() {
@@ -411,6 +432,44 @@ export default function DeadlineCard({
         (1000 * 60 * 60 * 24)
     );
     return days;
+  }
+
+  function animateArchive() {
+    // Get position of archived button
+    const { archivedButtonCenterX, archivedButtonCenterY } =
+      getArchivedBtnCenterCoords();
+    // Get position of card
+    const card = document.querySelector(`#deadline-${deadline.id}`);
+    const cardRect = card.getBoundingClientRect();
+    const cardCenterX = cardRect.left + cardRect.width / 2;
+    const cardCenterY = cardRect.top + cardRect.height / 2;
+    // Calculate translation
+    const translateX = archivedButtonCenterX - cardCenterX;
+    const translateY = archivedButtonCenterY - cardCenterY;
+    // Animate
+    card.style.position = "absolute";
+    card.style.opacity = 0;
+    card.style.transform = `translate(${translateX}px, ${translateY}px) scale(0.25)`;
+  }
+
+  function deleteDateDividerIfOnlyOneDeadline() {
+    // Ensure there is only one deadline with this date
+    if (deadlines.filter((d) => d.date === deadline.date).length !== 1) {
+      return;
+    }
+
+    // Get date divider
+    const dateDividers = document.querySelectorAll(".MuiDivider-root");
+    const dateDivider = Array.from(dateDividers).find((d) => {
+      return (
+        d.nextElementSibling.querySelector(`#deadline-${deadline.id}`) != null
+      ); // true if next elem contains this deadline
+    });
+
+    // Remove date divider
+    if (dateDivider) {
+      dateDivider.style.scale = 0;
+    }
   }
 }
 
@@ -463,4 +522,14 @@ function TypeChip({ type }) {
       {type}
     </Chip>
   );
+}
+
+function getArchivedBtnCenterCoords() {
+  const archivedButton = document.querySelector("#archived-button");
+  const archivedButtonRect = archivedButton.getBoundingClientRect();
+  const archivedButtonCenterX =
+    archivedButtonRect.left + archivedButtonRect.width / 2;
+  const archivedButtonCenterY =
+    archivedButtonRect.top + archivedButtonRect.height / 2;
+  return { archivedButtonCenterX, archivedButtonCenterY };
 }

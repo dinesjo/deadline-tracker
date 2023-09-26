@@ -289,6 +289,7 @@ function ArchiveModal({ ...props }) {
   return (
     <>
       <Button
+        id="archived-button"
         variant="outlined"
         color="brown"
         startDecorator={<FaArchive />}

@@ -1,9 +1,9 @@
 import {
   Alert,
+  Box,
   Chip,
   Divider,
   Grid,
-  Sheet,
   Tab,
   TabList,
   TabPanel,
@@ -114,7 +114,9 @@ function TabPanelForCourse({ index, deadlines, ...props }) {
         {dates.map((date, index) => (
           <Fragment key={date}>
             {/* Date Divider */}
-            <Divider sx={{ width: "100%", my: 2 }}>
+            <Divider
+              sx={{ width: "100%", my: 2, transition: "all 0.3s ease-out" }}
+            >
               {new Date(date).toLocaleDateString("en-US", {
                 weekday: "long",
                 month: "short",
@@ -124,7 +126,7 @@ function TabPanelForCourse({ index, deadlines, ...props }) {
 
             {groupedDeadlines[date].map((deadline) => (
               <Grid xs={12} sm={6} lg={4} key={deadline.id}>
-                <DeadlineCard {...props} deadline={deadline} />
+                <DeadlineCard {...props} deadlines={deadlines} deadline={deadline} />
               </Grid>
             ))}
             {index === dates.length - 1 ||
@@ -133,7 +135,7 @@ function TabPanelForCourse({ index, deadlines, ...props }) {
               ""
             ) : (
               <Fragment key={index}>
-                <Sheet
+                <Box
                   sx={{
                     display: "flex",
                     justifyContent: "end",
@@ -145,7 +147,7 @@ function TabPanelForCourse({ index, deadlines, ...props }) {
                   <Typography level="body-sm" startDecorator={<FaCoffee />}>
                     Some time later...
                   </Typography>
-                </Sheet>
+                </Box>
               </Fragment>
             )}
           </Fragment>
