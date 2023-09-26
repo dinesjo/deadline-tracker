@@ -1,13 +1,11 @@
 import {
   Alert,
   Button,
-  ButtonGroup,
   Card,
   CardActions,
   CardContent,
   CardOverflow,
   Grid,
-  IconButton,
   Typography,
 } from "@mui/joy";
 import { FaBoxOpen, FaCalendarDay, FaTrashAlt } from "react-icons/fa";
@@ -55,7 +53,7 @@ export default function ArchiveList({
         container
         spacing={2}
         columns={columns}
-        sx={{ justifyContent: "center" }}
+        sx={{ justifyContent: "center", overflowY: "auto" }}
       >
         {archived.length === 0 && (
           <Grid xs={12}>
@@ -75,7 +73,7 @@ export default function ArchiveList({
             return new Date(b.date) - new Date(a.date);
           })
           .map((deadline, index) => (
-            <Grid xs={12} md={6} lg={4} key={index}>
+            <Grid xs={12} md={6} xl={4} key={index}>
               <ArchiveCard
                 deadline={deadline}
                 index={index}
@@ -98,7 +96,7 @@ function ArchiveCard({
   courses,
 }) {
   return (
-    <Card variant="soft">
+    <Card variant="outlined">
       <CardOverflow
         sx={{
           backgroundColor: courses.find(
@@ -117,57 +115,46 @@ function ArchiveCard({
         </Typography>
       </CardOverflow>
       <CardContent>
-        <Typography variant="h4">{deadline.title}</Typography>
-        <Typography variant="body-md">
-          {deadline.date && (
-            <>
-              <Typography
-                startDecorator={<FaCalendarDay />}
-                level="body-sm"
-                color="primary"
-              >
-                {deadline.date}
-              </Typography>
-            </>
-          )}
-        </Typography>
+        <Typography level="title-md">{deadline.title}</Typography>
+        {deadline.date && (
+          <>
+            <Typography startDecorator={<FaCalendarDay />} level="body-xs">
+              {deadline.date}
+            </Typography>
+          </>
+        )}
       </CardContent>
-      <CardActions>
-        <ButtonGroup
-          sx={{
-            ml: "auto",
-            "--ButtonGroup-separatorColor": "none !important",
-          }}
+      <CardActions sx={{ display: "flex", justifyContent: "flex-end" }}>
+        <Button
           variant="plain"
+          color="primary"
+          size="sm"
+          onClick={() => {
+            unarchiveDeadline(index);
+          }}
+          startDecorator={<FaBoxOpen />}
         >
-          <Button
-            variant="plain"
-            color="primary"
-            onClick={() => {
-              unarchiveDeadline(index);
-            }}
-            startDecorator={<FaBoxOpen />}
-          >
-            Unarchive
-          </Button>
-          <IconButton
-            title="Delete"
-            variant="plain"
-            color="danger"
-            onClick={() => {
-              // Bring up confirmation modal
-              if (
-                !window.confirm(
-                  "Are you sure you want to delete this deadline?\nTHIS CANNOT BE UNDONE."
-                )
+          Restore
+        </Button>
+        <Button
+          title="Delete"
+          variant="solid"
+          color="danger"
+          size="sm"
+          onClick={() => {
+            // Bring up confirmation modal
+            if (
+              !window.confirm(
+                "Are you sure you want to delete this deadline?\nTHIS CANNOT BE UNDONE."
               )
-                return;
-              deleteArchived(index);
-            }}
-          >
-            <FaTrashAlt />
-          </IconButton>
-        </ButtonGroup>
+            )
+              return;
+            deleteArchived(index);
+          }}
+          startDecorator={<FaTrashAlt />}
+        >
+          Delete
+        </Button>
       </CardActions>
     </Card>
   );
