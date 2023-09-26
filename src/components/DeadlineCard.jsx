@@ -85,10 +85,9 @@ export default function DeadlineCard({
       }}
     >
       <Card
-        variant="outlined"
+        variant="soft"
         sx={{
           opacity: deadline.status === "Completed" && !editing ? 0.6 : 1,
-          // borderColor: course.color,
         }}
       >
         <CardOverflow
@@ -455,7 +454,7 @@ function StatusChip({ status, id, setDeadlines }) {
 function TypeChip({ type }) {
   return (
     <Chip
-      variant="plain"
+      variant="outlined"
       sx={{
         color: types.find((t) => t.name === type).color,
       }}

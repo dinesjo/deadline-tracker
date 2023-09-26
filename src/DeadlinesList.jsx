@@ -23,7 +23,12 @@ export default function DeadlinesList({
   courses,
 }) {
   return (
-    <Tabs defaultValue={-1}>
+    <Tabs
+      defaultValue={-1}
+      sx={{
+        backgroundColor: "background.body",
+      }}
+    >
       {/* Tab buttons and number indicator */}
       <TabList sx={{ overflowX: "auto" }}>
         <Tab

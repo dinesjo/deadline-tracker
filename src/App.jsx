@@ -28,7 +28,7 @@ import DeadlinesList from "./DeadlinesList";
 import ArchiveList from "./ArchiveList";
 import Courses from "./Courses";
 import Deadline from "./deadline";
-import logo from "../public/logo.png";
+import logo from "../public/512.png";
 
 export default function App() {
   // Deadlines
@@ -83,7 +83,10 @@ export default function App() {
         justifyContent="center"
         alignItems="center"
         spacing={2}
-        sx={{ width: "100vw", py: 1 }}
+        sx={{
+          width: "100vw",
+          py: 1,
+        }}
       >
         <Typography
           startDecorator={
@@ -108,6 +111,7 @@ export default function App() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          backgroundColor: "background.body",
         }}
       >
         <Stack
