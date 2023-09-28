@@ -33,6 +33,7 @@ import types from "../types";
 import SelectType from "./form-components/SelectType";
 import SelectCourse from "./form-components/SelectCourse";
 import RequiredDisclaimer from "./form-components/RequiredDisclaimer";
+import { daysFromNow } from "../app";
 
 const statuses = {
   color: {
@@ -59,7 +60,7 @@ export default function DeadlineCard({
   const course = courses.find((course) => course.name === deadline.course);
   const [editing, setEditing] = useState(false);
   const [editedDeadline, setEditedDeadline] = useState(deadline);
-  const daysLeft = getDaysLeft();
+  const daysLeft = daysFromNow(deadline.date);
   let daysLeftText;
   let daysLeftColor = daysLeft < 3 ? "danger" : daysLeft < 7 ? "warning" : null;
   switch (daysLeft) {
@@ -263,7 +264,11 @@ export default function DeadlineCard({
           ) : (
             deadline.date && (
               <Typography level="body-xs" startDecorator={<FaCalendarDay />}>
-                {deadline.date}
+                {new Date(deadline.date).toLocaleDateString("en-US", {
+                  weekday: "long",
+                  month: "short",
+                  day: "numeric",
+                })}
               </Typography>
             )
           )}
@@ -424,15 +429,6 @@ export default function DeadlineCard({
         return d;
       });
     });
-  }
-
-  function getDaysLeft() {
-    if (!deadline.date) return null;
-    const days = Math.ceil(
-      (new Date(deadline.date).getTime() - new Date().getTime()) /
-        (1000 * 60 * 60 * 24)
-    );
-    return days;
   }
 
   function animateArchive() {

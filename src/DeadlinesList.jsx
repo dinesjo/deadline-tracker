@@ -13,6 +13,7 @@ import {
 import DeadlineCard from "./components/DeadlineCard";
 import { Fragment } from "react";
 import { FaCoffee } from "react-icons/fa";
+import { daysFromNow } from "./app";
 
 // const isMobile = window.innerWidth < 600;
 
@@ -111,47 +112,91 @@ function TabPanelForCourse({ index, deadlines, ...props }) {
             <NoDeadlinesAlert />
           </Grid>
         )}
-        {dates.map((date, index) => (
-          <Fragment key={date}>
-            {/* Date Divider */}
-            <Divider
-              sx={{ width: "100%", my: 2, transition: "all 0.3s ease-out" }}
-            >
-              {new Date(date).toLocaleDateString("en-US", {
+        {dates.map((date, index) => {
+          // Format date
+          let d;
+          switch (daysFromNow(date)) {
+            case -1:
+              d = "Yesterday";
+              break;
+            case 0:
+              d = "Today";
+              break;
+            case 1:
+              d = "Tomorrow";
+              break;
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+              d = new Date(date).toLocaleDateString("en-US", {
                 weekday: "long",
-                month: "short",
+              });
+              break;
+            case 8:
+            case 9:
+            case 10:
+            case 11:
+            case 12:
+            case 13:
+            case 14:
+              d =
+                "Next " +
+                new Date(date).toLocaleDateString("en-US", {
+                  weekday: "long",
+                });
+              break;
+            default:
+              d = new Date(date).toLocaleDateString("en-US", {
+                weekday: "long",
+                month: "long",
                 day: "numeric",
-              })}
-            </Divider>
+              });
+              break;
+          }
+          return (
+            <Fragment key={date}>
+              {/* Date Divider */}
+              <Divider
+                sx={{ width: "100%", my: 2, transition: "all 0.3s ease-out" }}
+              >
+                {d}
+              </Divider>
 
-            {groupedDeadlines[date].map((deadline) => (
-              <Grid xs={12} sm={6} lg={4} key={deadline.id}>
-                <DeadlineCard {...props} deadlines={deadlines} deadline={deadline} />
-              </Grid>
-            ))}
-            {index === dates.length - 1 ||
-            new Date(dates[index + 1]).getTime() - new Date(date).getTime() <=
-              86400000 * 3 ? (
-              ""
-            ) : (
-              <Fragment key={index}>
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "end",
-                    width: "100%",
-                    mt: 8,
-                    mb: -2,
-                  }}
-                >
-                  <Typography level="body-sm" startDecorator={<FaCoffee />}>
-                    Some time later...
-                  </Typography>
-                </Box>
-              </Fragment>
-            )}
-          </Fragment>
-        ))}
+              {groupedDeadlines[date].map((deadline) => (
+                <Grid xs={12} sm={6} lg={4} key={deadline.id}>
+                  <DeadlineCard
+                    {...props}
+                    deadlines={deadlines}
+                    deadline={deadline}
+                  />
+                </Grid>
+              ))}
+              {index === dates.length - 1 ||
+              daysFromNow(dates[index + 1]) <= 3 ? (
+                ""
+              ) : (
+                <Fragment key={index}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "end",
+                      width: "100%",
+                      mt: 8,
+                      mb: -2,
+                    }}
+                  >
+                    <Typography level="body-sm" startDecorator={<FaCoffee />}>
+                      Some time later...
+                    </Typography>
+                  </Box>
+                </Fragment>
+              )}
+            </Fragment>
+          );
+        })}
       </Grid>
     </TabPanel>
   );
