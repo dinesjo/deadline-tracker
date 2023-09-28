@@ -91,7 +91,8 @@ export default function DeadlineCard({
         sx={{
           opacity: deadline.status === "Completed" && !editing ? 0.6 : 1,
           // Spring-like transition below
-          transition: "all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55)",
+          transition: "0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55)",
+          transitionProperty: "opacity, transform, scale",
         }}
       >
         <CardOverflow

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import {
   Alert,
+  Badge,
   Button,
-  Chip,
   Divider,
   Modal,
   ModalClose,
@@ -188,17 +188,20 @@ export default function App() {
 }
 
 function ManageCoursesModal({ ...props }) {
+  const hasCourses = props.courses.length != 0;
   const [open, setOpen] = useState(false);
   return (
     <>
-      <Button
-        variant="outlined"
-        color="purple"
-        startDecorator={<FaBook />}
-        onClick={() => setOpen(true)}
-      >
-        Manage Courses
-      </Button>
+      <Badge invisible={hasCourses} badgeContent={"Add Course!"} color="danger">
+        <Button
+          variant="outlined"
+          color="purple"
+          startDecorator={<FaBook />}
+          onClick={() => setOpen(true)}
+        >
+          Manage Courses
+        </Button>
+      </Badge>
       <Modal
         open={open}
         onClose={() => setOpen(false)}
@@ -245,6 +248,7 @@ function NewDeadlineFormModal({ courses, setDeadlines }) {
   return (
     <>
       <Button
+        disabled={courses.length === 0}
         variant="solid"
         color="primary"
         startDecorator={<FaCalendarPlus />}
@@ -288,18 +292,27 @@ function ArchiveModal({ ...props }) {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <Button
-        id="archived-button"
+      <Badge
+        invisible={props.archived.length === 0}
+        badgeContent={props.archived.length}
+        color="warning"
         variant="outlined"
-        color="brown"
-        startDecorator={<FaArchive />}
-        onClick={() => setOpen(true)}
       >
-        Archived
-        <Chip variant="outlined" size="sm" color="neutral" sx={{ ml: 1 }}>
-          {props.archived.length}
-        </Chip>
-      </Button>
+        <Button
+          disabled={props.archived.length === 0}
+          id="archived-button"
+          variant="outlined"
+          color="warning"
+          startDecorator={<FaArchive />}
+          onClick={() => setOpen(true)}
+          sx={{ width: "100%" }}
+        >
+          Archived
+          {/* <Chip variant="outlined" size="sm" color="neutral" sx={{ ml: 1 }}>
+            {props.archived.length}
+          </Chip> */}
+        </Button>
+      </Badge>
       <Modal
         open={open}
         onClose={() => setOpen(false)}
