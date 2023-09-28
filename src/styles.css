@@ -1,0 +1,6 @@
+@media screen and (max-width: 768px) {
+  /* Remove blue tap highligt on mobile for better PWA */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
