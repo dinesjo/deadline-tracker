@@ -4,3 +4,25 @@
     -webkit-tap-highlight-color: transparent;
   }
 }
+
+.bold {
+  font-weight: bold;
+}
+
+.day-header {
+  background-color: var(--joy-palette-neutral-900, #fbfcfe) !important;
+  border-color: var(--joy-palette-neutral-600, #cdd7e1) !important;
+  color: var(--joy-palette-neutral-200, #32383e) !important;
+}
+
+.day-cell {
+  background-color: var(--joy-palette-neutral-800, #32383e) !important;
+  border-color: var(--joy-palette-neutral-700, #cdd7e1) !important;
+  color: var(--joy-palette-neutral-300, #32383e) !important;
+}
+
+.week-number {
+  background-color: var(--joy-palette-neutral-600, #fbfcfe) !important;
+  border-color: var(--joy-palette-neutral-600, #cdd7e1) !important;
+  color: var(--joy-palette-neutral-200, #32383e) !important;
+}

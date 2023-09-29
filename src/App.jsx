@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import {
   Alert,
   Badge,
+  Box,
   Button,
   Divider,
   Modal,
@@ -20,6 +21,7 @@ import {
   FaCalendarPlus,
   FaEdit,
   FaExclamationTriangle,
+  FaListAlt,
   FaMoon,
   FaSun,
 } from "react-icons/fa";
@@ -29,6 +31,7 @@ import ArchiveList from "./ArchiveList";
 import Courses from "./Courses";
 import Deadline from "./deadline";
 import logo from "../public/512_full.png";
+import Calendar from "./Calendar";
 
 export default function App() {
   // Deadlines
@@ -36,13 +39,12 @@ export default function App() {
     let localValue = JSON.parse(localStorage.getItem("deadlines"));
     if (localValue == null) return [];
     // Replace "Assignment" deadlines with "Hand-in" deadlines TODO: remove this in the future
-    localValue = localValue.map((deadline) => {
+    return localValue.map((deadline) => {
       if (deadline.type === "Assignment" || deadline.type === "") {
         deadline.type = "Hand-in";
       }
       return deadline;
     });
-    return localValue;
   });
   useEffect(() => {
     localStorage.setItem("deadlines", JSON.stringify(deadlines));
@@ -114,6 +116,28 @@ export default function App() {
           backgroundColor: "background.body",
         }}
       >
+        {/* Welcome message */}
+        <Typography
+          level="title-lg"
+          startDecorator={<FaCalendarAlt />}
+          sx={{ mt: 2 }}
+        >
+          Calendar View
+        </Typography>
+        {/* Calendar */}
+        <Box
+          sx={{
+            width: { xs: "98%", sm: "90%", md: "70%", lg: "60%" },
+            mt: 2,
+          }}
+        >
+          <Calendar
+            deadlines={deadlines}
+            courses={courses}
+            setDeadlines={setDeadlines}
+          />
+        </Box>
+
         <Stack
           direction={{ xs: "column", sm: "row" }}
           spacing={2}
@@ -142,7 +166,7 @@ export default function App() {
         {/* Deadlines LIST */}
         <Typography
           level="title-lg"
-          startDecorator={<FaCalendarAlt />}
+          startDecorator={<FaListAlt />}
           sx={{ mt: 3 }}
         >
           Deadlines

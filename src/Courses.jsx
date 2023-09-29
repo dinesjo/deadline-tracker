@@ -15,16 +15,16 @@ import { useState } from "react";
 import { FaGoogleDrive, FaPalette, FaPlus } from "react-icons/fa";
 
 const courseColors = [
-  "#FF3333",
-  "#FF5733",
-  "#FF9900",
-  "#FFCC00",
-  "#66CC33",
-  "#008800",
-  "#3399FF",
-  "#3366FF",
-  "#9933CC",
-  "#FF5577",
+  "#c62828",
+  "#d84315",
+  "#f57c00",
+  "#ffa000",
+  "#558b2f",
+  "#2e7d32",
+  "#1565c0",
+  "#283593",
+  "#6a1b9a",
+  "#ad1457",
 ];
 
 class Course {
