@@ -21,6 +21,7 @@ import {
   FaCalendarPlus,
   FaEdit,
   FaExclamationTriangle,
+  FaListAlt,
   FaMoon,
   FaSun,
 } from "react-icons/fa";
@@ -115,9 +116,20 @@ export default function App() {
           backgroundColor: "background.body",
         }}
       >
+        {/* Welcome message */}
+        <Typography
+          level="title-lg"
+          startDecorator={<FaCalendarAlt />}
+          sx={{ mt: 2 }}
+        >
+          Calendar View
+        </Typography>
         {/* Calendar */}
         <Box
-          sx={{ width: { xs: "95%", sm: "90%", md: "70%", lg: "60%" }, mt: 2 }}
+          sx={{
+            width: { xs: "98%", sm: "90%", md: "70%", lg: "60%" },
+            mt: 2,
+          }}
         >
           <Calendar
             deadlines={deadlines}
@@ -154,7 +166,7 @@ export default function App() {
         {/* Deadlines LIST */}
         <Typography
           level="title-lg"
-          startDecorator={<FaCalendarAlt />}
+          startDecorator={<FaListAlt />}
           sx={{ mt: 3 }}
         >
           Deadlines

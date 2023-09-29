@@ -56,6 +56,7 @@ export default function DeadlineCard({
   setDeadlines,
   setArchived,
   courses,
+  sx,
 }) {
   const course = courses.find((course) => course.name === deadline.course);
   const [editing, setEditing] = useState(false);
@@ -94,6 +95,7 @@ export default function DeadlineCard({
           // Spring-like transition below
           transition: "0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55)",
           transitionProperty: "opacity, transform, scale",
+          ...sx,
         }}
       >
         <CardOverflow
@@ -130,50 +132,52 @@ export default function DeadlineCard({
             </Typography>
           )}
           {/* Discard edits button */}
-          <ButtonGroup
-            sx={{
-              "--ButtonGroup-separatorColor": "none !important",
-            }}
-          >
-            {editing && (
-              <IconButton
-                onClick={() => {
-                  setEditing(false);
-                  setEditedDeadline(deadline);
-                }}
-                title="Discard changes"
-                color="danger"
-                variant="solid"
-                sx={{
-                  color: "white",
-                  borderRadius: 0,
-                }}
-              >
-                <FaTimes />
-              </IconButton>
-            )}
-            {/* Edit/Confirm button */}
-            <IconButton
-              type={editing ? "submit" : "button"}
-              onClick={() => {
-                if (!editing) {
-                  setEditing(true);
-                }
-              }}
-              title={editing ? "Save" : "Edit"}
-              color={editing ? "primary" : "neutral"}
-              variant={editing ? "solid" : "plain"}
+          {setDeadlines && (
+            <ButtonGroup
               sx={{
-                color: editing ? "white" : "black",
-                borderRadius: 0,
-                ":hover": {
-                  color: !editing ? course.color : "",
-                },
+                "--ButtonGroup-separatorColor": "none !important",
               }}
             >
-              {editing ? <FaCheck /> : <FaEdit />}
-            </IconButton>
-          </ButtonGroup>
+              {editing && (
+                <IconButton
+                  onClick={() => {
+                    setEditing(false);
+                    setEditedDeadline(deadline);
+                  }}
+                  title="Discard changes"
+                  color="danger"
+                  variant="solid"
+                  sx={{
+                    color: "white",
+                    borderRadius: 0,
+                  }}
+                >
+                  <FaTimes />
+                </IconButton>
+              )}
+              {/* Edit/Confirm button */}
+              <IconButton
+                type={editing ? "submit" : "button"}
+                onClick={() => {
+                  if (!editing) {
+                    setEditing(true);
+                  }
+                }}
+                title={editing ? "Save" : "Edit"}
+                color={editing ? "primary" : "neutral"}
+                variant={editing ? "solid" : "plain"}
+                sx={{
+                  color: editing ? "white" : "black",
+                  borderRadius: 0,
+                  ":hover": {
+                    color: !editing ? course.color : "",
+                  },
+                }}
+              >
+                {editing ? <FaCheck /> : <FaEdit />}
+              </IconButton>
+            </ButtonGroup>
+          )}
         </CardOverflow>
         <CardContent>
           <Box
@@ -307,15 +311,8 @@ export default function DeadlineCard({
                 Drive
               </Link>
             )}
-            {!editing && ( // Hide buttons while editing
-              // <ButtonGroup
-              //   sx={{
-              //     ml: "auto",
-              //     "--ButtonGroup-separatorColor": "none !important",
-              //   }}
-              //   variant={isMobile ? "solid" : "plain"} // Solid btns on mobile
-              // >
-              <>
+            {!editing &&
+              setArchived && ( // Hide buttons while editing
                 <Button
                   size="sm"
                   variant="plain"
@@ -329,6 +326,9 @@ export default function DeadlineCard({
                 >
                   Archive
                 </Button>
+              )}
+            {!editing &&
+              setDeadlines && ( // Hide buttons while editing
                 <Button
                   size="sm"
                   variant="solid"
@@ -348,11 +348,9 @@ export default function DeadlineCard({
                 >
                   Delete
                 </Button>
-              </>
-              // </ButtonGroup>
-            )}
+              )}
           </CardActions>
-          {/* Required Disclaimer */}
+          {/* Required-disclaimer */}
           {editing && <RequiredDisclaimer />}
         </CardContent>
         <CardOverflow>
@@ -367,12 +365,16 @@ export default function DeadlineCard({
             }}
           >
             {/* Status */}
-            <StatusChip
-              status={deadline.status}
-              id={deadline.id}
-              setDeadlines={setDeadlines}
-            />
-            <Divider orientation="vertical" />
+            {setDeadlines && (
+              <>
+                <StatusChip
+                  status={deadline.status}
+                  id={deadline.id}
+                  setDeadlines={setDeadlines}
+                />
+                <Divider orientation="vertical" />
+              </>
+            )}
             {/* Days left */}
             {deadline.date && (
               <Typography
