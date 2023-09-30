@@ -116,7 +116,7 @@ export default function App() {
           backgroundColor: "background.body",
         }}
       >
-        {/* Welcome message */}
+        {/* Calendar VIEW */}
         <Typography
           level="title-lg"
           startDecorator={<FaCalendarAlt />}

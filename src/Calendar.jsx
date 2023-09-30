@@ -47,7 +47,6 @@ export default function Calendar({ deadlines, setDeadlines, courses }) {
         weekNumbers={true}
         weekText="" // remove "W"-prefix
         weekNumberClassNames={["week-number"]}
-        dayCellClassNames={["day-cell"]}
         editable={true}
         eventDurationEditable={false}
         eventDrop={(eventInfo) => {
