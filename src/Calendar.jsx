@@ -2,7 +2,7 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { Box, Button, ModalDialog, Typography } from "@mui/joy";
-import { Tooltip, Modal } from "@mui/joy";
+import { Modal } from "@mui/joy";
 import DeadlineCard from "./components/DeadlineCard";
 import { useState } from "react";
 
@@ -68,7 +68,30 @@ export default function Calendar({ deadlines, setDeadlines, courses }) {
   function eventContent(eventInfo) {
     const deadline = eventInfo.event.extendedProps.deadline;
     return (
-      <Tooltip
+      <EventContentJSX
+        deadline={deadline}
+        deadlines={deadlines}
+        courses={courses}
+        setDeadlines={setDeadlines}
+      />
+    );
+  }
+}
+
+function EventContentJSX({ deadline, ...props }) {
+  const [modalOpen, setModalOpen] = useState(false);
+  return (
+    <>
+      <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
+        <ModalDialog sx={{ m: 0, p: 0 }}>
+          <DeadlineCard
+            sx={{ minWidth: "300px" }}
+            deadline={deadline}
+            {...props}
+          />
+        </ModalDialog>
+      </Modal>
+      {/* <Tooltip
         sx={{ m: 0, p: 0 }}
         title={
           <DeadlineCard
@@ -82,19 +105,20 @@ export default function Calendar({ deadlines, setDeadlines, courses }) {
         enterDelay={0}
         enterTouchDelay={0}
         leaveTouchDelay={3000}
+      > */}
+      <Box
+        sx={{
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          whiteSpace: "nowrap",
+        }}
+        onClick={() => setModalOpen(true)}
       >
-        <Box
-          sx={{
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-          }}
-        >
-          {deadline.title}
-        </Box>
-      </Tooltip>
-    );
-  }
+        {deadline.title}
+      </Box>
+      {/* </Tooltip> */}
+    </>
+  );
 }
 
 /**

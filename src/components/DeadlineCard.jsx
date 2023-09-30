@@ -311,44 +311,45 @@ export default function DeadlineCard({
                 Drive
               </Link>
             )}
-            {!editing &&
-              setArchived && ( // Hide buttons while editing
-                <Button
-                  size="sm"
-                  variant="plain"
-                  color="warning"
-                  onClick={() => {
-                    archiveDeadline();
-                  }}
-                  title="Archive"
-                  sx={{ ml: "auto" }}
-                  startDecorator={<FaArchive />}
-                >
-                  Archive
-                </Button>
-              )}
-            {!editing &&
-              setDeadlines && ( // Hide buttons while editing
-                <Button
-                  size="sm"
-                  variant="solid"
-                  color="danger"
-                  onClick={() => {
-                    // Bring up confirmation modal
-                    if (
-                      !window.confirm(
-                        "Are you sure you want to delete this deadline?\nTHIS CANNOT BE UNDONE."
+            <Box sx={{ display: "flex", gap: ".5em", ml: "auto" }}>
+              {!editing &&
+                setArchived && ( // Hide buttons while editing
+                  <Button
+                    size="sm"
+                    variant="plain"
+                    color="warning"
+                    onClick={() => {
+                      archiveDeadline();
+                    }}
+                    title="Archive"
+                    startDecorator={<FaArchive />}
+                  >
+                    Archive
+                  </Button>
+                )}
+              {!editing &&
+                setDeadlines && ( // Hide buttons while editing
+                  <Button
+                    size="sm"
+                    variant="solid"
+                    color="danger"
+                    onClick={() => {
+                      // Bring up confirmation modal
+                      if (
+                        !window.confirm(
+                          "Are you sure you want to delete this deadline?\nTHIS CANNOT BE UNDONE."
+                        )
                       )
-                    )
-                      return;
-                    deleteDeadline();
-                  }}
-                  title="Delete"
-                  startDecorator={<FaTrashAlt />}
-                >
-                  Delete
-                </Button>
-              )}
+                        return;
+                      deleteDeadline();
+                    }}
+                    title="Delete"
+                    startDecorator={<FaTrashAlt />}
+                  >
+                    Delete
+                  </Button>
+                )}
+            </Box>
           </CardActions>
           {/* Required-disclaimer */}
           {editing && <RequiredDisclaimer />}
