@@ -14,7 +14,7 @@ export default function Calendar({ deadlines, setDeadlines, courses }) {
       id: deadline.id,
       date: new Date(deadline.date),
       allDay: true,
-      classNames: ["bold"],
+      classNames: ["bold", deadline.status.replace(" ", "-")],
       color: courses.find((course) => course.name === deadline.course).color,
       extendedProps: {
         deadline: deadline,
@@ -43,6 +43,7 @@ export default function Calendar({ deadlines, setDeadlines, courses }) {
         titleFormat={{ year: "numeric", month: "short" }}
         initialView="dayGridMonth"
         dayHeaderClassNames={["day-header"]}
+        nowIndicatorClassNames={["now-indicator"]}
         firstDay={1} // start week on Monday
         weekNumbers={true}
         weekText="" // remove "W"-prefix
@@ -90,32 +91,17 @@ function EventContentJSX({ deadline, ...props }) {
           />
         </ModalDialog>
       </Modal>
-      {/* <Tooltip
-        sx={{ m: 0, p: 0 }}
-        title={
-          <DeadlineCard
-            deadline={deadline}
-            deadlines={deadlines}
-            courses={courses}
-            sx={{ minWidth: "300px" }}
-          />
-        }
-        placement="top"
-        enterDelay={0}
-        enterTouchDelay={0}
-        leaveTouchDelay={3000}
-      > */}
       <Box
         sx={{
           overflow: "hidden",
           textOverflow: "ellipsis",
           whiteSpace: "nowrap",
+          px: ".25em",
         }}
         onClick={() => setModalOpen(true)}
       >
         {deadline.title}
       </Box>
-      {/* </Tooltip> */}
     </>
   );
 }

@@ -96,12 +96,7 @@ function ArchiveCard({
   courses,
 }) {
   return (
-    <Card
-      variant="outlined"
-      sx={{
-        backgroundColor: "background.backdrop",
-      }}
-    >
+    <Card variant="soft">
       <CardOverflow
         sx={{
           backgroundColor: courses.find(

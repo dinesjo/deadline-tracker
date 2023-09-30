@@ -9,6 +9,27 @@
   font-weight: bold;
 }
 
+.Completed div {
+  opacity: 0.6;
+  text-decoration: line-through;
+}
+
+.In-Progress div {
+}
+
+.Not-Started div {
+}
+
+td.fc-daygrid-day {
+  border: 0;
+}
+
+.fc table,
+.fc table td,
+.fc table th {
+  border: 0 !important;
+}
+
 .day-header {
   background-color: var(--joy-palette-neutral-900, #fbfcfe) !important;
   color: var(--joy-palette-neutral-200, #32383e) !important;
@@ -18,4 +39,20 @@
   background-color: var(--joy-palette-neutral-600, #fbfcfe) !important;
   border-color: var(--joy-palette-neutral-600, #cdd7e1) !important;
   color: var(--joy-palette-neutral-200, #32383e) !important;
+}
+
+.fc-day-today {
+  background-color: transparent !important;
+  color: var(--joy-palette-neutral-200, #32383e) !important;
+}
+
+.fc-day-today .fc-daygrid-day-number {
+  background-color: #0b6bcb !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  text-decoration: underline;
 }
