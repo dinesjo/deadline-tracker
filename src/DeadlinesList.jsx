@@ -94,7 +94,7 @@ export default function DeadlinesList({
   );
 }
 
-function TabPanelForCourse({ index, deadlines, archived, ...props }) {
+function TabPanelForCourse({ index, deadlines, ...props }) {
   const groupedDeadlines = groupDeadlinesByDate(deadlines);
   const dates = Object.keys(groupedDeadlines).sort((a, b) => {
     return new Date(a).getTime() - new Date(b).getTime();
@@ -169,10 +169,9 @@ function TabPanelForCourse({ index, deadlines, archived, ...props }) {
               {groupedDeadlines[date].map((deadline) => (
                 <Grid xs={12} sm={6} lg={4} key={deadline.id}>
                   <DeadlineCard
-                    {...props}
-                    deadlines={deadlines}
                     deadline={deadline}
-                    archived={archived}
+                    deadlines={deadlines}
+                    {...props}
                   />
                 </Grid>
               ))}

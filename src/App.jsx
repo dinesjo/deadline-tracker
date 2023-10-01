@@ -338,9 +338,6 @@ function ArchiveModal({ ...props }) {
           sx={{ width: "100%" }}
         >
           Archived
-          {/* <Chip variant="outlined" size="sm" color="neutral" sx={{ ml: 1 }}>
-            {props.archived.length}
-          </Chip> */}
         </Button>
       </Badge>
       <Modal

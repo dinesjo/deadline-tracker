@@ -18,6 +18,7 @@ import {
 } from "@mui/joy";
 import {
   FaArchive,
+  FaBoxOpen,
   FaCalendarDay,
   FaCheck,
   FaEdit,
@@ -75,6 +76,7 @@ export default function DeadlineCard({
       }}
     >
       <Badge
+        variant="plain"
         badgeContent="Archived!"
         invisible={!isArchived}
         color="warning"
@@ -88,10 +90,9 @@ export default function DeadlineCard({
           variant="soft"
           sx={{
             opacity: deadline.status === "Completed" && !editing ? 0.6 : 1,
-            // Spring-like transition below
+            // Spring-like transition
             transition: "0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55)",
             transitionProperty: "opacity, transform, scale",
-            filter: isArchived ? "grayscale(1)" : "",
             ...sx,
           }}
         >
@@ -103,9 +104,10 @@ export default function DeadlineCard({
               alignItems: "center",
               justifyContent: "space-between",
               pr: 0,
+              filter: isArchived ? "grayscale(1)" : "",
             }}
           >
-            {/* Course */}
+            {/* COURSE */}
             {editing ? (
               <SelectCourse
                 courses={courses}
@@ -128,7 +130,7 @@ export default function DeadlineCard({
                 {course.name}
               </Typography>
             )}
-            {/* Discard edits button */}
+            {/* EDIT/DISCARD BUTTONS */}
             {setDeadlines && (
               <ButtonGroup
                 sx={{
@@ -152,7 +154,7 @@ export default function DeadlineCard({
                     <FaTimes />
                   </IconButton>
                 )}
-                {/* Edit/Confirm button */}
+                {/* EDIT/CONFIRM BUTTON */}
                 {!isArchived && (
                   <IconButton
                     type={editing ? "submit" : "button"}
@@ -186,7 +188,7 @@ export default function DeadlineCard({
                 alignItems: "center",
               }}
             >
-              {/* Title */}
+              {/* TITLE */}
               {editing ? (
                 <Badge
                   invisible={editedDeadline.title != ""}
@@ -218,7 +220,7 @@ export default function DeadlineCard({
                   {deadline.title}
                 </Typography>
               )}
-              {/* Type */}
+              {/* TYPE */}
               {editing ? (
                 <SelectType
                   deadline={editedDeadline}
@@ -243,7 +245,7 @@ export default function DeadlineCard({
                 )
               )}
             </Box>
-            {/* Date */}
+            {/* DATE */}
             {editing ? (
               <Input
                 required
@@ -278,7 +280,7 @@ export default function DeadlineCard({
                 </Typography>
               )
             )}
-            {/* Details */}
+            {/* DETAILS */}
             {editing ? (
               <Textarea
                 sx={{ height: "4em", overflow: "hidden", resize: "vertical" }}
@@ -296,6 +298,7 @@ export default function DeadlineCard({
               <Typography level="body-sm">{deadline.details}</Typography>
             )}
             <CardActions>
+              {/* DRIVE BUTTON */}
               {!editing && course.googleDriveURL && (
                 <Link
                   variant="solid"
@@ -313,6 +316,7 @@ export default function DeadlineCard({
                   Drive
                 </Link>
               )}
+              {/* ARCHIVE/UNARCHIVE */}
               <Box sx={{ display: "flex", gap: ".5em", ml: "auto" }}>
                 {!editing && !isArchived && setDeadlines && (
                   <Button
@@ -328,7 +332,27 @@ export default function DeadlineCard({
                     Archive
                   </Button>
                 )}
+                {!editing && isArchived && setDeadlines && (
+                  <Button
+                    size="sm"
+                    variant="plain"
+                    color="primary"
+                    onClick={() => {
+                      setArchived((current) => {
+                        return current.filter((d) => d.id !== deadline.id);
+                      });
+                      setDeadlines((current) => {
+                        return [...current, deadline];
+                      });
+                    }}
+                    title="Unarchive"
+                    startDecorator={<FaBoxOpen />}
+                  >
+                    Unarchive
+                  </Button>
+                )}
 
+                {/* DELETE */}
                 {!editing &&
                   setDeadlines && ( // Hide buttons while editing
                     <Button
@@ -366,7 +390,7 @@ export default function DeadlineCard({
                 py: 1,
               }}
             >
-              {/* Status */}
+              {/* STATUS */}
               {setDeadlines && (
                 <>
                   <StatusChip
@@ -377,7 +401,7 @@ export default function DeadlineCard({
                   <Divider orientation="vertical" />
                 </>
               )}
-              {/* Days left */}
+              {/* DAYS LEFT */}
               {deadline.date && (
                 <Typography
                   level="body-sm"
@@ -478,17 +502,6 @@ function StatusChip({ status, id, setDeadlines }) {
     Completed: "Not Started",
   }[status];
 
-  const cycleStatus = () => {
-    setDeadlines((current) => {
-      return current.map((deadline) => {
-        if (deadline.id === id) {
-          return { ...deadline, status: nextStatus };
-        }
-        return deadline;
-      });
-    });
-  };
-
   return (
     <Chip
       variant="soft"
@@ -496,7 +509,14 @@ function StatusChip({ status, id, setDeadlines }) {
       color={statuses.color[status]}
       startDecorator={statuses.icon[status]}
       onClick={() => {
-        cycleStatus();
+        setDeadlines((current) => {
+          return current.map((deadline) => {
+            if (deadline.id === id) {
+              return { ...deadline, status: nextStatus };
+            }
+            return deadline;
+          });
+        });
       }}
       sx={{
         py: 0.75,
