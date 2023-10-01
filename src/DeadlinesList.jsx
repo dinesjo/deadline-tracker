@@ -18,6 +18,7 @@ import { daysFromNow } from "./app";
 export default function DeadlinesList({
   deadlines,
   setDeadlines,
+  archived,
   setArchived,
   courses,
 }) {
@@ -71,6 +72,7 @@ export default function DeadlinesList({
         setDeadlines={setDeadlines}
         setArchived={setArchived}
         courses={courses}
+        archived={archived}
       />
       {/* Course[i]-tabs */}
       {courses
@@ -82,6 +84,7 @@ export default function DeadlinesList({
               (deadline) => deadline.course === course.name
             )}
             setDeadlines={setDeadlines}
+            archived={archived}
             setArchived={setArchived}
             courses={courses}
             key={index}
@@ -91,7 +94,7 @@ export default function DeadlinesList({
   );
 }
 
-function TabPanelForCourse({ index, deadlines, ...props }) {
+function TabPanelForCourse({ index, deadlines, archived, ...props }) {
   const groupedDeadlines = groupDeadlinesByDate(deadlines);
   const dates = Object.keys(groupedDeadlines).sort((a, b) => {
     return new Date(a).getTime() - new Date(b).getTime();
@@ -169,6 +172,7 @@ function TabPanelForCourse({ index, deadlines, ...props }) {
                     {...props}
                     deadlines={deadlines}
                     deadline={deadline}
+                    archived={archived}
                   />
                 </Grid>
               ))}

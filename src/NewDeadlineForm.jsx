@@ -29,7 +29,6 @@ export default function NewDeadlineForm({
             crypto.randomUUID()
           ),
         ]);
-        console.log("New deadline submitted:", newDeadline);
         // Reset user input state
         setNewDeadline(new Deadline());
         setOpen(false); // close modal

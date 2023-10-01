@@ -6,16 +6,27 @@ import { Modal } from "@mui/joy";
 import DeadlineCard from "./components/DeadlineCard";
 import { useState } from "react";
 
-export default function Calendar({ deadlines, setDeadlines, courses }) {
+export default function Calendar({
+  archived,
+  setArchived,
+  deadlines,
+  setDeadlines,
+  courses,
+}) {
   const [modalOpen, setModalOpen] = useState(false);
   const [eventInfo, setEventInfo] = useState(null);
-  const events = deadlines.map((deadline) => {
+  const events = [...archived, ...deadlines].map((deadline) => {
+    const isArchived = archived.some((d) => d.id === deadline.id);
+    const courseColor = courses.find(
+      (course) => course.name === deadline.course
+    ).color;
     return {
       id: deadline.id,
       date: new Date(deadline.date),
       allDay: true,
       classNames: ["bold", deadline.status.replace(" ", "-")],
-      color: courses.find((course) => course.name === deadline.course).color,
+      backgroundColor: isArchived ? "#555E6888" : courseColor,
+      borderColor: isArchived ? "#555E6888" : courseColor,
       extendedProps: {
         deadline: deadline,
       },
@@ -66,10 +77,11 @@ export default function Calendar({ deadlines, setDeadlines, courses }) {
    * @see https://fullcalendar.io/docs/eventContent
    */
   function eventContent(eventInfo) {
-    const deadline = eventInfo.event.extendedProps.deadline;
     return (
       <EventContentJSX
-        deadline={deadline}
+        archived={archived}
+        setArchived={setArchived}
+        eventInfo={eventInfo}
         deadlines={deadlines}
         courses={courses}
         setDeadlines={setDeadlines}
@@ -78,7 +90,8 @@ export default function Calendar({ deadlines, setDeadlines, courses }) {
   }
 }
 
-function EventContentJSX({ deadline, ...props }) {
+function EventContentJSX({ eventInfo, archived, setArchived, ...props }) {
+  const { deadline } = eventInfo.event.extendedProps;
   const [modalOpen, setModalOpen] = useState(false);
   return (
     <>
@@ -87,16 +100,22 @@ function EventContentJSX({ deadline, ...props }) {
           <DeadlineCard
             sx={{ minWidth: "300px" }}
             deadline={deadline}
+            archived={archived}
+            setArchived={setArchived}
             {...props}
           />
         </ModalDialog>
       </Modal>
       <Box
         sx={{
+          transition: "box-shadow .2s ease-out",
           overflow: "hidden",
-          // textOverflow: "ellipsis",
           whiteSpace: "nowrap",
           px: ".1em",
+          borderRadius: "5px",
+          "&:hover": {
+            boxShadow: "0 0 0 3px #eee",
+          },
         }}
         onClick={() => setModalOpen(true)}
       >

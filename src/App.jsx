@@ -160,6 +160,8 @@ export default function App() {
           }}
         >
           <Calendar
+            archived={archived}
+            setArchived={setArchived}
             deadlines={deadlines}
             courses={courses}
             setDeadlines={setDeadlines}
@@ -181,6 +183,7 @@ export default function App() {
           <DeadlinesList
             deadlines={deadlines}
             setDeadlines={setDeadlines}
+            archived={archived}
             setArchived={setArchived}
             courses={courses}
           />
