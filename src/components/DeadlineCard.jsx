@@ -20,12 +20,9 @@ import {
   FaArchive,
   FaCalendarDay,
   FaCheck,
-  FaCheckCircle,
   FaEdit,
   FaExclamationTriangle,
   FaGoogleDrive,
-  FaRegCircle,
-  FaSpinner,
   FaTimes,
   FaTrashAlt,
 } from "react-icons/fa";
@@ -34,19 +31,7 @@ import SelectType from "./form-components/SelectType";
 import SelectCourse from "./form-components/SelectCourse";
 import RequiredDisclaimer from "./form-components/RequiredDisclaimer";
 import { daysFromNow } from "../app";
-
-const statuses = {
-  color: {
-    "Not Started": "neutral",
-    "In Progress": "primary",
-    Completed: "success",
-  },
-  icon: {
-    "Not Started": <FaRegCircle />,
-    "In Progress": <FaSpinner />,
-    Completed: <FaCheckCircle />,
-  },
-};
+import statuses from "../statuses";
 
 // const isMobile = window.innerWidth < 600;
 
@@ -353,27 +338,11 @@ export default function DeadlineCard({
                       onClick={() => {
                         // Bring up confirmation modal
                         if (
-                          !window.confirm(
+                          window.confirm(
                             "Are you sure you want to delete this deadline?\nTHIS CANNOT BE UNDONE."
                           )
                         )
-                          return;
-                        // Animate card deletion
-                        const card = document.querySelector(
-                          `#deadline-${deadline.id}`
-                        );
-                        card.style.opacity = 0;
-                        card.style.transform = "scale(0)";
-                        setTimeout(() => {
-                          // Delete deadline
-                          setDeadlines((current) => {
-                            return current.filter((d) => d.id !== deadline.id);
-                          });
-                          // Also remove from archived if it's there
-                          setArchived((current) => {
-                            return current.filter((d) => d.id !== deadline.id);
-                          });
-                        }, 500);
+                          deleteDeadline();
                       }}
                       title="Delete"
                       startDecorator={<FaTrashAlt />}
@@ -427,13 +396,42 @@ export default function DeadlineCard({
   );
 
   function archiveDeadline() {
-    // Animate archive
-    animateArchive();
+    // ANIMATION, only visually
+    // Get archived button center
+    const archivedButton = document.querySelector("#archived-button");
+    const archivedButtonRect = archivedButton.getBoundingClientRect();
+    const archivedButtonCenterX =
+      archivedButtonRect.left + archivedButtonRect.width / 2;
+    const archivedButtonCenterY =
+      archivedButtonRect.top + archivedButtonRect.height / 2;
+    // Get card center
+    const card = document.querySelector(`#deadline-${deadline.id}`);
+    card.parentElement.querySelector(".MuiBadge-badge").style.opacity = 0; // Prevents badge from showing up after animation
+    const cardRect = card.getBoundingClientRect();
+    const cardCenterX = cardRect.left + cardRect.width / 2;
+    const cardCenterY = cardRect.top + cardRect.height / 2;
+    // Calculate translation
+    const translateX = archivedButtonCenterX - cardCenterX;
+    const translateY = archivedButtonCenterY - cardCenterY;
+    // Animate
+    card.style.position = "absolute";
+    card.style.opacity = 0;
+    card.style.transform = `translate(${translateX}px, ${translateY}px) scale(0.25)`;
 
-    // If the only deadline during this date, delete date divider immediately
-    deleteDateDividerIfOnlyOneDeadline();
+    // DELETE DATE DIVIDER
+    if (deadlines.filter((d) => d.date === deadline.date).length === 1) {
+      // Get date divider by finding the one that has deadline as next element
+      const dateDividers = document.querySelectorAll(".MuiDivider-root");
+      const dateDivider = Array.from(dateDividers).find((d) => {
+        d.nextElementSibling.querySelector(`#deadline-${deadline.id}`) != null;
+      });
+      // Remove date divider if found
+      if (dateDivider) {
+        dateDivider.style.scale = 0; // "scale" animates nicely
+      }
+    }
 
-    // Archive after animation
+    // LOGIC
     setTimeout(() => {
       setArchived((current) => {
         return [...current, deadline];
@@ -441,7 +439,24 @@ export default function DeadlineCard({
       setDeadlines((current) => {
         return current.filter((d) => d.id !== deadline.id);
       });
-    }, 500);
+    }, 400);
+  }
+
+  function deleteDeadline() {
+    // Animate card deletion
+    const card = document.querySelector(`#deadline-${deadline.id}`);
+    card.style.opacity = 0;
+    card.style.transform = "scale(0)";
+    setTimeout(() => {
+      // Delete deadline
+      setDeadlines((current) => {
+        return current.filter((d) => d.id !== deadline.id);
+      });
+      // Also remove from archived if it's there
+      setArchived((current) => {
+        return current.filter((d) => d.id !== deadline.id);
+      });
+    }, 400);
   }
 
   function submitEdit() {
@@ -453,46 +468,6 @@ export default function DeadlineCard({
         return d;
       });
     });
-  }
-
-  function animateArchive() {
-    // Get position of archived button
-    const { archivedButtonCenterX, archivedButtonCenterY } =
-      getArchivedBtnCenterCoords();
-    // Get position of card
-    const card = document.querySelector(`#deadline-${deadline.id}`);
-    const cardBadge = card.parentElement.querySelector(".MuiBadge-badge");
-    cardBadge.style.opacity = 0;
-    const cardRect = card.getBoundingClientRect();
-    const cardCenterX = cardRect.left + cardRect.width / 2;
-    const cardCenterY = cardRect.top + cardRect.height / 2;
-    // Calculate translation
-    const translateX = archivedButtonCenterX - cardCenterX;
-    const translateY = archivedButtonCenterY - cardCenterY;
-    // Animate
-    card.style.position = "absolute";
-    card.style.opacity = 0;
-    card.style.transform = `translate(${translateX}px, ${translateY}px) scale(0.25)`;
-  }
-
-  function deleteDateDividerIfOnlyOneDeadline() {
-    // Ensure there is only one deadline with this date
-    if (deadlines.filter((d) => d.date === deadline.date).length !== 1) {
-      return;
-    }
-
-    // Get date divider
-    const dateDividers = document.querySelectorAll(".MuiDivider-root");
-    const dateDivider = Array.from(dateDividers).find((d) => {
-      return (
-        d.nextElementSibling.querySelector(`#deadline-${deadline.id}`) != null
-      ); // true if next elem contains this deadline
-    });
-
-    // Remove date divider
-    if (dateDivider) {
-      dateDivider.style.scale = 0;
-    }
   }
 }
 
@@ -545,14 +520,4 @@ function TypeChip({ type }) {
       {type}
     </Chip>
   );
-}
-
-function getArchivedBtnCenterCoords() {
-  const archivedButton = document.querySelector("#archived-button");
-  const archivedButtonRect = archivedButton.getBoundingClientRect();
-  const archivedButtonCenterX =
-    archivedButtonRect.left + archivedButtonRect.width / 2;
-  const archivedButtonCenterY =
-    archivedButtonRect.top + archivedButtonRect.height / 2;
-  return { archivedButtonCenterX, archivedButtonCenterY };
 }
