@@ -116,28 +116,6 @@ export default function App() {
           backgroundColor: "background.body",
         }}
       >
-        {/* Calendar VIEW */}
-        <Typography
-          level="title-lg"
-          startDecorator={<FaCalendarAlt />}
-          sx={{ mt: 2 }}
-        >
-          Calendar View
-        </Typography>
-        {/* Calendar */}
-        <Box
-          sx={{
-            width: { xs: "98%", sm: "90%", md: "70%", lg: "60%" },
-            mt: 2,
-          }}
-        >
-          <Calendar
-            deadlines={deadlines}
-            courses={courses}
-            setDeadlines={setDeadlines}
-          />
-        </Box>
-
         <Stack
           direction={{ xs: "column", sm: "row" }}
           spacing={2}
@@ -162,6 +140,31 @@ export default function App() {
             courses={courses}
           />
         </Stack>
+
+        {/* Calendar VIEW */}
+        <Typography
+          level="title-lg"
+          startDecorator={<FaCalendarAlt />}
+          sx={{ mt: 2 }}
+        >
+          Calendar
+        </Typography>
+        <Typography level="body-md" sx={{ textAlign: "center" }}>
+          Click a deadline to see details, or drag and drop to move it.
+        </Typography>
+        {/* Calendar */}
+        <Box
+          sx={{
+            width: { xs: "98%", sm: "90%", md: "70%", lg: "60%" },
+            mt: 2,
+          }}
+        >
+          <Calendar
+            deadlines={deadlines}
+            courses={courses}
+            setDeadlines={setDeadlines}
+          />
+        </Box>
 
         {/* Deadlines LIST */}
         <Typography

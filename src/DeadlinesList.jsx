@@ -1,6 +1,5 @@
 import {
   Alert,
-  Box,
   Chip,
   Divider,
   Grid,
@@ -12,7 +11,6 @@ import {
 } from "@mui/joy";
 import DeadlineCard from "./components/DeadlineCard";
 import { Fragment } from "react";
-import { FaCoffee } from "react-icons/fa";
 import { daysFromNow } from "./app";
 
 // const isMobile = window.innerWidth < 600;
@@ -112,7 +110,7 @@ function TabPanelForCourse({ index, deadlines, ...props }) {
             <NoDeadlinesAlert />
           </Grid>
         )}
-        {dates.map((date, index) => {
+        {dates.map((date) => {
           // Format date
           let d;
           switch (daysFromNow(date)) {
@@ -174,26 +172,6 @@ function TabPanelForCourse({ index, deadlines, ...props }) {
                   />
                 </Grid>
               ))}
-              {index === dates.length - 1 ||
-              daysFromNow(dates[index + 1]) <= 3 ? (
-                ""
-              ) : (
-                <Fragment key={index}>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "end",
-                      width: "100%",
-                      mt: 8,
-                      mb: -2,
-                    }}
-                  >
-                    <Typography level="body-sm" startDecorator={<FaCoffee />}>
-                      Some time later...
-                    </Typography>
-                  </Box>
-                </Fragment>
-              )}
             </Fragment>
           );
         })}

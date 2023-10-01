@@ -33,7 +33,7 @@ export default function Calendar({ deadlines, setDeadlines, courses }) {
       <FullCalendar
         events={events}
         eventContent={eventContent}
-        longPressDelay={250} // how long to wait before dragging on mobile (ms)
+        longPressDelay={500} // how long to wait before dragging on mobile (ms)
         plugins={[dayGridPlugin, interactionPlugin]}
         headerToolbar={{
           left: "today",
@@ -94,9 +94,9 @@ function EventContentJSX({ deadline, ...props }) {
       <Box
         sx={{
           overflow: "hidden",
-          textOverflow: "ellipsis",
+          // textOverflow: "ellipsis",
           whiteSpace: "nowrap",
-          px: ".25em",
+          px: ".1em",
         }}
         onClick={() => setModalOpen(true)}
       >
