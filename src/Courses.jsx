@@ -13,6 +13,7 @@ import {
 } from "@mui/joy";
 import { useState } from "react";
 import { FaGoogleDrive, FaPalette, FaPlus } from "react-icons/fa";
+import ConfirmModal from "./components/ConfirmModal";
 
 const courseColors = [
   "#c62828",
@@ -168,11 +169,11 @@ export default function Courses({
     });
     // Remove deadlines with this course
     setDeadlines((current) => {
-      return current.filter((deadline) => deadline.course !== courses.name);
+      return current.filter((deadline) => deadline.course !== course.name);
     });
     // Remove archived with this course
     setArchived((current) => {
-      return current.filter((deadline) => deadline.course !== courses.name);
+      return current.filter((deadline) => deadline.course !== course.name);
     });
   }
   function getRandomColorCode() {
@@ -200,14 +201,15 @@ function CourseChip({
   changeColor,
   changeGoogleDriveURL,
 }) {
-  const [open, setOpen] = useState(false); // edit course popup
+  const [editCourseModal, setEditCourseModal] = useState(false); // edit course popup
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false); // delete course confirmation modal
 
   return (
     <>
       <Modal
-        open={open}
+        open={editCourseModal}
         onClose={() => {
-          setOpen(false);
+          setEditCourseModal(false);
         }}
       >
         <ModalDialog
@@ -263,7 +265,7 @@ function CourseChip({
                   }}
                   onClick={() => {
                     changeColor(course, color);
-                    setOpen(false);
+                    setEditCourseModal(false);
                   }}
                 />
               </Grid>
@@ -282,6 +284,20 @@ function CourseChip({
           />
         </ModalDialog>
       </Modal>
+      <ConfirmModal
+        onConfirm={() => {
+          removeCourse(course);
+        }}
+        modalOpen={confirmModalOpen}
+        setModalOpen={setConfirmModalOpen}
+        confirmColor="danger"
+      >
+        Are you sure you want to delete this course? This will also{" "}
+        <Typography fontWeight="bold" color="danger">
+          delete all deadlines associated with this course
+        </Typography>
+        . Even archived ones.
+      </ConfirmModal>
       <Chip
         key={index}
         sx={{
@@ -289,7 +305,7 @@ function CourseChip({
           fontWeight: "bold",
         }}
         onClick={() => {
-          setOpen(true);
+          setEditCourseModal(true);
         }}
         endDecorator={
           <ChipDelete
@@ -299,14 +315,12 @@ function CourseChip({
                 deadlines.some((deadline) => deadline.course === course.name) ||
                 archived.some((deadline) => deadline.course === course.name)
               ) {
-                if (
-                  !window.confirm(
-                    "Are you sure you want to delete this course? This will also delete all deadlines with this course. Even archived ones.\nTHIS CANNOT BE UNDONE."
-                  )
-                )
-                  return;
+                setConfirmModalOpen(true);
               }
-              removeCourse(course);
+              // Otherwise, delete course immediately
+              else {
+                removeCourse(course);
+              }
             }}
           />
         }

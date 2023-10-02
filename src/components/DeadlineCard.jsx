@@ -32,6 +32,7 @@ import RequiredDisclaimer from "./form-components/RequiredDisclaimer";
 import TypeChip from "./TypeChip";
 import StatusChip from "./StatusChip";
 import { daysFromNow } from "../app";
+import ConfirmModal from "./ConfirmModal";
 
 export default function DeadlineCard({
   deadline,
@@ -42,10 +43,11 @@ export default function DeadlineCard({
   courses,
   sx,
 }) {
+  const [editing, setEditing] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [editedDeadline, setEditedDeadline] = useState(deadline);
   const isArchived = archived.some((d) => d.id === deadline.id);
   const course = courses.find((course) => course.name === deadline.course);
-  const [editing, setEditing] = useState(false);
-  const [editedDeadline, setEditedDeadline] = useState(deadline);
   const daysLeft = daysFromNow(deadline.date);
   let daysLeftText;
   let daysLeftColor = daysLeft < 3 ? "danger" : daysLeft < 7 ? "warning" : null;
@@ -320,7 +322,7 @@ export default function DeadlineCard({
                   Drive
                 </Link>
               )}
-              {/* ARCHIVE/UNARCHIVE */}
+              {/* ARCHIVE/UNARCHIVE, DELETE */}
               <Box sx={{ display: "flex", gap: ".5em", ml: "auto" }}>
                 {!editing && !isArchived && setDeadlines && (
                   <Button
@@ -359,24 +361,28 @@ export default function DeadlineCard({
                 {/* DELETE */}
                 {!editing &&
                   setDeadlines && ( // Hide buttons while editing
-                    <Button
-                      size="sm"
-                      variant="solid"
-                      color="danger"
-                      onClick={() => {
-                        // Bring up confirmation modal
-                        if (
-                          window.confirm(
-                            "Are you sure you want to delete this deadline?\nTHIS CANNOT BE UNDONE."
-                          )
-                        )
-                          deleteDeadline();
-                      }}
-                      title="Delete"
-                      startDecorator={<FaTrashAlt />}
-                    >
-                      Delete
-                    </Button>
+                    <>
+                      <ConfirmModal
+                        onConfirm={deleteDeadline}
+                        modalOpen={deleteModalOpen}
+                        setModalOpen={setDeleteModalOpen}
+                        confirmColor="danger"
+                      >
+                        Delete <strong>{deadline.title}</strong>?
+                      </ConfirmModal>
+                      <Button
+                        size="sm"
+                        variant="solid"
+                        color="danger"
+                        onClick={() => {
+                          setDeleteModalOpen(true);
+                        }}
+                        title="Delete"
+                        startDecorator={<FaTrashAlt />}
+                      >
+                        Delete
+                      </Button>
+                    </>
                   )}
               </Box>
             </CardActions>

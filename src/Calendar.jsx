@@ -1,10 +1,11 @@
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import { Box, Button, ModalDialog, Typography } from "@mui/joy";
+import { Box, ModalDialog } from "@mui/joy";
 import { Modal } from "@mui/joy";
 import DeadlineCard from "./components/DeadlineCard";
 import { useState } from "react";
+import ConfirmModal from "./components/ConfirmModal";
 
 export default function Calendar({
   archived,
@@ -36,11 +37,34 @@ export default function Calendar({
   return (
     <Box>
       <ConfirmModal
-        setDeadlines={setDeadlines}
+        onConfirm={() => {
+          setModalOpen(false);
+          const deadline = eventInfo.event.extendedProps.deadline;
+          setDeadlines((deadlines) => {
+            const newDate = new Date(eventInfo.event.start);
+            newDate.setDate(newDate.getDate() + 1); // HOTFIX
+            deadline.date = newDate.toISOString().split("T")[0]; // format date to yyyy-MM-dd
+            return deadlines.map((d) => {
+              if (d.id === deadline.id) {
+                return deadline;
+              }
+              return d;
+            });
+          });
+        }}
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
-        eventInfo={eventInfo}
-      />
+      >
+        Move <strong>{eventInfo?.event.extendedProps.deadline.title}</strong> to{" "}
+        <strong>
+          {eventInfo?.event.start?.toLocaleDateString("en-US", {
+            weekday: "long",
+            month: "long",
+            day: "numeric",
+          })}
+        </strong>
+        ?
+      </ConfirmModal>
       <FullCalendar
         events={events}
         eventContent={eventContent}
@@ -122,78 +146,5 @@ function EventContentJSX({ eventInfo, archived, setArchived, ...props }) {
         {deadline.title}
       </Box>
     </>
-  );
-}
-
-/**
- * Modal to confirm moving a deadline
- * @param {function} setDeadlines - function to set deadlines
- * @param {Object} eventInfo - event info from FullCalendar
- * @param {boolean} modalOpen - state of modal
- * @param {function} setModalOpen - function to set modal state
- */
-function ConfirmModal({ setDeadlines, eventInfo, modalOpen, setModalOpen }) {
-  return (
-    <Modal
-      open={modalOpen}
-      onClose={() => {
-        setModalOpen(false);
-      }}
-      sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
-    >
-      <ModalDialog>
-        <Typography level="h4">Are you sure?</Typography>
-        <Typography level="body-md" sx={{ mt: 1 }}>
-          Move <strong>{eventInfo?.event.extendedProps.deadline.title}</strong>{" "}
-          to{" "}
-          <strong>
-            {eventInfo?.event.start?.toLocaleDateString("en-US", {
-              weekday: "long",
-              month: "long",
-              day: "numeric",
-            })}
-          </strong>
-          ?
-        </Typography>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "flex-end",
-            gap: ".5em",
-            mt: 2,
-          }}
-        >
-          <Button
-            color="neutral"
-            variant="outlined"
-            onClick={() => {
-              setModalOpen(false);
-            }}
-          >
-            Cancel
-          </Button>
-          <Button
-            variant="solid"
-            onClick={() => {
-              setModalOpen(false);
-              const deadline = eventInfo.event.extendedProps.deadline;
-              setDeadlines((deadlines) => {
-                const newDate = new Date(eventInfo.event.start);
-                newDate.setDate(newDate.getDate() + 1); // HOTFIX
-                deadline.date = newDate.toISOString().split("T")[0]; // format date to yyyy-MM-dd
-                return deadlines.map((d) => {
-                  if (d.id === deadline.id) {
-                    return deadline;
-                  }
-                  return d;
-                });
-              });
-            }}
-          >
-            Confirm
-          </Button>
-        </Box>
-      </ModalDialog>
-    </Modal>
   );
 }
