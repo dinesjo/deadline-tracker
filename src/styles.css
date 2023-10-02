@@ -56,3 +56,7 @@ td.fc-daygrid-day {
   border-radius: 50%;
   text-decoration: underline;
 }
+
+Button {
+  transition: all 0.1s ease-in-out;
+}

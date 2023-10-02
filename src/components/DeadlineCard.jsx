@@ -8,7 +8,6 @@ import {
   CardActions,
   CardContent,
   CardOverflow,
-  Chip,
   Divider,
   IconButton,
   Input,
@@ -27,14 +26,12 @@ import {
   FaTimes,
   FaTrashAlt,
 } from "react-icons/fa";
-import types from "../types";
 import SelectType from "./form-components/SelectType";
 import SelectCourse from "./form-components/SelectCourse";
 import RequiredDisclaimer from "./form-components/RequiredDisclaimer";
+import TypeChip from "./TypeChip";
+import StatusChip from "./StatusChip";
 import { daysFromNow } from "../app";
-import statuses from "../statuses";
-
-// const isMobile = window.innerWidth < 600;
 
 export default function DeadlineCard({
   deadline,
@@ -70,15 +67,22 @@ export default function DeadlineCard({
   return (
     <form
       onSubmit={(e) => {
-        e.preventDefault();
-        submitEdit();
+        e.preventDefault(); // Prevent page refresh
+        setDeadlines((current) => {
+          return current.map((d) => {
+            if (d.id === deadline.id) {
+              return editedDeadline;
+            }
+            return d;
+          });
+        });
         setEditing(false);
       }}
     >
       <Badge
+        invisible={!isArchived}
         variant="plain"
         badgeContent="Archived!"
-        invisible={!isArchived}
         color="warning"
         sx={{
           display: "block",
@@ -419,6 +423,9 @@ export default function DeadlineCard({
     </form>
   );
 
+  /**
+   * Animates card to archive button, then archives it
+   */
   function archiveDeadline() {
     // ANIMATION, only visually
     // Get archived button center
@@ -466,6 +473,9 @@ export default function DeadlineCard({
     }, 400);
   }
 
+  /**
+   * Animates card deletion, then deletes it
+   */
   function deleteDeadline() {
     // Animate card deletion
     const card = document.querySelector(`#deadline-${deadline.id}`);
@@ -482,62 +492,4 @@ export default function DeadlineCard({
       });
     }, 400);
   }
-
-  function submitEdit() {
-    setDeadlines((current) => {
-      return current.map((d) => {
-        if (d.id === deadline.id) {
-          return editedDeadline;
-        }
-        return d;
-      });
-    });
-  }
-}
-
-function StatusChip({ status, id, setDeadlines }) {
-  const nextStatus = {
-    "Not Started": "In Progress",
-    "In Progress": "Completed",
-    Completed: "Not Started",
-  }[status];
-
-  return (
-    <Chip
-      variant="soft"
-      size="sm"
-      color={statuses.color[status]}
-      startDecorator={statuses.icon[status]}
-      onClick={() => {
-        setDeadlines((current) => {
-          return current.map((deadline) => {
-            if (deadline.id === id) {
-              return { ...deadline, status: nextStatus };
-            }
-            return deadline;
-          });
-        });
-      }}
-      sx={{
-        py: 0.75,
-        px: 1.5,
-      }}
-    >
-      {status}
-    </Chip>
-  );
-}
-
-function TypeChip({ type }) {
-  return (
-    <Chip
-      variant="outlined"
-      sx={{
-        color: types.find((t) => t.name === type).color,
-      }}
-      startDecorator={types.find((t) => t.name === type).icon}
-    >
-      {type}
-    </Chip>
-  );
 }
