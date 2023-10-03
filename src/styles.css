@@ -30,6 +30,13 @@ td.fc-daygrid-day {
   border: 0 !important;
 }
 
+.day-cell:hover {
+  position: relative;
+  transition: all 0.1s ease-in-out;
+  cursor: pointer;
+  background-color: #185ea555 !important;
+}
+
 .day-header {
   background-color: var(--joy-palette-neutral-900, #fbfcfe) !important;
   color: var(--joy-palette-neutral-200, #32383e) !important;

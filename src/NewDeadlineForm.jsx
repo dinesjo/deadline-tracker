@@ -5,6 +5,17 @@ import SelectCourse from "./components/form-components/SelectCourse";
 import SelectType from "./components/form-components/SelectType";
 import RequiredDisclaimer from "./components/form-components/RequiredDisclaimer";
 
+/**
+ * Form for creating a new deadline.
+ * @param {object} props - React props
+ * @param {function} props.setDeadlines - Function to update deadlines
+ * @param {Deadline[]} props.courses - List of courses
+ * @param {Deadline} props.newDeadline - New deadline
+ * @param {function} props.setNewDeadline - Function to update new deadline
+ * @param {function} props.setOpen - Function to update modal open state
+ * @param {object} props - React props
+ * @returns {JSX.Element} - JSX element
+ */
 export default function NewDeadlineForm({
   setDeadlines,
   courses,
@@ -17,20 +28,9 @@ export default function NewDeadlineForm({
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        setDeadlines((current) => [
-          ...current,
-          new Deadline(
-            newDeadline.title,
-            newDeadline.details,
-            newDeadline.date,
-            newDeadline.type,
-            newDeadline.course,
-            "Not Started",
-            crypto.randomUUID()
-          ),
-        ]);
+        setDeadlines((current) => [...current, new Deadline(newDeadline)]);
         // Reset user input state
-        setNewDeadline(new Deadline());
+        setNewDeadline(new Deadline({}));
         setOpen(false); // close modal
       }}
     >
@@ -48,7 +48,7 @@ export default function NewDeadlineForm({
         }}
         onClick={() => {
           // Reset user input state
-          setNewDeadline(new Deadline());
+          setNewDeadline(new Deadline({}));
         }}
       >
         Clear form

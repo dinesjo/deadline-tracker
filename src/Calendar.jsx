@@ -6,6 +6,8 @@ import { Modal } from "@mui/joy";
 import DeadlineCard from "./components/DeadlineCard";
 import { useState } from "react";
 import ConfirmModal from "./components/ConfirmModal";
+import NewDeadlineForm from "./NewDeadlineForm";
+import Deadline from "./deadline";
 
 export default function Calendar({
   archived,
@@ -14,8 +16,11 @@ export default function Calendar({
   setDeadlines,
   courses,
 }) {
-  const [modalOpen, setModalOpen] = useState(false);
-  const [eventInfo, setEventInfo] = useState(null);
+  const [confirmMoveOpen, setConfirmMoveOpen] = useState(false);
+  const [newDeadlineOpen, setNewDeadlineOpen] = useState(false);
+  const [newDeadline, setNewDeadline] = useState(new Deadline({}));
+  const [confirmMoveEventInfo, setConfirmMoveEventInfo] = useState(null);
+  // const [newDeadlineEventInfo, setNewDeadlineEventInfo] = useState(null);
   const events = [...archived, ...deadlines].map((deadline) => {
     const isArchived = archived.some((d) => d.id === deadline.id);
     const courseColor = courses.find(
@@ -38,10 +43,10 @@ export default function Calendar({
     <Box>
       <ConfirmModal
         onConfirm={() => {
-          setModalOpen(false);
-          const deadline = eventInfo.event.extendedProps.deadline;
+          setConfirmMoveOpen(false);
+          const deadline = confirmMoveEventInfo.event.extendedProps.deadline;
           setDeadlines((deadlines) => {
-            const newDate = new Date(eventInfo.event.start);
+            const newDate = new Date(confirmMoveEventInfo.event.start);
             newDate.setDate(newDate.getDate() + 1); // HOTFIX
             deadline.date = newDate.toISOString().split("T")[0]; // format date to yyyy-MM-dd
             return deadlines.map((d) => {
@@ -52,12 +57,16 @@ export default function Calendar({
             });
           });
         }}
-        modalOpen={modalOpen}
-        setModalOpen={setModalOpen}
+        modalOpen={confirmMoveOpen}
+        setModalOpen={setConfirmMoveOpen}
       >
-        Move <strong>{eventInfo?.event.extendedProps.deadline.title}</strong> to{" "}
+        Move{" "}
         <strong>
-          {eventInfo?.event.start?.toLocaleDateString("en-US", {
+          {confirmMoveEventInfo?.event.extendedProps.deadline.title}
+        </strong>{" "}
+        to{" "}
+        <strong>
+          {confirmMoveEventInfo?.event.start?.toLocaleDateString("en-US", {
             weekday: "long",
             month: "long",
             day: "numeric",
@@ -65,8 +74,25 @@ export default function Calendar({
         </strong>
         ?
       </ConfirmModal>
+      {/* NEW DEADLINE MODAL */}
+      <Modal open={newDeadlineOpen} onClose={() => setNewDeadlineOpen(false)}>
+        <ModalDialog>
+          <NewDeadlineForm
+            setDeadlines={setDeadlines}
+            courses={courses}
+            newDeadline={newDeadline}
+            setNewDeadline={setNewDeadline}
+            setOpen={setNewDeadlineOpen}
+          />
+        </ModalDialog>
+      </Modal>
       <FullCalendar
         events={events}
+        dateClick={(eventInfo) => {
+          setNewDeadline(new Deadline({ date: eventInfo.dateStr }));
+          setNewDeadlineOpen(true);
+          // setNewDeadlineEventInfo(eventInfo);
+        }}
         eventContent={eventContent}
         longPressDelay={500} // how long to wait before dragging on mobile (ms)
         plugins={[dayGridPlugin, interactionPlugin]}
@@ -79,6 +105,7 @@ export default function Calendar({
         initialView="dayGridMonth"
         dayHeaderClassNames={["day-header"]}
         nowIndicatorClassNames={["now-indicator"]}
+        dayCellClassNames={["day-cell"]}
         firstDay={1} // start week on Monday
         weekNumbers={true}
         weekText="" // remove "W"-prefix
@@ -86,8 +113,8 @@ export default function Calendar({
         editable={true}
         eventDurationEditable={false}
         eventDrop={(eventInfo) => {
-          setEventInfo(eventInfo);
-          setModalOpen(true);
+          setConfirmMoveEventInfo(eventInfo);
+          setConfirmMoveOpen(true);
         }}
         height="auto"
       />

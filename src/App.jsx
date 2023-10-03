@@ -265,7 +265,7 @@ function NewDeadlineFormModal({ courses, setDeadlines }) {
   const [open, setOpen] = useState(false);
   const [newDeadline, setNewDeadline] = useState(() => {
     const localValue = JSON.parse(sessionStorage.getItem("newDeadline"));
-    if (localValue == null) return new Deadline();
+    if (localValue == null) return new Deadline({});
     return localValue;
   });
 
