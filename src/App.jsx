@@ -4,6 +4,7 @@ import {
   Badge,
   Box,
   Button,
+  Chip,
   Divider,
   Modal,
   ModalClose,
@@ -151,6 +152,17 @@ export default function App() {
         </Typography>
         <Typography level="body-md" sx={{ textAlign: "center" }}>
           Click a deadline to see details, or drag and drop to move it.
+        </Typography>
+        <Typography
+          level="body-sm"
+          sx={{ textAlign: "center" }}
+          startDecorator={
+            <Chip size="sm" color="success">
+              New
+            </Chip>
+          }
+        >
+          Click a date to add a new deadline.
         </Typography>
         {/* Calendar */}
         <Box
