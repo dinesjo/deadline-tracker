@@ -153,17 +153,21 @@ export default function App() {
         <Typography level="body-md" sx={{ textAlign: "center" }}>
           Click a deadline to see details, or drag and drop to move it.
         </Typography>
-        <Typography
-          level="body-sm"
-          sx={{ textAlign: "center" }}
-          startDecorator={
-            <Chip size="sm" color="success">
-              New
-            </Chip>
-          }
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            gap: 1,
+            alignItems: "center",
+          }}
         >
-          Click a date to add a new deadline.
-        </Typography>
+          <Chip size="sm" color="success">
+            New
+          </Chip>
+          <Typography level="body-sm" sx={{ textAlign: "center" }}>
+            Click a date to add a new deadline.
+          </Typography>
+        </Box>
         {/* Calendar */}
         <Box
           sx={{

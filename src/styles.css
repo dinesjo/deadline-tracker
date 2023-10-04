@@ -64,6 +64,10 @@ td.fc-daygrid-day {
   text-decoration: underline;
 }
 
+a.fc-daygrid-block-event {
+  border-width: 4px 0px 0px 0px;
+}
+
 Button {
   transition: all 0.1s ease-in-out;
 }

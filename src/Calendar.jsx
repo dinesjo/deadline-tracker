@@ -31,8 +31,10 @@ export default function Calendar({
       date: new Date(deadline.date),
       allDay: true,
       classNames: ["bold", deadline.status.replace(" ", "-")],
-      backgroundColor: isArchived ? "#555E6888" : courseColor,
+      // backgroundColor: isArchived ? "#555E6888" : courseColor,
+      backgroundColor: "#222",
       borderColor: isArchived ? "#555E6888" : courseColor,
+      textColor: "#eee",
       extendedProps: {
         deadline: deadline,
       },
@@ -159,13 +161,13 @@ function EventContentJSX({ eventInfo, archived, setArchived, ...props }) {
       </Modal>
       <Box
         sx={{
-          transition: "box-shadow .2s ease-out",
           overflow: "hidden",
           whiteSpace: "nowrap",
+          borderRadius: "0 0px 4px 4px",
           px: ".1em",
-          borderRadius: "5px",
           "&:hover": {
-            boxShadow: "0 0 0 3px #eee",
+            cursor: "pointer",
+            backgroundColor: "#444",
           },
         }}
         onClick={() => setModalOpen(true)}
