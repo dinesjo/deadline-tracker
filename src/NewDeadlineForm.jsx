@@ -109,7 +109,7 @@ export default function NewDeadlineForm({
           }}
         />
         {/* Date */}
-        <Badge invisible={newDeadline.date != null}>
+        <Badge invisible={newDeadline.date != null && newDeadline.date != ""}>
           <Input
             type="date"
             slotProps={{

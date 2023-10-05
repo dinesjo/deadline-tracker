@@ -279,7 +279,6 @@ export default function DeadlineCard({
               deadline.date && (
                 <Typography level="body-xs" startDecorator={<FaCalendarDay />}>
                   {new Date(deadline.date).toLocaleDateString("en-US", {
-                    weekday: "long",
                     month: "short",
                     day: "numeric",
                   })}
@@ -368,7 +367,8 @@ export default function DeadlineCard({
                         setModalOpen={setDeleteModalOpen}
                         confirmColor="danger"
                       >
-                        Delete <strong>{deadline.title}</strong>?
+                        <strong>Permanently</strong> delete{" "}
+                        <strong>{deadline.title}</strong>?
                       </ConfirmModal>
                       <Button
                         size="sm"

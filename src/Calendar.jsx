@@ -69,7 +69,6 @@ export default function Calendar({
         to{" "}
         <strong>
           {confirmMoveEventInfo?.event.start?.toLocaleDateString("en-US", {
-            weekday: "long",
             month: "long",
             day: "numeric",
           })}
