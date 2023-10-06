@@ -6,6 +6,7 @@ import {
   Button,
   Chip,
   Divider,
+  IconButton,
   Modal,
   ModalClose,
   ModalDialog,
@@ -394,15 +395,19 @@ function ModeToggle() {
       title={mode === "light" ? "Dark Mode" : "Light Mode"}
       variant="soft"
     >
-      <Button
+      <IconButton
         variant="plain"
         color="neutral"
         onClick={() => {
           setMode(mode === "light" ? "dark" : "light");
         }}
       >
-        {mode === "light" ? <FaMoon /> : <FaSun />}
-      </Button>
+        {mode === "light" ? (
+          <FaSun style={{ color: "DarkOrange" }} />
+        ) : (
+          <FaMoon style={{ color: "SlateBlue" }} />
+        )}
+      </IconButton>
     </Tooltip>
   );
 }
