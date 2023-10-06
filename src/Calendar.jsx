@@ -15,6 +15,7 @@ export default function Calendar({
   deadlines,
   setDeadlines,
   courses,
+  settings,
 }) {
   const [confirmMoveOpen, setConfirmMoveOpen] = useState(false);
   const [newDeadlineOpen, setNewDeadlineOpen] = useState(false);
@@ -68,7 +69,7 @@ export default function Calendar({
         </strong>{" "}
         to{" "}
         <strong>
-          {confirmMoveEventInfo?.event.start?.toLocaleDateString("en-US", {
+          {confirmMoveEventInfo?.event.start?.toLocaleDateString(settings.region, {
             month: "long",
             day: "numeric",
           })}
@@ -88,11 +89,11 @@ export default function Calendar({
         </ModalDialog>
       </Modal>
       <FullCalendar
+        locale={settings.region}
         events={events}
         dateClick={(eventInfo) => {
           setNewDeadline(new Deadline({ date: eventInfo.dateStr }));
           setNewDeadlineOpen(true);
-          // setNewDeadlineEventInfo(eventInfo);
         }}
         eventContent={eventContent}
         longPressDelay={500} // how long to wait before dragging on mobile (ms)

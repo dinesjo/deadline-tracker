@@ -6,12 +6,18 @@ import {
   Button,
   Chip,
   Divider,
+  FormControl,
+  FormHelperText,
+  FormLabel,
   IconButton,
   Modal,
   ModalClose,
   ModalDialog,
+  Option,
+  Select,
   Sheet,
   Stack,
+  Switch,
   Tooltip,
   Typography,
   useColorScheme,
@@ -21,8 +27,10 @@ import {
   FaBook,
   FaCalendarAlt,
   FaCalendarPlus,
+  FaCog,
   FaEdit,
   FaExclamationTriangle,
+  FaGlobe,
   FaListAlt,
   FaMoon,
   FaSun,
@@ -34,6 +42,7 @@ import Courses from "./Courses";
 import Deadline from "./deadline";
 import logo from "../public/512_full.png";
 import Calendar from "./Calendar";
+import Settings from "./settings";
 
 export default function App() {
   // Deadlines
@@ -79,6 +88,16 @@ export default function App() {
     localStorage.setItem("courses", JSON.stringify(courses));
   }, [courses]);
 
+  // Settings
+  const [settings, setSettings] = useState(() => {
+    const localValue = JSON.parse(localStorage.getItem("settings"));
+    if (localValue == null) return new Settings({});
+    return localValue;
+  });
+  useEffect(() => {
+    localStorage.setItem("settings", JSON.stringify(settings));
+  }, [settings]);
+
   return (
     <>
       {/* "navbar" */}
@@ -105,6 +124,7 @@ export default function App() {
           Deadline Tracker
         </Typography>
         <ModeToggle />
+        <SettingsModal settings={settings} setSettings={setSettings} />
       </Stack>
 
       {/* Main content */}
@@ -144,46 +164,51 @@ export default function App() {
         </Stack>
 
         {/* Calendar VIEW */}
-        <Typography
-          level="title-lg"
-          startDecorator={<FaCalendarAlt />}
-          sx={{ mt: 2 }}
-        >
-          Calendar
-        </Typography>
-        <Typography level="body-md" sx={{ textAlign: "center" }}>
-          Click a deadline to see details, or drag and drop to move it.
-        </Typography>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            gap: 1,
-            alignItems: "center",
-          }}
-        >
-          <Chip size="sm" color="success">
-            New
-          </Chip>
-          <Typography level="body-sm" sx={{ textAlign: "center" }}>
-            Click a date to add a new deadline.
-          </Typography>
-        </Box>
-        {/* Calendar */}
-        <Box
-          sx={{
-            width: { xs: "98%", sm: "90%", md: "70%", lg: "60%" },
-            mt: 2,
-          }}
-        >
-          <Calendar
-            archived={archived}
-            setArchived={setArchived}
-            deadlines={deadlines}
-            courses={courses}
-            setDeadlines={setDeadlines}
-          />
-        </Box>
+        {settings.showCalendar && (
+          <>
+            <Typography
+              level="title-lg"
+              startDecorator={<FaCalendarAlt />}
+              sx={{ mt: 2 }}
+            >
+              Calendar
+            </Typography>
+            <Typography level="body-md" sx={{ textAlign: "center" }}>
+              Click a deadline to see details, or drag and drop to move it.
+            </Typography>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                gap: 1,
+                alignItems: "center",
+              }}
+            >
+              <Chip size="sm" color="success">
+                New
+              </Chip>
+              <Typography level="body-sm" sx={{ textAlign: "center" }}>
+                Click a date to add a new deadline.
+              </Typography>
+            </Box>
+            {/* Calendar */}
+            <Box
+              sx={{
+                width: { xs: "98%", sm: "90%", md: "70%", lg: "60%" },
+                mt: 2,
+              }}
+            >
+              <Calendar
+                archived={archived}
+                setArchived={setArchived}
+                deadlines={deadlines}
+                courses={courses}
+                setDeadlines={setDeadlines}
+                settings={settings}
+              />
+            </Box>
+          </>
+        )}
 
         {/* Deadlines LIST */}
         <Typography
@@ -203,6 +228,7 @@ export default function App() {
             archived={archived}
             setArchived={setArchived}
             courses={courses}
+            settings={settings}
           />
         </Sheet>
       </Sheet>
@@ -409,5 +435,111 @@ function ModeToggle() {
         )}
       </IconButton>
     </Tooltip>
+  );
+}
+
+function SettingsModal({ settings, setSettings }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <IconButton variant="plain" color="neutral" onClick={() => setOpen(true)}>
+        <FaCog />
+      </IconButton>
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
+      >
+        <ModalDialog>
+          <ModalClose />
+          <Typography
+            level="title-lg"
+            startDecorator={<FaCog />}
+            sx={{ mb: 2 }}
+          >
+            Settings
+          </Typography>
+          <Stack spacing={2}>
+            <FormControl
+              orientation="horizontal"
+              sx={{ width: 300, justifyContent: "space-between" }}
+            >
+              <Box>
+                <FormLabel>
+                  <Typography
+                    startDecorator={<FaCalendarAlt />}
+                    level="inherit"
+                  >
+                    Calendar View
+                  </Typography>
+                </FormLabel>
+                <FormHelperText>
+                  Shows your deadlines on a calendar at the top of the app.
+                </FormHelperText>
+              </Box>
+              <Switch
+                checked={settings.showCalendar}
+                onChange={(e) =>
+                  setSettings({ ...settings, showCalendar: e.target.checked })
+                }
+              />
+            </FormControl>
+            <FormControl
+              orientation="horizontal"
+              sx={{ width: 300, justifyContent: "space-between" }}
+            >
+              <Box>
+                <FormLabel>
+                  <Typography startDecorator={<FaMoon />} level="inherit">
+                    Dark Mode
+                  </Typography>
+                </FormLabel>
+                <FormHelperText>Color theme of the app.</FormHelperText>
+              </Box>
+              <Switch
+                disabled
+                checked={settings.darkMode}
+                onChange={(e) =>
+                  setSettings({ ...settings, darkMode: e.target.checked })
+                }
+              />
+            </FormControl>
+            <FormControl
+              orientation="vertical"
+              sx={{ width: 300, justifyContent: "space-between" }}
+            >
+              <Box>
+                <FormLabel>
+                  <Typography startDecorator={<FaGlobe />} level="inherit">
+                    Region
+                  </Typography>
+                </FormLabel>
+                <FormHelperText>
+                  Determines the format of dates and times, including Calendar
+                  View.
+                </FormHelperText>
+              </Box>
+              <Select
+                value={settings.region}
+                onChange={(e, value) =>
+                  e && setSettings({ ...settings, region: value })
+                }
+                slotProps={{
+                  listbox: {
+                    placement: "bottom-start",
+                  },
+                }}
+                sx={{ mt: 1 }}
+              >
+                <Option value="en-US">United States</Option>
+                <Option value="en-GB">United Kingdom</Option>
+                <Option value="sv-SE">Sweden</Option>
+                <Option value="fi-FI">Finland</Option>
+              </Select>
+            </FormControl>
+          </Stack>
+        </ModalDialog>
+      </Modal>
+    </>
   );
 }

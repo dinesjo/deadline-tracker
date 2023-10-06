@@ -42,6 +42,7 @@ export default function DeadlineCard({
   setArchived,
   courses,
   sx,
+  settings,
 }) {
   const [editing, setEditing] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -278,7 +279,7 @@ export default function DeadlineCard({
             ) : (
               deadline.date && (
                 <Typography level="body-xs" startDecorator={<FaCalendarDay />}>
-                  {new Date(deadline.date).toLocaleDateString("en-US", {
+                  {new Date(deadline.date).toLocaleDateString(settings.region, {
                     month: "short",
                     day: "numeric",
                   })}

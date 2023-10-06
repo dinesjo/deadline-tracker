@@ -21,6 +21,7 @@ export default function DeadlinesList({
   archived,
   setArchived,
   courses,
+  settings,
 }) {
   return (
     <Tabs
@@ -73,6 +74,7 @@ export default function DeadlinesList({
         setArchived={setArchived}
         courses={courses}
         archived={archived}
+        settings={settings}
       />
       {/* Course[i]-tabs */}
       {courses
@@ -88,13 +90,14 @@ export default function DeadlinesList({
             setArchived={setArchived}
             courses={courses}
             key={index}
+            settings={settings}
           />
         ))}
     </Tabs>
   );
 }
 
-function TabPanelForCourse({ index, deadlines, ...props }) {
+function TabPanelForCourse({ settings, index, deadlines, ...props }) {
   const groupedDeadlines = groupDeadlinesByDate(deadlines);
   const dates = Object.keys(groupedDeadlines).sort((a, b) => {
     return new Date(a).getTime() - new Date(b).getTime();
@@ -132,7 +135,7 @@ function TabPanelForCourse({ index, deadlines, ...props }) {
             case 5:
             case 6:
             case 7:
-              d = new Date(date).toLocaleDateString("en-US", {
+              d = new Date(date).toLocaleDateString(settings.region, {
                 weekday: "long",
               });
               break;
@@ -145,12 +148,12 @@ function TabPanelForCourse({ index, deadlines, ...props }) {
             case 14:
               d =
                 "Next " +
-                new Date(date).toLocaleDateString("en-US", {
+                new Date(date).toLocaleDateString(settings.region, {
                   weekday: "long",
                 });
               break;
             default:
-              d = new Date(date).toLocaleDateString("en-US", {
+              d = new Date(date).toLocaleDateString(settings.region, {
                 weekday: "long",
                 month: "long",
                 day: "numeric",
@@ -169,6 +172,7 @@ function TabPanelForCourse({ index, deadlines, ...props }) {
               {groupedDeadlines[date].map((deadline) => (
                 <Grid xs={12} sm={6} lg={4} key={deadline.id}>
                   <DeadlineCard
+                    settings={settings}
                     deadline={deadline}
                     deadlines={deadlines}
                     {...props}
