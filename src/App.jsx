@@ -4,7 +4,6 @@ import {
   Badge,
   Box,
   Button,
-  Chip,
   Divider,
   FormControl,
   FormHelperText,
@@ -184,9 +183,6 @@ export default function App() {
                 alignItems: "center",
               }}
             >
-              <Chip size="sm" color="success">
-                New
-              </Chip>
               <Typography level="body-sm" sx={{ textAlign: "center" }}>
                 Click a date to add a new deadline.
               </Typography>
@@ -442,9 +438,19 @@ function SettingsModal({ settings, setSettings }) {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <IconButton variant="plain" color="neutral" onClick={() => setOpen(true)}>
-        <FaCog />
-      </IconButton>
+      <Badge
+        badgeContent="New"
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        color="success"
+      >
+        <IconButton
+          variant="plain"
+          color="neutral"
+          onClick={() => setOpen(true)}
+        >
+          <FaCog />
+        </IconButton>
+      </Badge>
       <Modal
         open={open}
         onClose={() => setOpen(false)}
@@ -462,7 +468,7 @@ function SettingsModal({ settings, setSettings }) {
           <Stack spacing={2}>
             <FormControl
               orientation="horizontal"
-              sx={{ width: 300, justifyContent: "space-between" }}
+              sx={{ justifyContent: "space-between" }}
             >
               <Box>
                 <FormLabel>
@@ -486,7 +492,7 @@ function SettingsModal({ settings, setSettings }) {
             </FormControl>
             <FormControl
               orientation="horizontal"
-              sx={{ width: 300, justifyContent: "space-between" }}
+              sx={{ justifyContent: "space-between" }}
             >
               <Box>
                 <FormLabel>
@@ -506,7 +512,7 @@ function SettingsModal({ settings, setSettings }) {
             </FormControl>
             <FormControl
               orientation="vertical"
-              sx={{ width: 300, justifyContent: "space-between" }}
+              sx={{ justifyContent: "space-between" }}
             >
               <Box>
                 <FormLabel>
