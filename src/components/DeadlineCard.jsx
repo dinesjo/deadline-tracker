@@ -33,6 +33,7 @@ import TypeChip from "./TypeChip";
 import StatusChip from "./StatusChip";
 import { daysFromNow } from "../app";
 import ConfirmModal from "./ConfirmModal";
+import Settings from "../settings";
 
 export default function DeadlineCard({
   deadline,
@@ -47,6 +48,10 @@ export default function DeadlineCard({
   const [editing, setEditing] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [editedDeadline, setEditedDeadline] = useState(deadline);
+  if (!settings) {
+    // If settings not passed, create default one
+    settings = new Settings({});
+  }
   const isArchived = archived.some((d) => d.id === deadline.id);
   const course = courses.find((course) => course.name === deadline.course);
   const daysLeft = daysFromNow(deadline.date);

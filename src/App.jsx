@@ -159,6 +159,7 @@ export default function App() {
             setArchived={setArchived}
             setDeadlines={setDeadlines}
             courses={courses}
+            settings={settings}
           />
         </Stack>
 

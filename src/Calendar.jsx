@@ -138,6 +138,7 @@ export default function Calendar({
         deadlines={deadlines}
         courses={courses}
         setDeadlines={setDeadlines}
+        settings={settings}
       />
     );
   }
