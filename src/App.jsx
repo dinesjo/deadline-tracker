@@ -17,7 +17,6 @@ import {
   Sheet,
   Stack,
   Switch,
-  Tooltip,
   Typography,
   useColorScheme,
 } from "@mui/joy";
@@ -32,7 +31,6 @@ import {
   FaGlobe,
   FaListAlt,
   FaMoon,
-  FaSun,
 } from "react-icons/fa";
 import NewDeadlineForm from "./NewDeadlineForm";
 import DeadlinesList from "./DeadlinesList";
@@ -122,7 +120,6 @@ export default function App() {
         >
           Deadline Tracker
         </Typography>
-        <ModeToggle />
         <SettingsModal settings={settings} setSettings={setSettings} />
       </Stack>
 
@@ -400,7 +397,7 @@ function ArchiveModal({ ...props }) {
   );
 }
 
-function ModeToggle() {
+function DarkModeSwitch() {
   const { mode, setMode } = useColorScheme();
   const [mounted, setMounted] = useState(false);
 
@@ -414,24 +411,12 @@ function ModeToggle() {
   }
 
   return (
-    <Tooltip
-      title={mode === "light" ? "Dark Mode" : "Light Mode"}
-      variant="soft"
-    >
-      <IconButton
-        variant="plain"
-        color="neutral"
-        onClick={() => {
-          setMode(mode === "light" ? "dark" : "light");
-        }}
-      >
-        {mode === "light" ? (
-          <FaSun style={{ color: "DarkOrange" }} />
-        ) : (
-          <FaMoon style={{ color: "SlateBlue" }} />
-        )}
-      </IconButton>
-    </Tooltip>
+    <Switch
+      checked={mode === "dark"}
+      onChange={(e) => {
+        setMode(e.target.checked ? "dark" : "light");
+      }}
+    />
   );
 }
 
@@ -503,13 +488,7 @@ function SettingsModal({ settings, setSettings }) {
                 </FormLabel>
                 <FormHelperText>Color theme of the app.</FormHelperText>
               </Box>
-              <Switch
-                disabled
-                checked={settings.darkMode}
-                onChange={(e) =>
-                  setSettings({ ...settings, darkMode: e.target.checked })
-                }
-              />
+              <DarkModeSwitch />
             </FormControl>
             <FormControl
               orientation="vertical"
