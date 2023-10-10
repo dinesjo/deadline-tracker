@@ -1,7 +1,6 @@
 class Settings {
-  constructor({ showCalendar, darkMode, region }) {
+  constructor({ showCalendar, region }) {
     this.showCalendar = showCalendar || true;
-    this.darkMode = darkMode || true;
     this.region = region || "en-US";
   }
 }
