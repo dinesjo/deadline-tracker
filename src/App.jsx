@@ -5,32 +5,21 @@ import {
   Box,
   Button,
   Divider,
-  FormControl,
-  FormHelperText,
-  FormLabel,
-  IconButton,
   Modal,
   ModalClose,
   ModalDialog,
-  Option,
-  Select,
   Sheet,
   Stack,
-  Switch,
   Typography,
-  useColorScheme,
 } from "@mui/joy";
 import {
   FaArchive,
   FaBook,
   FaCalendarAlt,
   FaCalendarPlus,
-  FaCog,
   FaEdit,
   FaExclamationTriangle,
-  FaGlobe,
   FaListAlt,
-  FaMoon,
 } from "react-icons/fa";
 import NewDeadlineForm from "./NewDeadlineForm";
 import DeadlinesList from "./DeadlinesList";
@@ -40,6 +29,7 @@ import Deadline from "./deadline";
 import logo from "../public/512_full.png";
 import Calendar from "./Calendar";
 import Settings from "./settings";
+import SettingsModal from "./components/SettingsModal";
 
 export default function App() {
   // Deadlines
@@ -391,139 +381,6 @@ function ArchiveModal({ ...props }) {
             View and restore archived deadlines.
           </Typography>
           <ArchiveList {...props} />
-        </ModalDialog>
-      </Modal>
-    </>
-  );
-}
-
-function DarkModeSwitch() {
-  const { mode, setMode } = useColorScheme();
-  const [mounted, setMounted] = useState(false);
-
-  // necessary for server-side rendering
-  // because mode is undefined on the server
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-  if (!mounted) {
-    return null;
-  }
-
-  return (
-    <Switch
-      checked={mode === "dark"}
-      onChange={(e) => {
-        setMode(e.target.checked ? "dark" : "light");
-      }}
-    />
-  );
-}
-
-function SettingsModal({ settings, setSettings }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <>
-      <Badge
-        badgeContent="New"
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        color="success"
-      >
-        <IconButton
-          variant="plain"
-          color="neutral"
-          onClick={() => setOpen(true)}
-        >
-          <FaCog />
-        </IconButton>
-      </Badge>
-      <Modal
-        open={open}
-        onClose={() => setOpen(false)}
-        sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
-      >
-        <ModalDialog>
-          <ModalClose />
-          <Typography
-            level="title-lg"
-            startDecorator={<FaCog />}
-            sx={{ mb: 2 }}
-          >
-            Settings
-          </Typography>
-          <Stack spacing={2}>
-            <FormControl
-              orientation="horizontal"
-              sx={{ justifyContent: "space-between" }}
-            >
-              <Box>
-                <FormLabel>
-                  <Typography
-                    startDecorator={<FaCalendarAlt />}
-                    level="inherit"
-                  >
-                    Calendar View
-                  </Typography>
-                </FormLabel>
-                <FormHelperText>
-                  Shows your deadlines on a calendar at the top of the app.
-                </FormHelperText>
-              </Box>
-              <Switch
-                checked={settings.showCalendar}
-                onChange={(e) =>
-                  setSettings({ ...settings, showCalendar: e.target.checked })
-                }
-              />
-            </FormControl>
-            <FormControl
-              orientation="horizontal"
-              sx={{ justifyContent: "space-between" }}
-            >
-              <Box>
-                <FormLabel>
-                  <Typography startDecorator={<FaMoon />} level="inherit">
-                    Dark Mode
-                  </Typography>
-                </FormLabel>
-                <FormHelperText>Color theme of the app.</FormHelperText>
-              </Box>
-              <DarkModeSwitch />
-            </FormControl>
-            <FormControl
-              orientation="vertical"
-              sx={{ justifyContent: "space-between" }}
-            >
-              <Box>
-                <FormLabel>
-                  <Typography startDecorator={<FaGlobe />} level="inherit">
-                    Region
-                  </Typography>
-                </FormLabel>
-                <FormHelperText>
-                  Determines the format of dates and times, including Calendar
-                  View.
-                </FormHelperText>
-              </Box>
-              <Select
-                value={settings.region}
-                onChange={(e, value) =>
-                  e && setSettings({ ...settings, region: value })
-                }
-                slotProps={{
-                  listbox: {
-                    placement: "bottom-start",
-                  },
-                }}
-                sx={{ mt: 1 }}
-              >
-                <Option value="en-US">United States</Option>
-                <Option value="en-GB">United Kingdom</Option>
-                <Option value="sv-SE">Sweden</Option>
-                <Option value="fi-FI">Finland</Option>
-              </Select>
-            </FormControl>
-          </Stack>
         </ModalDialog>
       </Modal>
     </>
