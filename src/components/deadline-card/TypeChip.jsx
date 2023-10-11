@@ -1,5 +1,5 @@
 import { Chip } from "@mui/joy";
-import types from "../types";
+import types from "../../classes/types";
 
 /**
  * Displays assignment type as a chip

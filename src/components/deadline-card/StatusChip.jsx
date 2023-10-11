@@ -1,5 +1,5 @@
 import { Chip } from "@mui/joy";
-import statuses from "../statuses";
+import statuses from "../../classes/statuses";
 
 /**
  * Displays status as a chip

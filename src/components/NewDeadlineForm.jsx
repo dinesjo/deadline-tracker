@@ -1,9 +1,9 @@
 import { Badge, Button, Input, Stack, Textarea } from "@mui/joy";
 import { FaBackspace } from "react-icons/fa";
-import Deadline from "./deadline";
-import SelectCourse from "./components/form-components/SelectCourse";
-import SelectType from "./components/form-components/SelectType";
-import RequiredDisclaimer from "./components/form-components/RequiredDisclaimer";
+import Deadline from "../classes/deadline";
+import SelectCourse from "./form-components/SelectCourse";
+import SelectType from "./form-components/SelectType";
+import RequiredDisclaimer from "./form-components/RequiredDisclaimer";
 
 /**
  * Form for creating a new deadline.

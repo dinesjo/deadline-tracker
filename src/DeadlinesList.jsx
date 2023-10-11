@@ -9,7 +9,7 @@ import {
   Tabs,
   Typography,
 } from "@mui/joy";
-import DeadlineCard from "./components/DeadlineCard";
+import DeadlineCard from "./components/deadline-card/DeadlineCard";
 import { Fragment } from "react";
 import { daysFromNow } from "./app";
 

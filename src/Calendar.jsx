@@ -3,11 +3,11 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { Box, ModalDialog } from "@mui/joy";
 import { Modal } from "@mui/joy";
-import DeadlineCard from "./components/DeadlineCard";
+import DeadlineCard from "./components/deadline-card/DeadlineCard";
 import { useState } from "react";
 import ConfirmModal from "./components/ConfirmModal";
-import NewDeadlineForm from "./NewDeadlineForm";
-import Deadline from "./deadline";
+import NewDeadlineForm from "./components/NewDeadlineForm";
+import Deadline from "./classes/deadline";
 
 export default function Calendar({
   archived,
@@ -69,10 +69,13 @@ export default function Calendar({
         </strong>{" "}
         to{" "}
         <strong>
-          {confirmMoveEventInfo?.event.start?.toLocaleDateString(settings.region, {
-            month: "long",
-            day: "numeric",
-          })}
+          {confirmMoveEventInfo?.event.start?.toLocaleDateString(
+            settings.region,
+            {
+              month: "long",
+              day: "numeric",
+            }
+          )}
         </strong>
         ?
       </ConfirmModal>

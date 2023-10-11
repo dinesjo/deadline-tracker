@@ -21,14 +21,14 @@ import {
   FaExclamationTriangle,
   FaListAlt,
 } from "react-icons/fa";
-import NewDeadlineForm from "./NewDeadlineForm";
+import NewDeadlineForm from "./components/NewDeadlineForm";
 import DeadlinesList from "./DeadlinesList";
 import ArchiveList from "./ArchiveList";
 import Courses from "./Courses";
-import Deadline from "./deadline";
+import Deadline from "./classes/deadline";
 import logo from "../public/512_full.png";
 import Calendar from "./Calendar";
-import Settings from "./settings";
+import Settings from "./classes/settings";
 import SettingsModal from "./components/SettingsModal";
 
 export default function App() {

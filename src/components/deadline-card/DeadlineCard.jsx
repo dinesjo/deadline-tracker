@@ -26,14 +26,14 @@ import {
   FaTimes,
   FaTrashAlt,
 } from "react-icons/fa";
-import SelectType from "./form-components/SelectType";
-import SelectCourse from "./form-components/SelectCourse";
-import RequiredDisclaimer from "./form-components/RequiredDisclaimer";
+import SelectType from "../form-components/SelectType";
+import SelectCourse from "../form-components/SelectCourse";
+import RequiredDisclaimer from "../form-components/RequiredDisclaimer";
 import TypeChip from "./TypeChip";
 import StatusChip from "./StatusChip";
-import { daysFromNow } from "../app";
-import ConfirmModal from "./ConfirmModal";
-import Settings from "../settings";
+import { daysFromNow } from "../../app";
+import ConfirmModal from "../ConfirmModal";
+import Settings from "../../classes/settings";
 
 export default function DeadlineCard({
   deadline,

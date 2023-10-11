@@ -1,5 +1,5 @@
 import { Alert, Grid, Typography } from "@mui/joy";
-import DeadlineCard from "./components/DeadlineCard";
+import DeadlineCard from "./components/deadline-card/DeadlineCard";
 
 export default function ArchiveList({ archived, ...props }) {
   // Number of columns in grid

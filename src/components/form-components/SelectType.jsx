@@ -1,5 +1,5 @@
 import { IconButton, ListItemDecorator, Option, Select } from "@mui/joy";
-import types from "../../types";
+import types from "../../classes/types";
 import { FaTimes } from "react-icons/fa";
 
 export default function SelectType({ deadline, onChange, clearValue, width }) {
