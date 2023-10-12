@@ -1,6 +1,27 @@
-import { Badge, Box, FormControl, FormHelperText, FormLabel, IconButton, Modal, ModalClose, ModalDialog, Option, Select, Stack, Switch, Typography } from "@mui/joy";
+import {
+  Badge,
+  Box,
+  FormControl,
+  FormHelperText,
+  FormLabel,
+  IconButton,
+  Modal,
+  ModalClose,
+  ModalDialog,
+  Option,
+  Select,
+  Stack,
+  Switch,
+  Typography,
+} from "@mui/joy";
 import { useState } from "react";
-import { FaCalendarAlt, FaCog, FaGlobe, FaMoon } from "react-icons/fa";
+import {
+  FaCalendarAlt,
+  FaCog,
+  FaGlobe,
+  FaListAlt,
+  FaMoon,
+} from "react-icons/fa";
 import DarkModeSwitch from "./DarkModeSwitch";
 
 export default function SettingsModal({ settings, setSettings }) {
@@ -60,6 +81,25 @@ export default function SettingsModal({ settings, setSettings }) {
                 checked={settings.showCalendar}
                 onChange={(e) =>
                   setSettings({ ...settings, showCalendar: e.target.checked })
+                }
+              />
+            </FormControl>
+            <FormControl
+              orientation="horizontal"
+              sx={{ justifyContent: "space-between" }}
+            >
+              <Box>
+                <FormLabel>
+                  <Typography startDecorator={<FaListAlt />} level="inherit">
+                    List View
+                  </Typography>
+                </FormLabel>
+                <FormHelperText>Shows your deadlines in a list.</FormHelperText>
+              </Box>
+              <Switch
+                checked={settings.showList}
+                onChange={(e) =>
+                  setSettings({ ...settings, showList: e.target.checked })
                 }
               />
             </FormControl>

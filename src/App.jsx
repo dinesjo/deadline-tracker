@@ -195,26 +195,35 @@ export default function App() {
         )}
 
         {/* Deadlines LIST */}
-        <Typography
-          level="title-lg"
-          startDecorator={<FaListAlt />}
-          sx={{ mt: 3 }}
-        >
-          Deadlines
-        </Typography>
-        <Typography level="body-md">View and manage your deadlines.</Typography>
-        <Sheet
-          sx={{ width: { xs: "100%", sm: "90%", md: "80%", lg: "60%" }, mt: 2 }}
-        >
-          <DeadlinesList
-            deadlines={deadlines}
-            setDeadlines={setDeadlines}
-            archived={archived}
-            setArchived={setArchived}
-            courses={courses}
-            settings={settings}
-          />
-        </Sheet>
+        {settings.showList && (
+          <>
+            <Typography
+              level="title-lg"
+              startDecorator={<FaListAlt />}
+              sx={{ mt: 3 }}
+            >
+              Deadlines
+            </Typography>
+            <Typography level="body-md">
+              View and manage your deadlines.
+            </Typography>
+            <Sheet
+              sx={{
+                width: { xs: "100%", sm: "90%", md: "80%", lg: "60%" },
+                mt: 2,
+              }}
+            >
+              <DeadlinesList
+                deadlines={deadlines}
+                setDeadlines={setDeadlines}
+                archived={archived}
+                setArchived={setArchived}
+                courses={courses}
+                settings={settings}
+              />
+            </Sheet>
+          </>
+        )}
       </Sheet>
 
       {/* Footer */}
