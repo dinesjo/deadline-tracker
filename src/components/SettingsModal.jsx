@@ -1,5 +1,4 @@
 import {
-  Badge,
   Box,
   FormControl,
   FormHelperText,
@@ -34,19 +33,9 @@ export default function SettingsModal({ settings, setSettings }) {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <Badge
-        badgeContent="New"
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        color="success"
-      >
-        <IconButton
-          variant="plain"
-          color="neutral"
-          onClick={() => setOpen(true)}
-        >
-          <FaCog />
-        </IconButton>
-      </Badge>
+      <IconButton variant="plain" color="neutral" onClick={() => setOpen(true)}>
+        <FaCog />
+      </IconButton>
       <Modal
         open={open}
         onClose={() => setOpen(false)}
