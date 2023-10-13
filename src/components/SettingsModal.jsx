@@ -5,21 +5,27 @@ import {
   FormHelperText,
   FormLabel,
   IconButton,
+  List,
+  ListItem,
+  ListItemDecorator,
   Modal,
   ModalClose,
   ModalDialog,
   Option,
+  Radio,
+  RadioGroup,
   Select,
   Stack,
-  Switch,
   Typography,
 } from "@mui/joy";
 import { useState } from "react";
 import {
   FaCalendarAlt,
+  FaCheckDouble,
   FaCog,
+  FaEye,
   FaGlobe,
-  FaListAlt,
+  FaList,
   FaMoon,
 } from "react-icons/fa";
 import DarkModeSwitch from "./DarkModeSwitch";
@@ -61,47 +67,79 @@ export default function SettingsModal({ settings, setSettings }) {
           </Typography>
           <Stack spacing={2}>
             <FormControl
-              orientation="horizontal"
+              orientation="vertical"
               sx={{ justifyContent: "space-between" }}
             >
               <Box>
                 <FormLabel>
-                  <Typography
-                    startDecorator={<FaCalendarAlt />}
-                    level="inherit"
-                  >
-                    Calendar View
+                  <Typography startDecorator={<FaEye />} level="inherit">
+                    View
                   </Typography>
                 </FormLabel>
                 <FormHelperText>
-                  Shows your deadlines on a calendar at the top of the app.
+                  Choose between seeing a calendar, list, or both.
                 </FormHelperText>
               </Box>
-              <Switch
-                checked={settings.showCalendar}
-                onChange={(e) =>
-                  setSettings({ ...settings, showCalendar: e.target.checked })
-                }
-              />
-            </FormControl>
-            <FormControl
-              orientation="horizontal"
-              sx={{ justifyContent: "space-between" }}
-            >
-              <Box>
-                <FormLabel>
-                  <Typography startDecorator={<FaListAlt />} level="inherit">
-                    List View
-                  </Typography>
-                </FormLabel>
-                <FormHelperText>Shows your deadlines in a list.</FormHelperText>
-              </Box>
-              <Switch
-                checked={settings.showList}
-                onChange={(e) =>
-                  setSettings({ ...settings, showList: e.target.checked })
-                }
-              />
+              <RadioGroup
+                onChange={(e) => {
+                  e.target.value &&
+                    setSettings((settings) => ({
+                      ...settings,
+                      view: e.target.value,
+                    }));
+                }}
+              >
+                <List
+                  sx={{
+                    minWidth: 240,
+                    "--List-gap": "0.5rem",
+                    "--ListItem-paddingY": "1rem",
+                    "--ListItem-radius": "8px",
+                    "--ListItemDecorator-size": "32px",
+                  }}
+                >
+                  {[
+                    {
+                      key: "calendar",
+                      title: "Calendar only",
+                      icon: <FaCalendarAlt />,
+                    },
+                    { key: "list", title: "List only", icon: <FaList /> },
+                    {
+                      key: "list calendar",
+                      title: "Both",
+                      icon: <FaCheckDouble />,
+                    },
+                  ].map((item) => (
+                    <ListItem
+                      variant="outlined"
+                      key={item.key}
+                      sx={{ boxShadow: "sm" }}
+                    >
+                      <ListItemDecorator>{item.icon}</ListItemDecorator>
+                      <Radio
+                        size="sm"
+                        overlay
+                        value={item.key}
+                        label={item.title}
+                        checked={settings.view === item.key}
+                        sx={{ flexGrow: 1, flexDirection: "row-reverse" }}
+                        slotProps={{
+                          action: ({ checked }) => ({
+                            sx: (theme) => ({
+                              ...(checked && {
+                                inset: -1,
+                                border: "2px solid",
+                                borderColor: theme.vars.palette.primary[500],
+                              }),
+                            }),
+                          }),
+                        }}
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+              </RadioGroup>
             </FormControl>
             <FormControl
               orientation="horizontal"

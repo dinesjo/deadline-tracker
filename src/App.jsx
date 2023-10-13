@@ -19,7 +19,7 @@ import {
   FaCalendarPlus,
   FaEdit,
   FaExclamationTriangle,
-  FaListAlt,
+  FaList,
 } from "react-icons/fa";
 import NewDeadlineForm from "./components/NewDeadlineForm";
 import DeadlinesList from "./DeadlinesList";
@@ -77,7 +77,14 @@ export default function App() {
 
   // Settings
   const [settings, setSettings] = useState(() => {
-    const localValue = JSON.parse(localStorage.getItem("settings"));
+    const localValue = JSON.parse(
+      localStorage.getItem("settings"),
+      (key, value) => {
+        // ensure no legacy settings are loaded
+        if (key === "") return new Settings(value);
+        return value;
+      }
+    );
     if (localValue == null) return new Settings({});
     return localValue;
   });
@@ -151,7 +158,7 @@ export default function App() {
         </Stack>
 
         {/* Calendar VIEW */}
-        {settings.showCalendar && (
+        {settings.view.includes("calendar") && (
           <>
             <Typography
               level="title-lg"
@@ -195,11 +202,11 @@ export default function App() {
         )}
 
         {/* Deadlines LIST */}
-        {settings.showList && (
+        {settings.view.includes("list") && (
           <>
             <Typography
               level="title-lg"
-              startDecorator={<FaListAlt />}
+              startDecorator={<FaList />}
               sx={{ mt: 3 }}
             >
               Deadlines

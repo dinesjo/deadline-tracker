@@ -1,7 +1,6 @@
 class Settings {
-  constructor({ showCalendar, showList, region }) {
-    this.showCalendar = showCalendar || true;
-    this.showList = showList || true;
+  constructor({ view, region }) {
+    this.view = view || "list calendar";
     this.region = region || "en-US";
   }
 }
