@@ -12,7 +12,13 @@ import {
   Typography,
 } from "@mui/joy";
 import { useState } from "react";
-import { FaGoogleDrive, FaPalette, FaPlus } from "react-icons/fa";
+import {
+  FaBook,
+  FaEdit,
+  FaGoogleDrive,
+  FaPalette,
+  FaPlus,
+} from "react-icons/fa";
 import ConfirmModal from "./components/ConfirmModal";
 
 const courseColors = [
@@ -220,8 +226,16 @@ function CourseChip({
           }}
         >
           <ModalClose />
-          <Typography level="title-lg">Edit Course</Typography>
-          <Typography level="title-md">Name</Typography>
+          <Typography level="title-lg" startDecorator={<FaEdit />}>
+            Edit Course
+          </Typography>
+          <Typography
+            level="title-md"
+            startDecorator={<FaBook />}
+            sx={{ mt: 1 }}
+          >
+            Name
+          </Typography>
           {/* Name */}
           <Input
             placeholder="Course Name"
