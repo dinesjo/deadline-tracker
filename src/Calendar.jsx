@@ -111,7 +111,7 @@ export default function Calendar({
         dayHeaderClassNames={["day-header"]}
         nowIndicatorClassNames={["now-indicator"]}
         dayCellClassNames={["day-cell"]}
-        firstDay={1} // start week on Monday
+        firstDay={settings.calendarFirstDay} // start week on Monday
         weekNumbers={true}
         weekText="" // remove "W"-prefix
         weekNumberClassNames={["week-number"]}

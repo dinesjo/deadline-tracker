@@ -1,7 +1,8 @@
 class Settings {
-  constructor({ view, region }) {
+  constructor({ view, region, calendarFirstDay }) {
     this.view = view || "list calendar";
     this.region = region || "en-US";
+    this.calendarFirstDay = calendarFirstDay || 0;
   }
 }
 
