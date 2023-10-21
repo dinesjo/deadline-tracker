@@ -439,27 +439,34 @@ export default function DeadlineCard({
    * Animates card to archive button, then archives it
    */
   function archiveDeadline() {
+    let delay = 0;
     // ANIMATION, only visually
-    // Get archived button center
-    const archivedButton = document.querySelector("#archived-button");
-    const archivedButtonRect = archivedButton.getBoundingClientRect();
-    const archivedButtonCenterX =
-      archivedButtonRect.left + archivedButtonRect.width / 2;
-    const archivedButtonCenterY =
-      archivedButtonRect.top + archivedButtonRect.height / 2;
-    // Get card center
-    const card = document.querySelector(`#deadline-${deadline.id}`);
-    card.parentElement.querySelector(".MuiBadge-badge").style.opacity = 0; // Prevents badge from showing up after animation
-    const cardRect = card.getBoundingClientRect();
-    const cardCenterX = cardRect.left + cardRect.width / 2;
-    const cardCenterY = cardRect.top + cardRect.height / 2;
-    // Calculate translation
-    const translateX = archivedButtonCenterX - cardCenterX;
-    const translateY = archivedButtonCenterY - cardCenterY;
-    // Animate
-    card.style.position = "absolute";
-    card.style.opacity = 0;
-    card.style.transform = `translate(${translateX}px, ${translateY}px) scale(0.25)`;
+    // Get card
+    const card = document.querySelector(
+      `.MuiGrid-root #deadline-${deadline.id}`
+    );
+    if (card) {
+      delay = 400;
+      // If card exists, otherwise we are in calendar only view
+      card.parentElement.querySelector(".MuiBadge-badge").style.opacity = 0; // Prevents badge from showing up after animation
+      const cardRect = card.getBoundingClientRect();
+      const cardCenterX = cardRect.left + cardRect.width / 2;
+      const cardCenterY = cardRect.top + cardRect.height / 2;
+      // Get archived button center
+      const archivedButton = document.querySelector("#archived-button");
+      const archivedButtonRect = archivedButton.getBoundingClientRect();
+      const archivedButtonCenterX =
+        archivedButtonRect.left + archivedButtonRect.width / 2;
+      const archivedButtonCenterY =
+        archivedButtonRect.top + archivedButtonRect.height / 2;
+      // Calculate translation
+      const translateX = archivedButtonCenterX - cardCenterX;
+      const translateY = archivedButtonCenterY - cardCenterY;
+      // Animate
+      card.style.position = "absolute";
+      card.style.opacity = 0;
+      card.style.transform = `translate(${translateX}px, ${translateY}px) scale(0.25)`;
+    }
 
     // DELETE DATE DIVIDER
     if (deadlines.filter((d) => d.date === deadline.date).length === 1) {
@@ -482,7 +489,7 @@ export default function DeadlineCard({
       setDeadlines((current) => {
         return current.filter((d) => d.id !== deadline.id);
       });
-    }, 400);
+    }, delay);
   }
 
   /**
