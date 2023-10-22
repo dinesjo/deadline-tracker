@@ -49,11 +49,7 @@ export default function SettingsModal({ settings, setSettings }) {
           alignItems: "center",
         }}
       >
-        <ModalDialog
-          sx={{
-            overflowY: "auto",
-          }}
-        >
+        <ModalDialog>
           <ModalClose />
           <Typography
             level="title-lg"
@@ -62,7 +58,12 @@ export default function SettingsModal({ settings, setSettings }) {
           >
             Settings
           </Typography>
-          <Stack spacing={2}>
+          <Stack
+            spacing={2}
+            sx={{
+              overflowY: "auto",
+            }}
+          >
             <FormControl
               orientation="vertical"
               sx={{ justifyContent: "space-between" }}
