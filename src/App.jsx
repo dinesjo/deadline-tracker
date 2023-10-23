@@ -6,12 +6,6 @@ import {
   Box,
   Button,
   Divider,
-  Dropdown,
-  ListItem,
-  ListItemDecorator,
-  Menu,
-  MenuButton,
-  MenuItem,
   Modal,
   ModalClose,
   ModalDialog,
@@ -27,9 +21,6 @@ import {
   FaEdit,
   FaExclamationTriangle,
   FaList,
-  FaSignInAlt,
-  FaSignOutAlt,
-  FaUser,
 } from "react-icons/fa";
 import NewDeadlineForm from "./components/NewDeadlineForm";
 import DeadlinesList from "./DeadlinesList";
@@ -40,7 +31,7 @@ import logo from "../public/512_full.png";
 import Calendar from "./Calendar";
 import Settings from "./classes/settings";
 import SettingsModal from "./components/SettingsModal";
-import { googleLogout, useGoogleLogin } from "@react-oauth/google";
+import UserDropdown from "./components/UserDropdown";
 
 export default function App() {
   // Deadlines
@@ -110,16 +101,10 @@ export default function App() {
     if (localValue == null) return null;
     return localValue;
   });
-  // Save this session
+  // Save profile this session
   useEffect(() => {
     sessionStorage.setItem("profile", JSON.stringify(profile));
   }, [profile]);
-
-  const login = useGoogleLogin({
-    onSuccess: (response) => setUser(response),
-    onError: (error) => console.log("Login Failed:", error),
-  });
-
   useEffect(() => {
     if (user && user.access_token) {
       axios
@@ -168,59 +153,12 @@ export default function App() {
         </Typography>
         {/* Settings Modal */}
         <SettingsModal settings={settings} setSettings={setSettings} />
-        {/* Account Menu */}
-        <Dropdown>
-          <MenuButton variant="plain">
-            {profile && profile.picture ? (
-              <img
-                src={profile.picture}
-                alt="profile"
-                style={{
-                  width: "30px",
-                  height: "30px",
-                  borderRadius: "50%",
-                }}
-              />
-            ) : (
-              <FaUser />
-            )}
-          </MenuButton>
-          <Menu variant="plain">
-            {profile ? (
-              <>
-                <ListItem
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "start",
-                  }}
-                >
-                  <Typography level="title-sm">{profile.name}</Typography>
-                  <Typography level="body-sm">{profile.email}</Typography>
-                </ListItem>
-                <MenuItem
-                  color="danger"
-                  onClick={() => {
-                    googleLogout();
-                    setProfile(null);
-                  }}
-                >
-                  <ListItemDecorator>
-                    <FaSignOutAlt />
-                  </ListItemDecorator>
-                  Log Out
-                </MenuItem>
-              </>
-            ) : (
-              <MenuItem color="primary" onClick={() => login()}>
-                <ListItemDecorator>
-                  <FaSignInAlt />
-                </ListItemDecorator>
-                Sign In
-              </MenuItem>
-            )}
-          </Menu>
-        </Dropdown>
+        {/* User account Dropdown */}
+        <UserDropdown
+          profile={profile}
+          setProfile={setProfile}
+          setUser={setUser}
+        />
       </Stack>
 
       {/* Main content */}
