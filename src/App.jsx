@@ -8,6 +8,7 @@ import {
   Divider,
   Dropdown,
   ListItem,
+  ListItemDecorator,
   Menu,
   MenuButton,
   MenuItem,
@@ -26,6 +27,8 @@ import {
   FaEdit,
   FaExclamationTriangle,
   FaList,
+  FaSignInAlt,
+  FaSignOutAlt,
   FaUser,
 } from "react-icons/fa";
 import NewDeadlineForm from "./components/NewDeadlineForm";
@@ -185,7 +188,14 @@ export default function App() {
           <Menu variant="plain">
             {profile ? (
               <>
-                <ListItem>
+                <ListItem
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "start",
+                  }}
+                >
+                  <Typography level="title-sm">{profile.name}</Typography>
                   <Typography level="body-sm">{profile.email}</Typography>
                 </ListItem>
                 <MenuItem
@@ -195,12 +205,18 @@ export default function App() {
                     setProfile(null);
                   }}
                 >
+                  <ListItemDecorator>
+                    <FaSignOutAlt />
+                  </ListItemDecorator>
                   Log Out
                 </MenuItem>
               </>
             ) : (
               <MenuItem color="primary" onClick={() => login()}>
-                Log In
+                <ListItemDecorator>
+                  <FaSignInAlt />
+                </ListItemDecorator>
+                Sign In
               </MenuItem>
             )}
           </Menu>
