@@ -1,10 +1,16 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import {
   Alert,
   Badge,
   Box,
   Button,
   Divider,
+  Dropdown,
+  ListItem,
+  Menu,
+  MenuButton,
+  MenuItem,
   Modal,
   ModalClose,
   ModalDialog,
@@ -20,6 +26,7 @@ import {
   FaEdit,
   FaExclamationTriangle,
   FaList,
+  FaUser,
 } from "react-icons/fa";
 import NewDeadlineForm from "./components/NewDeadlineForm";
 import DeadlinesList from "./DeadlinesList";
@@ -30,6 +37,7 @@ import logo from "../public/512_full.png";
 import Calendar from "./Calendar";
 import Settings from "./classes/settings";
 import SettingsModal from "./components/SettingsModal";
+import { googleLogout, useGoogleLogin } from "@react-oauth/google";
 
 export default function App() {
   // Deadlines
@@ -92,6 +100,43 @@ export default function App() {
     localStorage.setItem("settings", JSON.stringify(settings));
   }, [settings]);
 
+  // Google sign in TODO: ADD open-state and menu for user sign in
+  const [user, setUser] = useState([]);
+  const [profile, setProfile] = useState(() => {
+    const localValue = JSON.parse(sessionStorage.getItem("profile"));
+    if (localValue == null) return null;
+    return localValue;
+  });
+  // Save this session
+  useEffect(() => {
+    sessionStorage.setItem("profile", JSON.stringify(profile));
+  }, [profile]);
+
+  const login = useGoogleLogin({
+    onSuccess: (response) => setUser(response),
+    onError: (error) => console.log("Login Failed:", error),
+  });
+
+  useEffect(() => {
+    if (user && user.access_token) {
+      axios
+        .get(
+          `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`,
+          {
+            headers: {
+              Authorization: `Bearer ${user.access_token}`,
+              Accept: "application/json",
+            },
+          }
+        )
+        .then((res) => {
+          console.log(res.data);
+          setProfile(res.data);
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [user]);
+
   return (
     <>
       {/* "navbar" */}
@@ -105,6 +150,7 @@ export default function App() {
           py: 1,
         }}
       >
+        {/* Title */}
         <Typography
           startDecorator={
             <img
@@ -117,7 +163,48 @@ export default function App() {
         >
           Deadline Tracker
         </Typography>
+        {/* Settings Modal */}
         <SettingsModal settings={settings} setSettings={setSettings} />
+        {/* Account Menu */}
+        <Dropdown>
+          <MenuButton variant="plain">
+            {profile && profile.picture ? (
+              <img
+                src={profile.picture}
+                alt="profile"
+                style={{
+                  width: "30px",
+                  height: "30px",
+                  borderRadius: "50%",
+                }}
+              />
+            ) : (
+              <FaUser />
+            )}
+          </MenuButton>
+          <Menu variant="plain">
+            {profile ? (
+              <>
+                <ListItem>
+                  <Typography level="body-sm">{profile.email}</Typography>
+                </ListItem>
+                <MenuItem
+                  color="danger"
+                  onClick={() => {
+                    googleLogout();
+                    setProfile(null);
+                  }}
+                >
+                  Log Out
+                </MenuItem>
+              </>
+            ) : (
+              <MenuItem color="primary" onClick={() => login()}>
+                Log In
+              </MenuItem>
+            )}
+          </Menu>
+        </Dropdown>
       </Stack>
 
       {/* Main content */}
@@ -156,7 +243,6 @@ export default function App() {
             settings={settings}
           />
         </Stack>
-
         {/* Calendar VIEW */}
         {settings.view.includes("calendar") && (
           <>
@@ -200,7 +286,6 @@ export default function App() {
             </Box>
           </>
         )}
-
         {/* Deadlines LIST */}
         {settings.view.includes("list") && (
           <>

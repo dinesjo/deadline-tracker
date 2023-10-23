@@ -4,6 +4,7 @@ import App from "./App.jsx";
 import "@fontsource/inter";
 import { CssBaseline, CssVarsProvider } from "@mui/joy";
 import { extendTheme } from "@mui/joy/styles";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 export const theme = extendTheme({
   colorSchemes: {
@@ -103,10 +104,14 @@ export const theme = extendTheme({
 });
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <CssVarsProvider theme={theme}>
-      <CssBaseline />
-      <App />
-    </CssVarsProvider>
-  </React.StrictMode>
+  <GoogleOAuthProvider
+    clientId={`949466353226-lic46gqm4flu2ppq8uaqtpepat1gbjms.apps.googleusercontent.com`}
+  >
+    <React.StrictMode>
+      <CssVarsProvider theme={theme}>
+        <CssBaseline />
+        <App />
+      </CssVarsProvider>
+    </React.StrictMode>
+  </GoogleOAuthProvider>
 );
