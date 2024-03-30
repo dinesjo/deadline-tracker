@@ -1,17 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  Alert,
-  Badge,
-  Box,
-  Button,
-  Divider,
-  Modal,
-  ModalClose,
-  ModalDialog,
-  Sheet,
-  Stack,
-  Typography,
-} from "@mui/joy";
+import { Alert, Badge, Box, Button, Divider, Modal, ModalClose, ModalDialog, Sheet, Stack, Typography } from "@mui/joy";
 import {
   FaArchive,
   FaBook,
@@ -77,15 +65,15 @@ export default function App() {
 
   // Settings
   const [settings, setSettings] = useState(() => {
-    const localValue = JSON.parse(
-      localStorage.getItem("settings"),
-      (key, value) => {
-        // ensure no legacy settings are loaded
-        if (key === "") return new Settings(value);
-        return value;
-      }
-    );
-    if (localValue == null) return new Settings({});
+    // Get settings from local storage
+    const localValueJson = localStorage.getItem("settings");
+    if (!localValueJson) return new Settings({});
+    // Parse those settings
+    const localValue = JSON.parse(localValueJson, (key, value) => {
+      // ensure no legacy settings are loaded
+      if (key === "") return new Settings(value);
+      return value;
+    });
     return localValue;
   });
   useEffect(() => {
@@ -106,13 +94,7 @@ export default function App() {
         }}
       >
         <Typography
-          startDecorator={
-            <img
-              src={logo}
-              alt="logo"
-              style={{ width: "30px", height: "30px" }}
-            />
-          }
+          startDecorator={<img src={logo} alt="logo" style={{ width: "30px", height: "30px" }} />}
           level="title-lg"
         >
           Deadline Tracker
@@ -131,11 +113,7 @@ export default function App() {
           backgroundColor: "background.body",
         }}
       >
-        <Stack
-          direction={{ xs: "column", sm: "row" }}
-          spacing={2}
-          sx={{ pt: 2, maxWidth: "80%" }}
-        >
+        <Stack direction={{ xs: "column", sm: "row" }} spacing={2} sx={{ pt: 2, maxWidth: "80%" }}>
           {/* Manage Courses */}
           <ManageCoursesModal
             courses={courses}
@@ -160,11 +138,7 @@ export default function App() {
         {/* Calendar VIEW */}
         {settings.view.includes("calendar") && (
           <>
-            <Typography
-              level="title-lg"
-              startDecorator={<FaCalendarAlt />}
-              sx={{ mt: 2 }}
-            >
+            <Typography level="title-lg" startDecorator={<FaCalendarAlt />} sx={{ mt: 2 }}>
               Calendar
             </Typography>
             <Typography level="body-md" sx={{ textAlign: "center" }}>
@@ -204,16 +178,10 @@ export default function App() {
         {/* Deadlines LIST */}
         {settings.view.includes("list") && (
           <>
-            <Typography
-              level="title-lg"
-              startDecorator={<FaList />}
-              sx={{ mt: 3 }}
-            >
+            <Typography level="title-lg" startDecorator={<FaList />} sx={{ mt: 3 }}>
               Deadlines
             </Typography>
-            <Typography level="body-md">
-              View and manage your deadlines.
-            </Typography>
+            <Typography level="body-md">View and manage your deadlines.</Typography>
             <Sheet
               sx={{
                 width: { xs: "100%", sm: "90%", md: "80%", lg: "60%" },
@@ -252,8 +220,8 @@ export default function App() {
           }}
           startDecorator={<FaExclamationTriangle />}
         >
-          Please note that data is stored locally in your browser. If you clear
-          your browser data, your deadlines will be lost.
+          Please note that data is stored locally in your browser. If you clear your browser data, your deadlines will
+          be lost.
         </Alert>
       </Sheet>
     </>
@@ -266,12 +234,7 @@ function ManageCoursesModal({ ...props }) {
   return (
     <>
       <Badge invisible={hasCourses} badgeContent={"Add Course!"} color="danger">
-        <Button
-          variant="outlined"
-          color="purple"
-          startDecorator={<FaBook />}
-          onClick={() => setOpen(true)}
-        >
+        <Button variant="outlined" color="purple" startDecorator={<FaBook />} onClick={() => setOpen(true)}>
           Manage Courses
         </Button>
       </Badge>
@@ -285,16 +248,8 @@ function ManageCoursesModal({ ...props }) {
           <Typography level="title-lg" startDecorator={<FaBook />}>
             Manage Courses
           </Typography>
-          <Typography level="body-md">
-            Add, edit, and remove courses.
-          </Typography>
-          <Alert
-            variant="soft"
-            color="primary"
-            size="md"
-            sx={{ mt: 1, mb: 1.5 }}
-            startDecorator={<FaEdit />}
-          >
+          <Typography level="body-md">Add, edit, and remove courses.</Typography>
+          <Alert variant="soft" color="primary" size="md" sx={{ mt: 1, mb: 1.5 }} startDecorator={<FaEdit />}>
             <Typography level="title-md">Click a course to edit it</Typography>
           </Alert>
           <Courses open={open} setOpen={setOpen} {...props} />
@@ -340,11 +295,7 @@ function NewDeadlineFormModal({ courses, setDeadlines }) {
       >
         <ModalDialog>
           <ModalClose />
-          <Typography
-            level="title-lg"
-            startDecorator={<FaCalendarPlus />}
-            sx={{ mb: 2 }}
-          >
+          <Typography level="title-lg" startDecorator={<FaCalendarPlus />} sx={{ mb: 2 }}>
             New Deadline
           </Typography>
           <NewDeadlineForm
